@@ -1,0 +1,19 @@
+<div id="page-wrapper">
+    <h2>[{title}]</h2>
+    <header class="breadcrumb">
+        <a href="[{url_add}]" 
+           class="btn btn-success">Add new</a>
+    </header>
+    <section id='results' class='table-responsive'>
+      <table class="table table-bordered table-condensed table-hover">
+        <thead class='bg-warning'>
+            <tr>
+                [{table_titles}]
+            </tr>
+        </thead>
+        <tbody>
+            [{table_content}]
+        </tbody>
+      </table>
+    </section>
+</div>

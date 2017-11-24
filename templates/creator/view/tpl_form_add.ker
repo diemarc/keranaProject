@@ -1,0 +1,17 @@
+<div id="page-wrapper">
+    <h2>[{title}]</h2>
+        <form action="[{url_save}]" 
+              id="formKerana" name="formKerana" method="POST" class="form-horizontal"
+              accept-charset="utf-8">
+                  <?php echo $kerana_token; ?>
+
+            <header class="breadcrumb">
+                <a href="[{url_goback}]" 
+                   class="btn btn-warning">Cancel</a>
+                <button type="submit" class="btn btn-success">Save</button>
+            </header>
+
+            [{form}]
+
+        </form>
+</div>

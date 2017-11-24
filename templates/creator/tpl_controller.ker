@@ -1,0 +1,113 @@
+<?php
+
+namespace application\modules\[{module_name}]\controller;
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
+/*
+  |-----------------------------------------------------------------------------
+  | Class [{controller_name}]
+  |-----------------------------------------------------------------------------
+  |
+  | [{controller_description}]
+  | @author kerana,
+  | @date [{controller_date}],
+  |
+ */
+
+class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
+
+    
+    [{controller_model}]
+
+     public function __construct()
+    {
+        parent::__construct();
+        [{model_object}]
+        
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Show all 
+     * -------------------------------------------------------------------------
+     */
+    public function index(){
+        
+        \kerana\View::showView($this->_current_module, 'index', 
+                ['rs[{model_rs}]s' => [{model_name}]->getAll()]);
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Add new
+     * -------------------------------------------------------------------------
+     */
+    
+    public function add(){
+        
+        $params = [];
+        \kerana\View::showForm($this->_current_module,'add',$params,[{model_name}]);
+    }
+    
+     /**
+     * -------------------------------------------------------------------------
+     * Save new record
+     * -------------------------------------------------------------------------
+     */
+    
+    public function save(){
+        ([{model_name}]->save()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Show one record detail
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function detail($id){
+        
+        [{model_name}]->_setIdTableValue($id);
+        $params['rs[{model_rs}]'] = [{model_name}]->getRecord();
+        \kerana\View::showView($this->_current_module,'detail',$params);
+        
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Edit one record
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function edit($id){
+        [{model_name}]->_setIdTableValue($id);
+        $params['rs[{model_rs}]'] = [{model_name}]->getRecord();
+        \kerana\View::showForm($this->_current_module,'detail',$params);
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Update one record
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function update($id){
+        [{model_name}]->_setIdTableValue($id);
+        ([{model_name}]->save()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Delete one record
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function delete($id){
+        [{model_name}]->_setIdTableValue($id);
+        ([{model_name}]->delete()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
+    }
+
+}

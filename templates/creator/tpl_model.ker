@@ -1,0 +1,26 @@
+<?php
+namespace application\modules\[{module_name}]\model;
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
+/*
+  |-----------------------------------------------------------------------------
+  | Class [{model_name}]
+  |-----------------------------------------------------------------------------
+  |
+  | [{model_description}]
+  | @author kerana,
+  | @date [{model_date}],
+  |
+ */
+
+class [{model_name}] extends \kerana\Ada {
+
+
+     public function __construct()
+    {
+        parent::__construct();
+        $this->table_name = '[{model_table}]';
+        $this->table_id = '[{model_table_id}]';
+    }
+
+
+}

@@ -1,0 +1,1 @@
+SHOW KEYS FROM sys_controller_model WHERE key_name = "Primary"
