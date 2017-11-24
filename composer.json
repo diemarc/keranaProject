@@ -3,8 +3,8 @@
         "psr-4": {
             "kerana\\": "kerana",
             "application\\": "application",
-            "helpers\\" : "helpers",
-            "creator\\" : "creator"
+            "helpers\\" : "helpers"
+            
         }
        
     }
