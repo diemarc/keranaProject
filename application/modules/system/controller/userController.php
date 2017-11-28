@@ -37,7 +37,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
      public function __construct()
     {
         parent::__construct();
-         $this->_user= New \application\modules\admin\model\UsuarioModel();
+         $this->_user= New \application\modules\system\model\UserModel();
         
     }
 
@@ -49,7 +49,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     public function index(){
         
       
-        \kerana\View::showView($this->_current_module, 'index', 
+        \kerana\View::showView($this->_current_module, 'users/index', 
                 ['rsUsuarios' => $this->_user->getAll()]);
     }
     
@@ -62,7 +62,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     public function add(){
         
         $params = [];
-        \kerana\View::showForm($this->_current_module,'add',$params,$this->_user);
+        \kerana\View::showForm($this->_current_module,'users/add',$params,$this->_user);
     }
     
      /**
@@ -73,7 +73,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     
     public function save(){
         
-        ($this->_user->save()) ? \helpers\Redirect::to('/admin/usuario/index') : '';
+        ($this->_user->save()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
     
     /**
@@ -87,7 +87,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
         
         $this->_user->_setIdTableValue($id);
         $params['rsUsuario'] = $this->_user->getRecord();
-        \kerana\View::showView($this->_current_module,'detail',$params);
+        \kerana\View::showView($this->_current_module,'user/detail',$params);
         
     }
     
@@ -101,7 +101,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     public function edit($id){
         $this->_user->_setIdTableValue($id);
         $params['rsUsuario'] = $this->_user->getRecord();
-        \kerana\View::showForm($this->_current_module,'detail',$params);
+        \kerana\View::showForm($this->_current_module,'user/detail',$params);
     }
     
     /**
@@ -113,7 +113,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     
     public function update($id){
         $this->_user->_setIdTableValue($id);
-        ($this->_user->save()) ? \helpers\Redirect::to('/admin/usuario/index') : '';
+        ($this->_user->save()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
     
     /**
@@ -125,7 +125,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     
     public function delete($id){
         $this->_user->_setIdTableValue($id);
-        ($this->_user->delete()) ? \helpers\Redirect::to('/admin/usuario/index') : '';
+        ($this->_user->delete()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
 
 }
