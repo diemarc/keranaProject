@@ -1,46 +1,131 @@
 <?php
+
+/*
+ * This file is part of keranaProject
+ * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace application\modules\system\controller;
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : '';
+
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /*
   |--------------------------------------------------------------------------
-  | CONTROLADOR PARA USUARIOS
+  | ControllerClass for users
   |--------------------------------------------------------------------------
   |
  */
 
-class UserController extends \kerana\Kerana
-{
+class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
 
-    protected
-    /** @var object , modelo de usuarios */
-            $_user;
+    
+    protected $_user;
 
-    public function __construct()
+     public function __construct()
     {
         parent::__construct();
-        $this->_user = new \application\modules\system\model\UserModel();
+         $this->_user= New \application\modules\admin\model\UsuarioModel();
+        
     }
-    
+
+    /**
+     * -------------------------------------------------------------------------
+     * Show all 
+     * -------------------------------------------------------------------------
+     */
     public function index(){
         
+      
+        \kerana\View::showView($this->_current_module, 'index', 
+                ['rsUsuarios' => $this->_user->getAll()]);
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Add new
+     * -------------------------------------------------------------------------
+     */
+    
+    public function add(){
         
-        $this->nuevo();
+        $params = [];
+        \kerana\View::showForm($this->_current_module,'add',$params,$this->_user);
+    }
+    
+     /**
+     * -------------------------------------------------------------------------
+     * Save new record
+     * -------------------------------------------------------------------------
+     */
+    
+    public function save(){
+        
+        ($this->_user->save()) ? \helpers\Redirect::to('/admin/usuario/index') : '';
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Show one record detail
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function detail($id){
+        
+        $this->_user->_setIdTableValue($id);
+        $params['rsUsuario'] = $this->_user->getRecord();
+        \kerana\View::showView($this->_current_module,'detail',$params);
         
     }
     
     /**
      * -------------------------------------------------------------------------
-     * Carga el formulario de nuevo usuario
+     * Edit one record
      * -------------------------------------------------------------------------
+     * @param int $id
      */
-    public function nuevo(){
-        
-
-        $form_helper = new \helpers\KeranaForm($this->_user);
-        
-        
-        
+    
+    public function edit($id){
+        $this->_user->_setIdTableValue($id);
+        $params['rsUsuario'] = $this->_user->getRecord();
+        \kerana\View::showForm($this->_current_module,'detail',$params);
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Update one record
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function update($id){
+        $this->_user->_setIdTableValue($id);
+        ($this->_user->save()) ? \helpers\Redirect::to('/admin/usuario/index') : '';
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Delete one record
+     * -------------------------------------------------------------------------
+     * @param int $id
+     */
+    
+    public function delete($id){
+        $this->_user->_setIdTableValue($id);
+        ($this->_user->delete()) ? \helpers\Redirect::to('/admin/usuario/index') : '';
     }
 
 }
