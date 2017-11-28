@@ -1,12 +1,30 @@
 <?php
 
+/*
+ * This file is part of keranaProject
+ * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 namespace application\modules\system\model;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : '';
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /*
   |--------------------------------------------------------------------------
-  | CLASE MODELO PARA USUARIOS
+  | ModelClass for users
   |--------------------------------------------------------------------------
   |
  */
@@ -15,10 +33,14 @@ class UserModel extends \kerana\Ada
 {
 
     public
-    /** @var mixed , usuario de origen del post del form */
+    /** @var mixed , username */
             $username,
-            /** @var mixed , password de origen del post del form */
-            $password;
+            /** @var mixed , user password */
+            $password,
+            /** @var mixed, email */
+            $email,
+            /** @var password salt */
+            $salt;
 
     public function __construct()
     {
@@ -29,12 +51,11 @@ class UserModel extends \kerana\Ada
 
     /**
      * -------------------------------------------------------------------------
-     * Trae los datos de un username si esta activo
+     * Get user active data
      * -------------------------------------------------------------------------
      */
     public function _checkAndGetUserActive()
     {
-
         return $this->find('id_usuario,nombres,apellidos,email,salt,password', [
                     'username' => $this->username,
                     'sw_activo' => 1
@@ -43,7 +64,7 @@ class UserModel extends \kerana\Ada
 
     /**
      * -------------------------------------------------------------------------
-     * Genera un SALT y un password para un usuario y lo guarda en tabla
+     * Generate password salt and store into a table
      * -------------------------------------------------------------------------
      * @return type
      */
@@ -51,15 +72,14 @@ class UserModel extends \kerana\Ada
     {
 
         try {
-            // generamos la sal aleatoriamente, 
-            // reemplazamos byte por byte para ser compatible con utf8 al guardarlo
-            // en tabla
+            // lets do generate the random salt, 
+            // replace byte por byte for utf8 support
             $salt_created = strtr(base64_encode(mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)), '+', '.');
 
-            // generamos la contraseña con la sal
-            $password = password_hash("invent*497", PASSWORD_BCRYPT, ['salt' => $salt_created]);
+            // generate the password with the salt
+            $password = password_hash($this->password, PASSWORD_BCRYPT, ['salt' => $salt_created]);
 
-            // actualizamos los datos del usuario
+            // update the user data
             return $this->save(
                             [
                                 'password' => $password,
@@ -67,16 +87,16 @@ class UserModel extends \kerana\Ada
                             ]
             );
         } catch (\Exception $ex) {
-            \kerana\Exceptions::showError('Error de login', $ex);
+            \kerana\Exceptions::showError('LOGIN ERROR', $ex);
         }
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Bloquea un usuario
+     * Set inactive one user
      * -------------------------------------------------------------------------
-     * @param type $id_usuario
-     * @return type
+     * @param int $id_usuario
+     * @return boolean
      */
     public function blockUserAccount($id_usuario)
     {
