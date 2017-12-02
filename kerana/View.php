@@ -1,4 +1,21 @@
 <?php
+/*
+ * This file is part of keranaProject
+ * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Kerana;
 
@@ -8,16 +25,15 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
   |--------------------------------------------------------------------------
   | VIEW CLASS
   |--------------------------------------------------------------------------
-  | Carga vistas
+  | load views, simply
   |
  */
 
 class View
 {
 
-    public static 
-                    $_model;
-
+    public static
+            $_model;
 
     /**
      * -------------------------------------------------------------------------
@@ -36,8 +52,7 @@ class View
         $full_path_template = __MODULEFOLDER__ . '/' . $template_path;
 
         // verificamos si existe la ruta
-        (!file_exists($full_path_template)) ? \kerana\ViewMaker::createView($module,$template,$params,self::$_model) : '';
-
+        (!file_exists($full_path_template)) ? \helpers\ViewMaker::createView($module, $template, $params, self::$_model) : '';
 
         // procesamos los parametros que usara la vista
         if (is_array($params)) {
@@ -47,7 +62,7 @@ class View
                 $$key = $valor;
             }
         }
-        
+
         // si se quiere guardar la vista para usarlo como partial view
         if ($save) {
             ob_start(); # apertura de bufer
@@ -74,17 +89,17 @@ class View
      * @param mixed $module
      * @param mixed $template
      * @param array $params
-     * @param mixed $model , object of model to create a html form
+     * @param object $model , object of model to create a html form
      */
-    public static function showForm($module, $template, $params = '',$model = false)
+    public static function showForm($module, $template, $params = '', $model = false)
     {
 
         //$token_string = \kerana\Security::csrfGetTokenId();
         $token_value = \kerana\Security::csrfGetTokenValue();
         ($model != false) ? self::$_model = $model : '';
-        
+
         $params['kerana_token'] = '<input type="hidden" name="_kerana_token_" value="' . $token_value . '">';
-        
+
         self::showView($module, $template, $params);
     }
 
