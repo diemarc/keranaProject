@@ -65,35 +65,37 @@ class KeranaForm
      * -------------------------------------------------------------------------
      * Parsea los campos de la tabla a campos de form html
      * -------------------------------------------------------------------------
-     * @param type $field_name
-     * @param type $field_type
-     * @param type $length
-     * @return type
+     * @param mixed $field_name
+     * @param string $field_type
+     * @param int $length
+     * @return avoid
      */
-    public function parseField($field_name, $field_type, $length = '', $null = 'NO', $is_edit = false)
+    public function parseField($field_name, $field_type, $length = '', $null = 'NO', $rs= false)
     {
 
         $label = "<label for='f_$field_name' class='col-sm-2 control-label'>$field_name</label> \n";
         $divput = "<div class='col-sm-6'> \n <div class='input-group col-sm-8'> \n";
         $required = ($null == 'NO') ? 'required' : '';
+        $value = ($rs != false) ? "value='".$rs->$field_name."'" : '';
+        
         switch ($field_type) {
             
             // inputs type text
             case 'varchar';
                 $element = '<input type="text" id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . ' />';
+                        . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required .$value. '  />';
                 break;
             
             // inputs type number
             case 'int';
                 $element = '<input type="number" id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . ' />';
+                        . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required .$value. ' />';
                 break;
             
             // textareas
             case 'text';
                 $element = '<textarea id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control"></textarea>';
+                        . '' . $field_name . '" class="form-control">'.$value.'</textarea>';
                 break;
             
            
@@ -101,9 +103,5 @@ class KeranaForm
          array_push($this->form_elements,$label.$divput.$element."\n </div> \n </div>");
     }
     
-    
-    public function validateForm(){
-        
-    }
 
 }

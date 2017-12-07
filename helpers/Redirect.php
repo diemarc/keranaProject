@@ -1,16 +1,33 @@
 <?php
+/*
+ * This file is part of keranaProject
+ * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 namespace helpers;
 /**
- * Class Redirect
- *
- * Abstracion para redireccionar a una pagina de kerana
+ * -----------------------------------------------------------------------------
+ * RedirectClass
+ * -----------------------------------------------------------------------------
  */
 class Redirect
 {
 
     /**
      * -------------------------------------------------------------------------
-     * Redirecciona a la url principal de kerana
+     * Go to home
      * -------------------------------------------------------------------------
      */
     public static function home()
@@ -20,7 +37,7 @@ class Redirect
 
     /**
      * -------------------------------------------------------------------------
-     * Redirecciona a una url
+     * got to url
      * -------------------------------------------------------------------------
      * @param type $path
      */

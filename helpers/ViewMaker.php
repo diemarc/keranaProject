@@ -47,7 +47,7 @@ class ViewMaker
      */
     public static function createView($module, $tpl, $params, $model = false)
     {
-        $method_name = 'create' . ucwords($tpl);
+        $method_name = 'create' . ucwords(substr(strrchr($tpl, '/'),1));
         ($model != false) ? self::$_model_view = $model : '';
 
         return (method_exists(__CLASS__, $method_name)) ? self::$method_name($module, $params) :
@@ -104,6 +104,11 @@ class ViewMaker
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a form without a model object');
         }
 
+    }
+    
+    public static function createEdit(){
+        echo 'creating edit form';
+        die();
     }
 
     /**
