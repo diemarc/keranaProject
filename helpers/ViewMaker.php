@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -47,7 +48,7 @@ class ViewMaker
      */
     public static function createView($module, $tpl, $params, $model = false)
     {
-        $method_name = 'create' . ucwords(substr(strrchr($tpl, '/'),1));
+        $method_name = 'create' . ucwords(substr(strrchr($tpl, '/'), 1));
         ($model != false) ? self::$_model_view = $model : '';
 
         return (method_exists(__CLASS__, $method_name)) ? self::$method_name($module, $params) :
@@ -59,55 +60,33 @@ class ViewMaker
      * Create a form for add a new record
      * -------------------------------------------------------------------------
      * @param type $module
-     * @param type $params
+     * @param type $rs
      */
-    public static function createAdd($module, $params)
+    public static function createAdd()
     {
         if (isset(self::$_model_view) AND ! empty(self::$_model_view)) {
             $kerana_form = New \helpers\KeranaForm(self::$_model_view);
-            $kerana_form->createForm();
-            $form_created = $kerana_form->form_elements;
-
-            // current controller
-           $controller = \helpers\Url::getController();
-           $path_tpl_form = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_form_add.ker');
-           $path_add_file = realpath(__MODULEFOLDER__ . '/' . $module . '/view/');
-            
-            
-            // load the form template
-            $tpl_form_content = file_get_contents($path_tpl_form);
-
-            // form elements
-            $form_elements = '';
-            foreach ($form_created AS $v):
-                $form_elements .= "<div class='form-group form-group-sm'> \n"
-                        . "".$v." \n"
-                        . "</div> \n";
-            endforeach;
-
-            // inject the code
-            $code_to_inject = [
-                '[{title}]' => $module . '/New record',
-                '[{url_save}]' => __URL__ . '/' . $module . '/' . $controller . '/save',
-                '[{url_goback}]' => __URL__ . '/' . $module . '/' . $controller . '/index',
-                '[{form}]' => $form_elements
-            ];
-
-            // create the form view.
-            fopen($path_add_file . '/add.php', 'w');
-
-            // inject the code 
-            $formadd_code_content = strtr($tpl_form_content, $code_to_inject);
-            file_put_contents($path_add_file . '/add.php', $formadd_code_content);
-        }
-        else {
+            $kerana_form->setFormType(1);
+            $kerana_form->createKeranaForm();
+        } else {
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a form without a model object');
         }
-
     }
-    
-    public static function createEdit(){
-        echo 'creating edit form';
+
+    /**
+     *--------------------------------------------------------------------------
+     * Create a edit form 
+     * ------------------------------------------------------------------------- 
+     */
+    public static function createEdit()
+    {
+        if (isset(self::$_model_view) AND ! empty(self::$_model_view)) {
+            $kerana_form = New \helpers\KeranaForm(self::$_model_view);
+            $kerana_form->setFormType(2);
+            $kerana_form->createKeranaForm();
+        } else {
+            \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a edit/form without a model object');
+        }
         die();
     }
 
