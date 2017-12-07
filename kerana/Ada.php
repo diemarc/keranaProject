@@ -244,7 +244,7 @@ abstract class Ada
 
     /**
      * -------------------------------------------------------------------------
-     * Get the primary key index 1, for a table
+     * Get the table primary key index 1
      * -------------------------------------------------------------------------
      * @return type
      */
