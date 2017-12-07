@@ -25,10 +25,10 @@
                 <a href="#"><i class="fa fa-user-md fa-fw"></i>Usuarios<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="<?php echo __URL__;?>/system/module/index">Users</a>
+                        <a href="<?php echo __URL__;?>/system/user/index">Users</a>
                     </li>
                     <li>
-                        <a href="<?php echo __URL__;?>/system/module/index">Groups</a>
+                        <a href="<?php echo __URL__;?>/system/user/index">Groups</a>
                     </li>
 
                 </ul>
