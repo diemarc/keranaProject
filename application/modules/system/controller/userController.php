@@ -101,7 +101,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     public function edit($id){
         $this->_user->_setIdTableValue($id);
         $params['rsUsuario'] = $this->_user->getRecord();
-        \kerana\View::showForm($this->_current_module,'user/edit',$params);
+        \kerana\View::showForm($this->_current_module,'user/edit',$params,$this->_user);
     }
     
     /**
