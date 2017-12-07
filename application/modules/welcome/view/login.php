@@ -17,9 +17,10 @@
                     <div class="panel-body">
                         <form class="form-signin form-group-sm" 
                               action="go" method="post">
-                            <h2 class="form-signin-heading">Hola</h2>
-                            <label for="f_username" class="sr-only">Escribe tu usuario </label>
-                            <input type="text" id="f_username" name="f_username" class="form-control form-group-sm" placeholder="Escribe tu usuario " required autofocus>
+                            <h2 class="form-signin-heading">Hello World!!</h2>
+                            <label for="f_username" class="sr-only">Username? </label>
+                            <input type="text" id="f_username" name="f_username" class="form-control form-group-sm" 
+                                   placeholder="username? " required autofocus>
                             <label for="f_password" class="sr-only">Password.?</label>
                             <input type="password" id="f_password" name="f_password" class="form-control" placeholder="Password?" required>
                            <hr/>

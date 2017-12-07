@@ -5,6 +5,7 @@
         <a href="<?php echo __URL__;?>/system/user/add" 
            class="btn btn-success">Add new</a>
     </header>
+    <?php echo \helpers\Url::getModule();?>
     <section id='results' class='table-responsive'>
         <table class="table table-bordered table-condensed table-hover">
             <thead class='bg-warning'>
@@ -28,7 +29,9 @@
                         <td><?php echo $usuario->nombres; ?></td> 
                         <td><?php echo $usuario->apellidos; ?></td> 
                         <td><?php echo $usuario->sw_activo; ?></td> 
-                        <td> </td> 
+                        <td> 
+                            <a href="<?php echo __URL__;?>/system/user/edit/<?php echo $usuario->id_usuario;?>">Editar</a>
+                        </td> 
                     </tr> 
                 <?php endforeach; ?>
             </tbody>

@@ -73,7 +73,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     
     public function save(){
         
-        ($this->_user->save()) ? \helpers\Redirect::to('/system/user/index') : '';
+        ($this->_user->saveUser()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
     
     /**
@@ -101,7 +101,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
     public function edit($id){
         $this->_user->_setIdTableValue($id);
         $params['rsUsuario'] = $this->_user->getRecord();
-        \kerana\View::showForm($this->_current_module,'user/detail',$params);
+        \kerana\View::showForm($this->_current_module,'user/edit',$params);
     }
     
     /**

@@ -20,6 +20,8 @@
 
 namespace application\modules\system\model;
 
+use helpers\Request AS Request;
+
 defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /*
@@ -33,14 +35,21 @@ class UserModel extends \kerana\Ada
 {
 
     public
-    /** @var mixed , username */
+    /** @var int, id_user */
+            $id_user,
+            /** @var mixed , username */
             $username,
             /** @var mixed , user password */
             $password,
             /** @var mixed, email */
             $email,
-            /** @var password salt */
-            $salt;
+            /** @var name, email */
+            $name,
+            /** @var lastname, email */
+            $lastname;
+    private
+    /** @var password salt */
+            $_salt;
 
     public function __construct()
     {
@@ -64,28 +73,57 @@ class UserModel extends \kerana\Ada
 
     /**
      * -------------------------------------------------------------------------
+     * Check all user fileds 
+     * -------------------------------------------------------------------------
+     */
+    private function _initUser()
+    {
+        $this->username = Request::varchar('f_username',true);
+        $this->password = Request::varchar('f_password');
+        $this->name = Request::varchar('f_nombres', true);
+        $this->email = Request::email();
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Save a new user
+     * -------------------------------------------------------------------------
+     */
+    public function saveUser()
+    {
+        $this->_initUser();
+
+        $this->generateSecurePassword();
+
+        return $this->save(
+                        [
+                            'username' => $this->username,
+                            'password' => $this->password,
+                            'salt' => $this->_salt,
+                            'email' => $this->email,
+                            'nombres' => $this->name,
+                            'apellidos' => $this->lastname,
+                            'sw_activo' => 1
+                        ]
+        );
+    }
+
+    /**
+     * -------------------------------------------------------------------------
      * Generate password salt and store into a table
      * -------------------------------------------------------------------------
      * @return type
      */
-    public function generatePasswordUser()
+    public function generateSecurePassword()
     {
 
         try {
             // lets do generate the random salt, 
             // replace byte por byte for utf8 support
-            $salt_created = strtr(base64_encode(mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)), '+', '.');
+            $this->_salt = strtr(base64_encode(mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)), '+', '.');
 
             // generate the password with the salt
-            $password = password_hash($this->password, PASSWORD_BCRYPT, ['salt' => $salt_created]);
-
-            // update the user data
-            return $this->save(
-                            [
-                                'password' => $password,
-                                'salt' => $salt_created
-                            ]
-            );
+            $this->password = password_hash($this->password, PASSWORD_BCRYPT, ['salt' => $this->_salt]);
         } catch (\Exception $ex) {
             \kerana\Exceptions::showError('LOGIN ERROR', $ex);
         }

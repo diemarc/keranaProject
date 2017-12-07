@@ -27,14 +27,7 @@
                 </div> 
             </div> 
         </div> 
-        <div class='form-group form-group-sm'> 
-            <label for='f_salt' class='col-sm-2 control-label'>salt</label> 
-            <div class='col-sm-6'> 
-                <div class='input-group col-sm-8'> 
-                    <input type="text" id="f_salt" name="f_salt" class="form-control" maxlength="32" required />
-                </div> 
-            </div> 
-        </div> 
+        
         <div class='form-group form-group-sm'> 
             <label for='f_email' class='col-sm-2 control-label'>email</label> 
             <div class='col-sm-6'> 
@@ -47,7 +40,8 @@
             <label for='f_nombres' class='col-sm-2 control-label'>nombres</label> 
             <div class='col-sm-6'> 
                 <div class='input-group col-sm-8'> 
-                    <input type="text" id="f_nombres" name="f_nombres" class="form-control" maxlength="150"  />
+                    <input type="text" id="f_nombres" name="f_nombres" 
+                           class="form-control" maxlength="150"  />
                 </div> 
             </div> 
         </div> 
@@ -56,14 +50,6 @@
             <div class='col-sm-6'> 
                 <div class='input-group col-sm-8'> 
                     <input type="text" id="f_apellidos" name="f_apellidos" class="form-control" maxlength="150"  />
-                </div> 
-            </div> 
-        </div> 
-        <div class='form-group form-group-sm'> 
-            <label for='f_sw_activo' class='col-sm-2 control-label'>sw_activo</label> 
-            <div class='col-sm-6'> 
-                <div class='input-group col-sm-8'> 
-
                 </div> 
             </div> 
         </div> 

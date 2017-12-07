@@ -1,12 +1,12 @@
 <div id="page-wrapper">
-    <h2>admin/New record</h2>
-        <form action="http://local.keranaproject/admin/usuario/save" 
+    <h2>system/New record</h2>
+        <form action="http://local.keranaproject/system/user/save" 
               id="formKerana" name="formKerana" method="POST" class="form-horizontal"
               accept-charset="utf-8">
                   <?php echo $kerana_token; ?>
 
             <header class="breadcrumb">
-                <a href="http://local.keranaproject/admin/usuario/index" 
+                <a href="http://local.keranaproject/system/user/index" 
                    class="btn btn-warning">Cancel</a>
                 <button type="submit" class="btn btn-success">Save</button>
             </header>
