@@ -31,9 +31,6 @@ namespace helpers;
 class KeranaForm
 {
 
-    public
-    /** @array, contains the form elements  */
-            $form_elements = [];
     protected
     /** @object , model to create form \kerana\Ada */
             $_object_table,
@@ -44,11 +41,39 @@ class KeranaForm
             /** @var mixed, form action button submit */
             $_form_action,
             /** @var mixed, form file name */
-            $_form_file;
+            $_form_file,
+            /** @var mixed, form path file  */
+            $_form_path_file,
+            /** @var mixed, resultset object to edit forms */
+            $_form_rs,
+            /** @var mixed, form controller */
+            $_form_controller,
+            /** @var mixed, form module */
+            $_form_module,
+            /** @var mixed, form controller */
+            $_form_elements,
+            /** @var mixed, form template content */
+            $_form_template_content,
+            /** @array, contains the html form tags  */
+            $_form_tags = [];
 
     public function __construct(\kerana\Ada $objectTable)
     {
         $this->_object_table = $objectTable;
+    }
+
+    /*
+      |--------------------------------------------------------------------------
+      | GETTERS SETTERS
+      |--------------------------------------------------------------------------
+      |
+     */
+
+    public function __set($property, $value)
+    {
+        $this->$property = (property_exists(__CLASS__, $property)) ?
+                filter_var($value, FILTER_SANITIZE_STRING) :
+                \kerana\Exceptions::ShowError('Not exists', 'Property "' . $property . '" not exists in this class');
     }
 
     /**
@@ -68,13 +93,15 @@ class KeranaForm
                 $this->_form_title = 'New record';
                 $this->_form_action = 'save';
                 $this->_form_file = 'add';
+                $this->_form_rs = false;
                 break;
 
             // edit record form
             case 2;
                 $this->_form_title = 'Edit record';
-                $this->_form_action = 'update';
+                $this->_form_action = 'update/'.\helpers\Url::getParameters()[0];
                 $this->_form_file = 'edit';
+                $this->_form_rs = '$rs';
                 break;
         }
     }
@@ -92,7 +119,7 @@ class KeranaForm
             $ex = preg_split("/[\()s]+/", $desc->Type);
             $field_type = $ex[0];
             $field_lenght = $ex[1];
-            ($desc->Key != 'PRI') ? $this->parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
+            ($desc->Key != 'PRI') ? $this->_parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
         endforeach;
     }
 
@@ -105,20 +132,20 @@ class KeranaForm
      * @param int $length
      * @return avoid
      */
-    private function parseField($field_name, $field_type, $length = '', $null = 'NO', $rs = false)
+    private function _parseField($field_name, $field_type, $length = '', $null = 'NO')
     {
 
         $label = "<label for='f_$field_name' class='col-sm-2 control-label'>$field_name</label> \n";
         $divput = "<div class='col-sm-6'> \n <div class='input-group col-sm-8'> \n";
         $required = ($null == 'NO') ? 'required' : '';
-        $value = ($rs != false) ? "value='" . $rs->$field_name . "'" : '';
+        $value = ($this->_form_rs != false) ? ' value="<?php echo $rs->' . $field_name . ';?>"' : '';
 
         switch ($field_type) {
 
             // inputs type text
             case 'varchar';
                 $element = '<input type="text" id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . $value . '  />';
+                        . '' . $field_name . '" class="form-control"  maxlength="' . $length . '" ' . $required . $value . '  />';
                 break;
 
             // inputs type number
@@ -133,10 +160,9 @@ class KeranaForm
                         . '' . $field_name . '" class="form-control">' . $value . '</textarea>';
                 break;
         }
-        array_push($this->form_elements, $label . $divput . $element . "\n </div> \n </div>");
+        array_push($this->_form_tags, $label . $divput . $element . "\n </div> \n </div>");
     }
 
-    
     /**
      * -------------------------------------------------------------------------
      * Create a form 
@@ -144,25 +170,11 @@ class KeranaForm
      */
     public function createKeranaForm()
     {
-
-        $this->_extractModelFields();
-
-        // get the current controller and module
-        $controller = \helpers\Url::getController();
-        $module = \helpers\Url::getModule();
-
-        // template form file
-        $tpl_form = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_form_add.ker');
-
-        // path to save the new form
-        $path_form_file = realpath(__MODULEFOLDER__ . '/' . $module . '/view/'.$controller.'s/');
-
-        // load the form template
-        $tpl_form_content = file_get_contents($tpl_form);
+        $this->_initKeranaForm();
 
         // form elements
         $form_elements = '';
-        foreach ($this->form_elements AS $v):
+        foreach ($this->_form_tags AS $v):
             $form_elements .= "<div class='form-group form-group-sm'> \n"
                     . "" . $v . " \n"
                     . "</div> \n";
@@ -170,18 +182,50 @@ class KeranaForm
 
         // inject the code
         $code_to_inject = [
-            '[{title}]' => $module . '/'.$this->_form_title,
-            '[{url_save}]' => __URL__ . '/' . $module . '/' . $controller . '/'.$this->_form_action,
-            '[{url_goback}]' => __URL__ . '/' . $module . '/' . $controller . '/index',
+            '[{title}]' => $this->_form_module . '/' . $this->_form_title,
+            '[{url_save}]' => __URL__ . '/' . $this->_form_module . '/' . $this->_form_controller . '/' . $this->_form_action,
+            '[{url_goback}]' => __URL__ . '/' . $this->_form_module . '/' . $this->_form_controller . '/index',
             '[{form}]' => $form_elements
         ];
 
         // create the form view.
-        fopen($path_form_file . '/'.$this->_form_file.'.php', 'w');
+        fopen($this->_form_path_file . '/' . $this->_form_file . '.php', 'w');
 
         // inject the code 
-        $formadd_code_content = strtr($tpl_form_content, $code_to_inject);
-        file_put_contents($path_form_file . '/'.$this->_form_file.'.php', $formadd_code_content);
+        $formadd_code_content = strtr($this->_form_template_content, $code_to_inject);
+        file_put_contents($this->_form_path_file . '/' . $this->_form_file . '.php', $formadd_code_content);
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Setup kerana form
+     * -------------------------------------------------------------------------
+     */
+    private function _initKeranaForm()
+    {
+
+
+        $this->_form_module = (!isset($this->_form_module) AND empty($this->_form_module)) ?
+                \helpers\Url::getModule() : $this->_form_module;
+        $this->_form_controller = (!isset($this->_form_controller) AND empty($this->_form_controller)) ?
+                \helpers\Url::getController() : $this->_form_controller;
+        $this->_form_path_file = (!isset($this->_form_path_file) AND empty($this->_form_path_file)) ?
+                realpath(__MODULEFOLDER__ . '/' . $this->_form_module . '/view/' . $this->_form_controller . 's/') : $this->_form_path_file;
+
+        $this->_loadTemplateForm();
+        $this->_extractModelFields();
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Load the template form content
+     * -------------------------------------------------------------------------
+     */
+    private function _loadTemplateForm()
+    {
+        // template form file
+        $tpl_form = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_form_add.ker');
+        $this->_form_template_content = file_get_contents($tpl_form);
     }
 
 }
