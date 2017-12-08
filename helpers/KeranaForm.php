@@ -171,6 +171,16 @@ class KeranaForm
                 $element = '<textarea id="f_' . $field_name . '" name="f_'
                         . '' . $field_name . '" class="form-control">' . $value . '</textarea>';
                 break;
+            // checkbox
+            case 'tinyint';
+                // if is boolean (tinyint 1)
+                if ($length == 1) {
+                    $element = '<input type="radio" id="f_' . $field_name . '" name="f_'
+                            . '' . $field_name . '" class="radio_inline" value="1">Si';
+                    $element .= ' <input type="radio" id="f_' . $field_name . '" name="f_'
+                            . '' . $field_name . '" class="radio_inline" value="0">No';
+                    break;
+                }
         }
         array_push($this->_form_tags, $label . $divput . $element . "\n </div> \n </div>");
     }
