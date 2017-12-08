@@ -46,9 +46,9 @@ class ViewMaker
      * @param mixed $tpl , the view template
      * @param array $params , params
      */
-    public static function createView($module, $tpl, $params, $model = false)
+    public static function makeView($module, $tpl, $params, $model = false)
     {
-        $method_name = 'create' . ucwords(substr(strrchr($tpl, '/'), 1));
+        $method_name = 'make' . ucwords(substr(strrchr($tpl, '/'), 1));
         ($model != false) ? self::$_model_view = $model : '';
 
         return (method_exists(__CLASS__, $method_name)) ? self::$method_name($module, $params) :
@@ -62,7 +62,7 @@ class ViewMaker
      * @param type $module
      * @param type $rs
      */
-    public static function createAdd()
+    public static function makeAdd()
     {
         if (isset(self::$_model_view) AND ! empty(self::$_model_view)) {
             $kerana_form = New \helpers\KeranaForm(self::$_model_view);
@@ -78,7 +78,7 @@ class ViewMaker
      * Create a edit form 
      * ------------------------------------------------------------------------- 
      */
-    public static function createEdit()
+    public static function makeEdit()
     {
         if (isset(self::$_model_view) AND ! empty(self::$_model_view)) {
             $kerana_form = New \helpers\KeranaForm(self::$_model_view);
@@ -87,7 +87,6 @@ class ViewMaker
         } else {
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a edit/form without a model object');
         }
-        die();
     }
 
     /**
@@ -97,7 +96,7 @@ class ViewMaker
      * @param mixed $module
      * @param array $params
      */
-    public static function createIndex($module, $params)
+    public static function makeIndex($module, $params)
     {
 
         // load the index template
