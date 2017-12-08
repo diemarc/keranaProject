@@ -99,7 +99,7 @@ class KeranaForm
             // edit record form
             case 2;
                 $this->_form_title = 'Edit record';
-                $this->_form_action = 'update/'.\helpers\Url::getParameters()[0];
+                $this->_form_action = 'update/' . \helpers\Url::getParameters()[0];
                 $this->_form_file = 'edit';
                 $this->_form_rs = '$rs';
                 break;
@@ -144,7 +144,19 @@ class KeranaForm
 
             // inputs type text
             case 'varchar';
-                $element = '<input type="text" id="f_' . $field_name . '" name="f_'
+
+                // lets check if is email
+                $is_email = strpos($field_name, 'email');
+                $is_pass = strpos($field_name, 'password');
+
+                if ($is_email !== false) {
+                    $type = 'email';
+                } else if ($is_pass !== false) {
+                    $type = 'password';
+                } else {
+                    $type = 'text';
+                }
+                $element = '<input type="' . $type . '" id="f_' . $field_name . '" name="f_'
                         . '' . $field_name . '" class="form-control"  maxlength="' . $length . '" ' . $required . $value . '  />';
                 break;
 
