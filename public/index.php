@@ -21,24 +21,24 @@ namespace kerana;
 
 /**
  * -----------------------------------------------------------------------------
- * Determina si keranaPrject se esta ejecutando desde CLI
+ * is KeranaCli?
  * -----------------------------------------------------------------------------
  */
 if (PHP_SAPI == 'cli') {
     define('__ISCLI__',1);
-    // esta ejecutandose desde CLI
+    // cli is tru
     define('__DOCUMENTROOT__', substr(str_replace(pathinfo(__FILE__, PATHINFO_BASENAME), '', __FILE__), 0, -1));
 } else {
-    // sobre apache
+//     // is http petition
     define('__DOCUMENTROOT__', filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '');
 }
 
 
-/** @cons, url actual */
+/** @cons, url project */
 
 define('__URL__', 'http://'.filter_input(INPUT_SERVER, 'HTTP_HOST') . '');
 
-/** @cons , nombre de la aplicacion */
+/** @cons , application name */
 define('__APPNAME__','keranaProject');
 /*
  * ---------------------------------------------------------------
@@ -71,30 +71,30 @@ define('__MODULEFOLDER__', __APPFOLDER__ . 'modules');
 
 /*
  *---------------------------------------------------------------
- * ENTORNO DE LA APLICACION
+ * APP environment
  *---------------------------------------------------------------
 /**
- * Reporte de errores
- * por defecto esta en modo desarrollo
+ * Set the general app environment.
+ * if "development" is defined , all errors will show
  * posibles valores (desarrollo,produccion,testing)
  */
-define('_ENTORNO_', 'desarrollo');
+define('__ENVIRONMENT__', 'development');
 
-if (defined('_ENTORNO_')) {
-    switch (_ENTORNO_) {
-        case 'desarrollo':
+if (defined('__ENVIRONMENT__')) {
+    switch (__ENVIRONMENT__) {
+        case 'development':
             ini_set('display_errors', 1);
             error_reporting(-1);
             error_reporting(E_ALL);
             break;
 
         case 'testing':
-        case 'produccion':
+        case 'production':
             error_reporting(0);
             break;
 
         default:
-            exit('La aplicacion no tiene definido un entorno valido');
+            exit('Kerana dosnt have a valid environment, bye');
     }
 }
 
