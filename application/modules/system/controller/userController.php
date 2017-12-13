@@ -29,16 +29,15 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
   |
  */
 
-class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
+class UserController extends \kerana\Kerana implements \kerana\KeranaInterface
+{
 
-    
     protected $_user;
 
-     public function __construct()
+    public function __construct()
     {
         parent::__construct();
-         $this->_user= New \application\modules\system\model\UserModel();
-        
+        $this->_user = New \application\modules\system\model\UserModel();
     }
 
     /**
@@ -46,84 +45,82 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface {
      * Show all 
      * -------------------------------------------------------------------------
      */
-    public function index(){
-        
-      
-        \kerana\View::showView($this->_current_module, 'users/index', 
-                ['rsUsuarios' => $this->_user->getAll()]);
+    public function index()
+    {
+        \kerana\View::$model = $this->_user;
+        \kerana\View::showView($this->_current_module, 'users/index', ['rsUsers' => $this->_user->getAll()]);
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Add new
      * -------------------------------------------------------------------------
      */
-    
-    public function add(){
-        
+    public function add()
+    {
+
         $params = [];
-        \kerana\View::showForm($this->_current_module,'users/add',$params,$this->_user);
+        \kerana\View::showForm($this->_current_module, 'users/add', $params, $this->_user);
     }
-    
-     /**
+
+    /**
      * -------------------------------------------------------------------------
      * Save new record
      * -------------------------------------------------------------------------
      */
-    
-    public function save(){
-        
+    public function save()
+    {
+
         ($this->_user->saveUser()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Show one record detail
      * -------------------------------------------------------------------------
      * @param int $id
      */
-    
-    public function detail($id){
-        
+    public function detail($id)
+    {
+
         $this->_user->_setIdTableValue($id);
         $params['rsUsuario'] = $this->_user->getRecord();
-        \kerana\View::showView($this->_current_module,'user/detail',$params);
-        
+        \kerana\View::showView($this->_current_module, 'users/detail', $params);
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Edit one record
      * -------------------------------------------------------------------------
      * @param int $id
      */
-    
-    public function edit($id){
+    public function edit($id)
+    {
         $this->_user->_setIdTableValue($id);
-        $params['rsUsuario'] = $this->_user->getRecord();
-        \kerana\View::showForm($this->_current_module,'user/edit',$params,$this->_user);
+        $params['rs'] = $this->_user->getRecord();
+        \kerana\View::showForm($this->_current_module, 'users/edit', $params, $this->_user);
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Update one record
      * -------------------------------------------------------------------------
      * @param int $id
      */
-    
-    public function update($id){
+    public function update($id)
+    {
         $this->_user->_setIdTableValue($id);
         ($this->_user->save()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Delete one record
      * -------------------------------------------------------------------------
      * @param int $id
      */
-    
-    public function delete($id){
+    public function delete($id)
+    {
         $this->_user->_setIdTableValue($id);
         ($this->_user->delete()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
