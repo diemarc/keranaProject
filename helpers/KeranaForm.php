@@ -179,8 +179,9 @@ class KeranaForm
 
             // textareas
             case 'text';
+                $value_text = ($this->_form_rs != false) ? '<?php echo $rs->' . $field_name . ';?>' : '';
                 $element = '<textarea id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control">' . $value . '</textarea>';
+                        . '' . $field_name . '" class="form-control">' . $value_text . '</textarea>';
                 break;
             // checkbox
             case 'tinyint';
