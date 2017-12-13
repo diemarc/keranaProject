@@ -5,6 +5,7 @@
             <li>
                 <a href="#"><i class="fa fa-dashboard fa-fw"></i> Home</a>
             </li>
+            <?php if(__ENVIRONMENT__ == 'development') { ?>
             <li>
                 <a href="#"><i class="fa fa-wrench fa-fw"></i>System<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
@@ -21,6 +22,7 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
+            <?php } ?>
             <li>
                 <a href="#"><i class="fa fa-user-md fa-fw"></i>Usuarios<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
