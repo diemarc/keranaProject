@@ -23,7 +23,7 @@
                         </h2>
                     </div>
                     <div class="panel-body">
-                        <?php if (_ENTORNO_ == 'desarrollo') { ?>
+                        <?php if (__ENVIRONMENT__ == 'development') { ?>
 
                             <h4>File</h4>
                             <p>
@@ -55,7 +55,7 @@
                     </div>
                     <div class="panel-footer">
                         <span align='center'>
-                            <button class="btn btn-default"  onclick='history.back()'>Volver</button>
+                            <button class="btn btn-default"  onclick='history.back()'>go back</button>
                         </span>
                     </div>
                 </div>
