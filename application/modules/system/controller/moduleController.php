@@ -12,7 +12,7 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
   | Handler the modules creations
  */
 
-class ModuleController extends \kerana\Kerana implements \kerana\KeranaInterface
+class ModuleController extends systemController implements \kerana\KeranaInterface
 {
 
     protected
