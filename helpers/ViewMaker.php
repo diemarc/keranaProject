@@ -34,27 +34,40 @@ class ViewMaker
 {
 
     public static
-            $_model_view,
-            $controller;
+            $model_view,
+            $controller,
+            
+            /** @var mixed $path_view_file, where you want to save the new view-file */
+            $path_view_file;
 
     /**
      * -------------------------------------------------------------------------
      * Check if exists method to create a view, if not throw kerana exception,
      * otherwise call the method
      * -------------------------------------------------------------------------
-     * @param mixed $module , module path view
      * @param mixed $tpl , the view template
      * @param array $params , params
      */
-    public static function makeView($module, $tpl, $params, $model = false)
+    public static function makeView($tpl, $params, $model = false)
     {
+        self::setPathView();
         $method_name = 'make' . ucwords(substr(strrchr($tpl, '/'), 1));
-        ($model != false) ? self::$_model_view = $model : '';
+        ($model != false) ? self::$model_view = $model : '';
 
-        return (method_exists(__CLASS__, $method_name)) ? self::$method_name($module, $params) :
-                \kerana\Exceptions::showError('ViewMaker', 'View template not found ' . $method_name);
+        return (method_exists(__CLASS__, $method_name)) ? self::$method_name($params) :
+                \kerana\Exceptions::showError('ViewMaker', 'ViewMaker cant create this view , method-> ' . $method_name);
     }
 
+    /**
+     * -------------------------------------------------------------------------
+     * Set the path will be stored the new view file
+     * -------------------------------------------------------------------------
+     */
+    public static function setPathView(){
+        self::$path_view_file = realpath(__MODULEFOLDER__ . '/' . \helpers\Url::getModule() . '/view/'.\helpers\Url::getController().'s');
+    }
+    
+    
     /**
      * -------------------------------------------------------------------------
      * Create a form for add a new record
@@ -64,26 +77,24 @@ class ViewMaker
      */
     public static function makeAdd()
     {
-        if (isset(self::$_model_view) AND ! empty(self::$_model_view)) {
-            $kerana_form = New \helpers\KeranaForm(self::$_model_view);
-            $kerana_form->setFormType(1);
-            $kerana_form->createKeranaForm();
+        if (isset(self::$model_view) AND ! empty(self::$model_view)) {
+            $kerana_form = New \helpers\KeranaForm(self::$model_view,1,self::$path_view_file);
+            $kerana_form = null;
         } else {
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a form without a model object');
         }
     }
 
     /**
-     *--------------------------------------------------------------------------
+     * --------------------------------------------------------------------------
      * Create a edit form 
      * ------------------------------------------------------------------------- 
      */
     public static function makeEdit()
     {
-        if (isset(self::$_model_view) AND ! empty(self::$_model_view)) {
-            $kerana_form = New \helpers\KeranaForm(self::$_model_view);
-            $kerana_form->setFormType(2);
-            $kerana_form->createKeranaForm();
+        if (isset(self::$model_view) AND ! empty(self::$model_view)) {
+            $kerana_form = New \helpers\KeranaForm(self::$model_view,2,self::$path_view_file);
+            $kerana_form = null;
         } else {
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a edit/form without a model object');
         }
@@ -93,60 +104,68 @@ class ViewMaker
      * -------------------------------------------------------------------------
      * Create a index page
      * -------------------------------------------------------------------------
-     * @param mixed $module
      * @param array $params
      */
-    public static function makeIndex($module, $params)
+    public static function makeIndex($params)
     {
+        if (isset(self::$model_view) AND ! empty(self::$model_view)) {
 
-        // load the index template
-        $path_tpl_index = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_index.ker');
-        $path_index_file = realpath(__MODULEFOLDER__ . '/' . $module . '/view/');
+             // current controller
+            $controller = \helpers\Url::getController();
+            $module = \helpers\Url::getModule();
+            
+            // load the index template
+            $path_tpl_index = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_index.ker');
 
-        // load index tpl
-        $index_tpl_content = file_get_contents($path_tpl_index);
+            // load index tpl
+            $index_tpl_content = file_get_contents($path_tpl_index);
 
-        // current controller
-        $controller = \helpers\Url::getController();
+            // resultset array 
+            $rs = $params['rs' . ucwords($controller) . 's'];
+            $array = json_decode(json_encode($rs), TRUE);
+            $keys = array_keys($array[0]);
 
-        // resultset array 
-        $rs = $params['rs' . ucwords($controller) . 's'];
-        $array = json_decode(json_encode($rs), TRUE);
-        $keys = array_keys($array[0]);
+            // parse the table for rs
+            $table_title = '';
+            foreach ($keys AS $key):
+                $table_title .= "<th>" . $key . "</th> \n";
+            endforeach;
+            $table_title .= "<th>Options</th> \n";
 
-        // parse the table for rs
-        $table_title = '';
-        foreach ($keys AS $key):
-            $table_title .= "<th>" . $key . "</th> \n";
-        endforeach;
-        $table_title .= "<th>Options</th> \n";
+            // parse the table content
+            $table_content = '<?php foreach($rs' . ucwords($controller) . 's AS $' . $controller . '):?>' . "\n";
+            $table_content .= "<tr> \n";
+            foreach ($keys AS $k_table) {
+                $table_content .= "<td><?php echo $$controller->$k_table; ?></td> \n";
+            }
+            $url_edit = '/' . $module . '/' . $controller . '/edit/<?php echo $' . $controller . '->'.self::$model_view->table_id.'; ?>';
+            $url_delete = '/' . $module . '/' . $controller . '/delete/<?php echo $' . $controller . '->'.self::$model_view->table_id.'; ?>';
+            $table_content .= "<td> \n "
+                    . "<a href='$url_edit' \n class='btn btn-default btn-xs' title='Edit'>\n<i class='fa fa-edit'></i>\n</a> \n"
+                    . "<a href='$url_delete' \n class='btn btn-danger btn-xs' title='Delete'>\n<i class='fa fa-trash'></i></a> \n "
+                    . "</td> \n";
+            $table_content .= "</tr> \n";
+            $table_content .= "<?php endforeach;?>";
 
-        // parse the table content
-        $table_content = '<?php foreach($rs' . ucwords($controller) . 's AS $' . $controller . '):?>' . "\n";
-        $table_content .= "<tr> \n";
-        foreach ($keys AS $k_table) {
-            $table_content .= "<td><?php echo $$controller->$k_table; ?></td> \n";
+            // inject the code
+            $code_to_inject = [
+                '[{title}]' => $module . '/index',
+                '[{url_add}]' => __URL__ . '/' . $module . '/' . $controller . '/add',
+                '[{lists}]' => ucwords($controller) . 's',
+                '[{controller}]' => $controller,
+                '[{table_titles}]' => $table_title,
+                '[{table_content}]' => $table_content
+            ];
+
+            // create the index view.
+            fopen(self::$path_view_file . '/index.php', 'w');
+
+            // inject the code 
+            $index_code_content = strtr($index_tpl_content, $code_to_inject);
+            file_put_contents(self::$path_view_file . '/index.php', $index_code_content);
+        } else {
+            \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a index without a model object');
         }
-        $table_content .= "<td> </td> \n";
-        $table_content .= "</tr> \n";
-        $table_content .= "<?php endforeach;?>";
-
-        // inject the code
-        $code_to_inject = [
-            '[{title}]' => $module . '/index',
-            '[{url_add}]' => __URL__ . '/' . $module . '/' . $controller . '/add',
-            '[{lists}]' => ucwords($controller) . 's',
-            '[{controller}]' => $controller,
-            '[{table_titles}]' => $table_title,
-            '[{table_content}]' => $table_content
-        ];
-
-        // create the index view.
-        fopen($path_index_file . '/index.php', 'w');
-
-        // inject the code 
-        $index_code_content = strtr($index_tpl_content, $code_to_inject);
-        file_put_contents($path_index_file . '/index.php', $index_code_content);
     }
 
 }
