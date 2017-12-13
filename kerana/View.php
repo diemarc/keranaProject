@@ -33,7 +33,7 @@ class View
 {
 
     public static
-            $_model;
+            $model;
 
     /**
      * -------------------------------------------------------------------------
@@ -52,7 +52,7 @@ class View
         $full_path_template = __MODULEFOLDER__ . '/' . $template_path;
 
         // verificamos si existe la ruta
-        (!file_exists($full_path_template)) ? \helpers\ViewMaker::createView($module, $template, $params, self::$_model) : '';
+        (!file_exists($full_path_template)) ? \helpers\ViewMaker::makeView($template, $params, self::$model) : '';
 
         // procesamos los parametros que usara la vista
         if (is_array($params)) {
@@ -96,7 +96,7 @@ class View
 
         //$token_string = \kerana\Security::csrfGetTokenId();
         $token_value = \kerana\Security::csrfGetTokenValue();
-        ($model != false) ? self::$_model = $model : '';
+        ($model != false) ? self::$model = $model : '';
 
         $params['kerana_token'] = '<input type="hidden" name="_kerana_token_" value="' . $token_value . '">';
 
