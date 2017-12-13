@@ -57,9 +57,20 @@ class KeranaForm
             /** @array, contains the html form tags  */
             $_form_tags = [];
 
-    public function __construct(\kerana\Ada $objectTable)
+    
+    
+    /**
+     * 
+     * @param \kerana\Ada $objectTable
+     * @param type $type
+     * @param type $path
+     */
+    public function __construct(\kerana\Ada $objectTable,$type,$path)
     {
         $this->_object_table = $objectTable;
+        $this->setFormType($type);
+        $this->_form_path_file = $path;
+        $this->createKeranaForm();
     }
 
     /*
@@ -99,7 +110,7 @@ class KeranaForm
             // edit record form
             case 2;
                 $this->_form_title = 'Edit record';
-                $this->_form_action = 'update/' . \helpers\Url::getParameters()[0];
+                $this->_form_action = 'update/<?php echo $rs->' . $this->_object_table->table_id.'; ?>';
                 $this->_form_file = 'edit';
                 $this->_form_rs = '$rs';
                 break;
@@ -231,8 +242,6 @@ class KeranaForm
                 \helpers\Url::getModule() : $this->_form_module;
         $this->_form_controller = (!isset($this->_form_controller) AND empty($this->_form_controller)) ?
                 \helpers\Url::getController() : $this->_form_controller;
-        $this->_form_path_file = (!isset($this->_form_path_file) AND empty($this->_form_path_file)) ?
-                realpath(__MODULEFOLDER__ . '/' . $this->_form_module . '/view/' . $this->_form_controller . 's/') : $this->_form_path_file;
 
         $this->_loadTemplateForm();
         $this->_extractModelFields();
@@ -246,7 +255,7 @@ class KeranaForm
     private function _loadTemplateForm()
     {
         // template form file
-        $tpl_form = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_form_add.ker');
+        $tpl_form = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_form.ker');
         $this->_form_template_content = file_get_contents($tpl_form);
     }
 
