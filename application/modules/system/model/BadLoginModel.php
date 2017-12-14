@@ -76,7 +76,7 @@ class BadLoginModel extends \Kerana\Ada
      */
     public function registerBadLogin($string, $id_usuario = 0)
     {
-
+        
         $this->_query = ' INSERT INTO ' . $this->table_name
                 . '(id_usuario,remote_address,time,string_attempt)'
                 . ' VALUES '
@@ -90,7 +90,7 @@ class BadLoginModel extends \Kerana\Ada
             ':string_attemp' => filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS)
         ];
 
-        return $this->_runQuery();
+        return $this->runQuery();
     }
 
 }
