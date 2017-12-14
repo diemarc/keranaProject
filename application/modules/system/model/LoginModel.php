@@ -147,13 +147,16 @@ class LoginModel extends \application\modules\system\model\UserModel
 
                 //comprobamos que exista el usuario de la session
                 $this->_setIdTableValue($user_id);
-                $this->user = $this->getRecord();
+                if ($this->user = $this->getRecord(false)) {
 
-                // creamos un hash con los datos obtenidos de la sesion que se
-                // desea restaurar  + el user_agent + sal user
-                $login_check = hash('sha512', $user_agent . $this->user->salt);
+                    // creamos un hash con los datos obtenidos de la sesion que se
+                    // desea restaurar  + el user_agent + sal user
+                    $login_check = hash('sha512', $user_agent . $this->user->salt);
 
-                return ($login_check == $login_string) ? true : false;
+                    return ($login_check == $login_string) ? true : false;
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
