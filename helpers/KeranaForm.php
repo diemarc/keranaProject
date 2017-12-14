@@ -146,7 +146,7 @@ class KeranaForm
     private function _parseField($field_name, $field_type, $length = '', $null = 'NO')
     {
 
-        $label = "<label for='f_$field_name' class='col-sm-2 control-label'>$field_name</label> \n";
+        $label = "<label for='f_$field_name' class='col-sm-2 control-label'>".ucwords($field_name)."</label> \n";
         $divput = "<div class='col-sm-6'> \n <div class='input-group col-sm-8'> \n";
         $required = ($null == 'NO') ? 'required' : '';
         $value = ($this->_form_rs != false) ? ' value="<?php echo $rs->' . $field_name . ';?>"' : '';
