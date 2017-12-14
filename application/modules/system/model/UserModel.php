@@ -104,7 +104,7 @@ class UserModel extends \kerana\Ada
                             'nombres' => $this->name,
                             'apellidos' => $this->lastname,
                             'sw_activo' => 1
-                        ]
+                        ],true
         );
     }
 
