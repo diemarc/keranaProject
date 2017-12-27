@@ -1,19 +1,24 @@
 <div id="page-wrapper">
-    <h2>Application Models</h2>
+     <h4 class='text-primary'> 
+        <i class="fa fa-database fa-2x"></i>
+        <span class='text-muted'>apps</span>Models
+    </h4>
     <header class="breadcrumb">
         <a href="<?php echo __URL__;?>/system/model/add" 
-           class="btn btn-success">Add New</a>
+           class="btn btn-success">
+        <i class='fa fa-plus'></i> add
+        </a>
     </header>
     <section id='section_modelos' class='table-responsive'>
         <table class='table table-condensed table-bordered table-hover'>
-            <thead class='bg-primary'>
+            <thead class='bg-info'>
                 <tr>
                     <th>ID</th>
                     <th>Model</th>
                     <th>Table</th>
                     <th>Module</th>
                     <th>Description</th>
-                    <th></th>
+                    <th class="bg-primary">Tools</th>
                 </tr>
             </thead>
             <tbody>
