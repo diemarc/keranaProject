@@ -6,7 +6,7 @@
     <header class="breadcrumb">
         <a href="<?php echo __URL__;?>/system/module/add" 
            class="btn btn-success btn-sm">
-            <i class='fa fa-plus'></i>
+            <i class='fa fa-plus'></i> add
         </a>
     </header>
     <section id='section_modulos' class='table-responsive'>
