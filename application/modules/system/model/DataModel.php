@@ -195,6 +195,7 @@ class DataModel extends \kerana\Ada
        // put the replacement into a model class
        file_put_contents($path_tpl_1, $file_new_contents);
         
+       return true;
         
     }
     
