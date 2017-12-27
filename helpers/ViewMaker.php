@@ -51,7 +51,9 @@ class ViewMaker
     public static function makeView($tpl, $params, $model = false)
     {
         self::setPathView();
-        $method_name = 'make' . ucwords(substr(strrchr($tpl, '/'), 1));
+        $method_trigger = substr(strrchr($tpl, '/'), 1);
+        $method_name = 'make' . ucwords(($method_trigger == false)) ? $tpl : $method_trigger;
+        
         ($model != false) ? self::$model_view = $model : '';
 
         return (method_exists(__CLASS__, $method_name)) ? self::$method_name($params) :
