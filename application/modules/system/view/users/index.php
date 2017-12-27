@@ -18,7 +18,7 @@
                     <th>Email</th> 
                     <th>Name</th> 
                     <th>Is active?</th> 
-                    <th class='bg-primary'>Options</th> 
+                    <th class='bg-primary'>Tools</th> 
 
                 </tr>
             </thead>
