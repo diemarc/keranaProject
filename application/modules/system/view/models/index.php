@@ -29,7 +29,7 @@
                         <td><?php echo $modelo->table_reference;?></td>
                         <td><?php echo strtoupper($modelo->module);?></td>
                         <td><?php echo $modelo->model_description;?></td>
-                        <td>
+                        <td class="well">
                             <a href='<?php echo __URL__;?>/system/model/detail/<?php echo $modelo->id_model; ?>' 
                                class='btn btn-default btn-xs'>
                                 <i class='fa fa-eye'></i>
