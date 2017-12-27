@@ -1,7 +1,13 @@
 <div id="page-wrapper">
-    <h2>Application Modules</h2>
+    <h4 class='text-primary'> 
+        <i class="fa fa-list-alt fa-2x"></i>
+        <span class='text-muted'>apps</span>Modules
+    </h4>
     <header class="breadcrumb">
-        <a href="<?php echo __URL__;?>/system/module/add" class="btn btn-success">Add new</a>
+        <a href="<?php echo __URL__;?>/system/module/add" 
+           class="btn btn-success btn-sm">
+            <i class='fa fa-plus'></i>
+        </a>
     </header>
     <section id='section_modulos' class='table-responsive'>
         <table class='table table-condensed table-bordered table-hover'>
