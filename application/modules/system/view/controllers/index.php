@@ -29,7 +29,7 @@
                         <td><?php echo strtoupper($controller->controller_module);?></td>
                         <td><?php echo $controller->controller;?></td>
                         <td><?php echo $controller->controller_description;?></td>
-                        <td>
+                        <td class="well">
                             <a href='<?php echo __URL__;?>/system/controller/detail/<?php echo $controller->id_controller; ?>' 
                                class='btn btn-default btn-xs'>
                                 <i class='fa fa-eye'></i>
