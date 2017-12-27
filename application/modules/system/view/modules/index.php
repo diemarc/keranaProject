@@ -11,13 +11,13 @@
     </header>
     <section id='section_modulos' class='table-responsive'>
         <table class='table table-condensed table-bordered table-hover'>
-            <thead class='bg-primary'>
+            <thead class='bg-info'>
                 <tr>
                     <th>ID</th>
                     <th>Module</th>
                     <th>Active</th>
                     <th>Restricted</th>
-                    <th></th>
+                    <th class="bg-primary">Tools</th>
                 </tr>
             </thead>
             <tbody>
