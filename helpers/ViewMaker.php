@@ -52,8 +52,9 @@ class ViewMaker
     {
         self::setPathView();
         $method_trigger = substr(strrchr($tpl, '/'), 1);
-        $method_name = 'make' . ucwords(($method_trigger == false)) ? $tpl : $method_trigger;
         
+        $method_name = 'make' . ucwords(($method_trigger == false) ? $tpl : $method_trigger);
+
         ($model != false) ? self::$model_view = $model : '';
 
         return (method_exists(__CLASS__, $method_name)) ? self::$method_name($params) :
@@ -66,7 +67,16 @@ class ViewMaker
      * -------------------------------------------------------------------------
      */
     public static function setPathView(){
-        self::$path_view_file = realpath(__MODULEFOLDER__ . '/' . \helpers\Url::getModule() . '/view/'.\helpers\Url::getController().'s');
+        
+        $base_path_view = __MODULEFOLDER__ . '/' . \helpers\Url::getModule() . '/view/';
+        
+        if(is_dir($base_path_view.\helpers\Url::getController().'s')){
+            self::$path_view_file = realpath($base_path_view.\helpers\Url::getController().'s');
+        }
+        else{
+            self::$path_view_file = realpath($base_path_view);
+        }
+        
     }
     
     
@@ -117,8 +127,9 @@ class ViewMaker
             $module = \helpers\Url::getModule();
             
             // load the index template
-            $path_tpl_index = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_index.ker');
+           $path_tpl_index = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_index.ker');
 
+            
             // load index tpl
             $index_tpl_content = file_get_contents($path_tpl_index);
 
