@@ -32,6 +32,9 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
      */
     public function index(){
         
+        // only necesary for a view creator, remove it  after index files is
+        // created
+        \kerana\View::$model = [{model_name}];
         \kerana\View::showView($this->_current_module, 'index', 
                 ['rs[{model_rs}]s' => [{model_name}]->getAll()]);
     }
