@@ -73,7 +73,7 @@ class Request
     public static function int($field,$require = true)
     {
         self::init();
-        return Validator::email(self::$request[$field],$require);
+        return Validator::int(self::$request[$field],$require);
     }
     /**
      * -------------------------------------------------------------------------
