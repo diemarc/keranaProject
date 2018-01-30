@@ -20,6 +20,8 @@
 
 namespace helpers;
 
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
+
 /**
  * -----------------------------------------------------------------------------
  * Class Url
@@ -36,7 +38,6 @@ class Url
             $current_controller,
             /** @var mixed, current actin */
             $current_action,
-            
             /** @var array, get parameters url */
             $url_parameters;
 
@@ -57,12 +58,11 @@ class Url
             self::$current_module = isset($url[$config->get('position_module')]) ? $url[$config->get('position_module')] : false;
             self::$current_controller = isset($url[$config->get('position_controller')]) ? $url[$config->get('position_controller')] : false;
             self::$current_action = isset($url[$config->get('position_action')]) ? $url[$config->get('position_action')] : false;
-            
+
             // remove from array the other parameters to store in diferent array
-            unset($url[$config->get('position_module')],$url[$config->get('position_controller')],$url[$config->get('position_action')]);
-            
+            unset($url[$config->get('position_module')], $url[$config->get('position_controller')], $url[$config->get('position_action')]);
+
             self::$url_parameters = array_values($url);
-            
         }
     }
 
@@ -82,7 +82,7 @@ class Url
      * -------------------------------------------------------------------------
      * Get current controller 
      * -------------------------------------------------------------------------
-     * @return type
+     * @return string
      */
     public static function getController()
     {
@@ -94,7 +94,7 @@ class Url
      * -------------------------------------------------------------------------
      * Get current action
      * -------------------------------------------------------------------------
-     * @return type
+     * @return string
      */
     public static function getAction()
     {
@@ -102,10 +102,16 @@ class Url
         return self::$current_action;
     }
 
-    
-    public static function getParameters(){
+    /**
+     * -------------------------------------------------------------------------
+     * Get all parameters passes by url-string
+     * -------------------------------------------------------------------------
+     * @return array
+     */
+    public static function getParameters()
+    {
         self::setUrl();
         return self::$url_parameters;
     }
-    
+
 }
