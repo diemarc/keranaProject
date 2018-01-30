@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace kerana; // siempre en minusculas
+namespace kerana;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a estde archivo') : '';
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 /*
   |--------------------------------------------------------------------------
   | SYSTEM
@@ -33,24 +33,24 @@ class System
 {
 
     private
-            /** @var mixed, full namespace para crear objetos y autoload */
+            /** @var mixed, full namespace  */
             $_namespace,
-            /** @var mixed, nombre del modulo a cargar */
+            /** @var mixed, module to load */
             $_module,
-            /** @var mixed, controlador a utilizar */
+            /** @var mixed, controller to use */
             $_controller,
-            /** @var mixed, instancia del controller a utilizar */
+            /** @var mixed, object controller */
             $_object_controller,
-            /** @var mixed, metodo a ejecutar del controlador */
+            /** @var mixed, method to call */
             $_action,
-            /** @var array, almacena los parametros pasados por URL GET */
+            /** @var array, url parameters passed via GET */
             $_parameters;
     public
             $config;
 
     /**
      * -------------------------------------------------------------------------
-     * Inicializa la aplicacion
+     * Start the applicaction
      * -------------------------------------------------------------------------
      * @return boolean
      */
@@ -59,28 +59,28 @@ class System
 
         require_once(__APPFOLDER__ . '/../config/conf.php');
 
-        //cargamos la configuracion del sistema.
+        //load kerana confguration file.
         $this->config = \kerana\Configuration::singleton();
 
-        // se obtiene las partes de la url y se almacena parametros
+        // segment url, and store parameters
         $this->_segmentUrlAndStoreParameters();
-
-        // seteamos el namespace
         $this->_setAndCheckNamespace();
 
-        // se comprueba si el modulo necesita autentificacion, 
-        // solo si no es de cli
+        // if kerana is not running in CLI mode, check access
         (!defined('__ISCLI__')) ? $this->_checkAccessPetition() :'';
 
-        // creamos un ojbjeto del controlador
+        // object controller is created now
         $this->_object_controller = new $this->_namespace;
 
-        // si hay parametros almacenados pasamos el namespace y el metodo 
-        // con los parametros
+        // if exists some parameters will stored in a array 
         // ej: indexController->index($i,$y)
         if (!empty($this->_parameters)) {
+            
+            // call the method and pass the parameters
             call_user_func_array([$this->_object_controller, $this->_action], $this->_parameters);
         } else {
+            
+            // if not parameters , the call the method
             $this->_object_controller->{$this->_action}();
         }
     }
@@ -108,10 +108,7 @@ class System
 
     /**
      * -------------------------------------------------------------------------
-     * Comprueba si esta seteado las partes de mod,controller,action, sino es asi
-     * asigna los valores por defecto seteados en config/conf.php
-     *
-     * Setea el full namespace y comprueba que exista y pueda ser llamado.
+     * Check the namespace, create the url to run
      * -------------------------------------------------------------------------
      * @return boolean
      */
@@ -139,13 +136,11 @@ class System
 
     /**
      * -------------------------------------------------------------------------
-     * Comprueba si el modulo necesita autentificacion
+     * Check Access Petition
      * -------------------------------------------------------------------------
      */
     private function _checkAccessPetition()
     {
-        
-        //comprobamos si el modulo necesita una autentificacion
         if (!in_array($this->_module, $this->config->get('_public_modules_'))) {
             \kerana\Auth::checkAuthentication();
         }
