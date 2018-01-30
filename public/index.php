@@ -26,7 +26,7 @@ namespace kerana;
  */
 if (PHP_SAPI == 'cli') {
     define('__ISCLI__',1);
-    // cli is tru
+    // cli is true
     define('__DOCUMENTROOT__', substr(str_replace(pathinfo(__FILE__, PATHINFO_BASENAME), '', __FILE__), 0, -1));
 } else {
 //     // is http petition
@@ -42,29 +42,24 @@ define('__URL__', 'http://'.filter_input(INPUT_SERVER, 'HTTP_HOST') . '');
 define('__APPNAME__','keranaProject');
 /*
  * ---------------------------------------------------------------
- * CORE DEL SISTEMA
+ * CORE SYSTEM DIRECTORY
  * ---------------------------------------------------------------
-
-  /**
- * carpeta donde se encuentran los archivos del core
- * siempre poner slash inicial y final
- */
+*/
 define('__COREFOLDER__', __DOCUMENTROOT__ . '/../kerana/');
 
 
 /*
  * ---------------------------------------------------------------
- * CARPETA DE APPLICATION
+ * APPLICATION FOLDER
  * ---------------------------------------------------------------
  *    
- * carpeta donde se encuentra Application,
- * la carpeta donde se aloja la aplicacion
- * siempre poner slash inicial y final
  */
 define('__APPFOLDER__', __DOCUMENTROOT__ . '/../application/');
-/*
- * carpeta donde se encuentra los modulos de la aplicacion
- * HMVC
+
+/**
+ * -----------------------------------------------------------------------------
+ * MODULE FOLDER
+ * -----------------------------------------------------------------------------
  */
 define('__MODULEFOLDER__', __APPFOLDER__ . 'modules');
 
@@ -76,7 +71,7 @@ define('__MODULEFOLDER__', __APPFOLDER__ . 'modules');
 /**
  * Set the general app environment.
  * if "development" is defined , all errors will show
- * posibles valores (desarrollo,produccion,testing)
+ * values permited (desarrollo,produccion,testing)
  */
 define('__ENVIRONMENT__', 'development');
 
@@ -100,7 +95,7 @@ if (defined('__ENVIRONMENT__')) {
 
 /**
  * ------------------------------------------------------------------------------
- * Iniciamos el sistema
+ * Create a NEW System Objetct, AND run the application
  * ------------------------------------------------------------------------------
  */
 require __DOCUMENTROOT__.'/../vendor/autoload.php';
