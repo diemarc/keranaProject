@@ -18,10 +18,11 @@
  */
 
 namespace kerana;
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /*
   |--------------------------------------------------------------------------
-  | Modelo donde se guarda las sesiones de kerana
+  | Model the store and handler the sessions
   |--------------------------------------------------------------------------
   |
  */
