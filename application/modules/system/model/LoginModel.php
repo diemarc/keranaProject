@@ -33,7 +33,7 @@ class LoginModel extends \application\modules\system\model\UserModel
 {
 
     public
-    /** @object , user */
+        /** @object , user */
             $user,
             /** @object, bad login, handler for login errors */
             $bl;
@@ -48,8 +48,8 @@ class LoginModel extends \application\modules\system\model\UserModel
      * -------------------------------------------------------------------------
      * Start the login system,ç
      * -------------------------------------------------------------------------
-     * Setea los nombres de usuario y contraseña recibidas por el form
-     * y si existe usuario crea un objeto user
+     * Set the username and password
+     * Create a user_object if the user exists
      * -------------------------------------------------------------------------
      */
     private function _init()
@@ -60,117 +60,121 @@ class LoginModel extends \application\modules\system\model\UserModel
             $this->password = filter_input(INPUT_POST, 'f_password', FILTER_SANITIZE_SPECIAL_CHARS);
 
             if ((empty($this->username)) OR ( empty($this->password))) {
-                throw new \Exception('No se ha recibido Usuario y password');
+                throw new \Exception('Username & password is empty, fix it!!!!');
             }
             // veerificamos si existe un usuario activo con username y creamos
             // un objeto con el resultado.
             $this->user = $this->_checkAndGetUserActive();
         } catch (\Exception $ex) {
-            \kerana\Exceptions::showError('Error de login', $ex);
+            \kerana\Exceptions::showError('LoginError', $ex);
         }
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Procesa el login
+     * Proccess the login
      * -------------------------------------------------------------------------
      */
     public function doLogin()
     {
 
         $this->_init();
-
-        // si el usuario no existe
+        // if user object not exists
         if ($this->user == false) {
-
-            // registramos un bl(badLogin) con la ip ya que no tenemos el id_usuario
-            $this->bl->registerBadLogin('Usuario no existe ' . $this->username);
-            \kerana\Exceptions::showError('Error de login', 'Usuario/password incorrecto');
+            
+            // register a badLogin 
+            $this->bl->registerBadLogin('User not exists' . $this->username);
+            \kerana\Exceptions::showError('LoginError', 'Username & password is empty');
         } else {
 
-            // comprobacion de intentos de inicio de sesion en bl
+            // check login attempts in badLogins
             $this->bl->checkBadLogin($this->user->id_usuario);
 
-            // comprobamos si coincide la constraseña enviada por form y la
-            // guardada en tabla
+            // check the password sent from the form
             $password_received = password_hash($this->password, PASSWORD_BCRYPT, ['salt' => $this->user->salt]);
             if ($password_received === $this->user->password) {
 
-                // creamos la sesion
+                // if passwords matchs, create a session secure
                 $this->_createSessionSucces();
             } else {
-                $string = 'El password de ' . $this->username . ' es incorrecto ';
+                $string = 'Password for ' . $this->username . ' is wrong ';
                 $this->bl->registerBadLogin($string, $this->user->id_usuario);
-                \kerana\Exceptions::showError('Error de login', 'Usuario/password incorrecto');
+                \kerana\Exceptions::showError('LoginError', 'Username & password not match');
             }
         }
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Crea una sesion de login
+     * Create a secure session
      * -------------------------------------------------------------------------
      */
     private function _createSessionSucces()
     {
 
         try {
-            // obtenemos la ip y el agente del usuario
+            // get the ip, and the user_agent(browser)
             $user_browser = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_SPECIAL_CHARS);
             $user_name = preg_replace('/[^a-zA-Z0-9_\-]+/', '', $this->username);
             $user_id = preg_replace('/[^0-9]/', '', $this->user->id_usuario);
 
-            // iniciamos la sesion segura
+            // start a secure session
             $ka_session = New \kerana\SessionHandler();
             $ka_session->startSession();
 
 
-            // creamos la sesion
+            // create a session data
             $_SESSION['id_usuario'] = $user_id;
             $_SESSION['username'] = $user_name;
-            // creamos un string con hash para establecer el login
-            // estoy hay que comprobar en cada restore session, esto evita
-            // session_hijack
+            
+            // to prevent session-hijack, create a hash from concat(user_agent, user_password_salt)
+            // and store in session_data "login_string"
+            // this will check in a restore session method
             $_SESSION['login_string'] = hash('sha512', $user_browser . $this->user->salt);
 
-            //registramos el acceso
+            // register the access
             $access = new \application\modules\system\model\AccessLogin();
             $access->registerAccessUser($user_id);
 
-            // redirigimos
+            // redirect
             \helpers\Redirect::to('/system/module/index');
         } catch (Exception $ex) {
-            \kerana\Exceptions::showError('Error al crear una sesion de acceso', $ex);
+            \kerana\Exceptions::showError('SessionLoginError', $ex);
         }
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Comprueba si existe sesion d elogin
+     * Check if user is logged in
      * -------------------------------------------------------------------------
      */
     public function checkAccessUser()
     {
 
-
         try {
 
-            // primero comprobamos que las variables de sesion estan seteados
+            // first check if session user is setted
             if (isset($_SESSION['id_usuario'], $_SESSION['username'], $_SESSION['login_string'])) {
                 $user_id = $_SESSION['id_usuario'];
+                
+                // contains the concat(user_agent + user_password_salt)
                 $login_string = $_SESSION['login_string'];
 
-                // obtenemos los valores a comprobar (Agent)
+                // get the current user agent(browser)
                 $user_agent = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_SPECIAL_CHARS);
 
-                //comprobamos que exista el usuario de la session
+                // check if the id_user stored in the session_data, match with
+                // the user stored in table
                 $this->_setIdTableValue($user_id);
+                
+                // if user exists
                 if ($this->user = $this->getRecord(false)) {
 
-                    // creamos un hash con los datos obtenidos de la sesion que se
-                    // desea restaurar  + el user_agent + sal user
+                    // create a new concat(user_agent+ user_password_salt, with data obtaind from the 
+                    // database query)
                     $login_check = hash('sha512', $user_agent . $this->user->salt);
 
+                    // check if login_string stored in session_data match with $login_check
                     return ($login_check == $login_string) ? true : false;
                 } else {
                     return false;
@@ -179,18 +183,17 @@ class LoginModel extends \application\modules\system\model\UserModel
                 return false;
             }
         } catch (Exception $ex) {
-            \kerana\Exceptions::showError('Error al restore session', $ex);
+            \kerana\Exceptions::showError('RestoreSession', $ex);
         }
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Cierra una sesion
+     * Close session
      * -------------------------------------------------------------------------
      */
     public function closeSession()
     {
-        // iniciamos la sesion segura
         $ka_session = New \kerana\SessionHandler();
         $ka_session->startSession();
         $ka_session->cleanSession();
