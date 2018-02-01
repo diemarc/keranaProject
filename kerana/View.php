@@ -37,13 +37,13 @@ class View
 
     /**
      * -------------------------------------------------------------------------
-     * Show a view
+     * Show a view template
      * -------------------------------------------------------------------------
-     * @param string $module , el modulo donde se encuentra la vista a cargar
-     * @param string $template , el html
-     * @param array $params , parametros para pasar a la vista
-     * @param boolean $save , si queremos usar partials views
-     * @param boolean $load_header , para cargar los encabezados html
+     * @param string $module , module template
+     * @param string $template , html template
+     * @param array $params , parameters to pass to a view
+     * @param boolean $save , if you want to sotre the rendered view in a variable
+     * @param boolean $load_header , load html headers
      */
     public static function showView($module = '', $template = '', $params = '', $save = false, $load_header = true)
     {
@@ -51,34 +51,34 @@ class View
         $template_path = $module . '/view/' . $template . '.php';
         $full_path_template = __MODULEFOLDER__ . '/' . $template_path;
 
-        // verificamos si existe la ruta
+        // check if template path exists
+        // if not exists, pass the template to a viewMaker to try to create it
         (!file_exists($full_path_template)) ? \helpers\ViewMaker::makeView($template, $params, self::$model) : '';
 
-        // procesamos los parametros que usara la vista
+        // processs the parameters is available in the template view
         if (is_array($params)) {
-            // limpiamos las variables a mostrar
-
             foreach ($params as $key => $valor) {
                 $$key = $valor;
             }
         }
 
-        // si se quiere guardar la vista para usarlo como partial view
+        // if $save is true, create a buffer and store tne entire template rendered
+        // in a variable, & return this variable
         if ($save) {
-            ob_start(); # apertura de bufer
+            ob_start(); 
             include($full_path_template );
             $var_view = ob_get_contents();
-            ob_end_clean(); # cierre de bufer
+            ob_end_clean(); 
             return $var_view;
         }
 
-        // si queremos cargar el encabezado html
+        // if want to load the html header
         ($load_header) ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlHeader.php') : '';
 
-        // inlcuimos la plantilla
+        // include the template file
         include($full_path_template);
 
-        // si queremos cargar el encabezado html tambien cargamos el footer
+        // if want to load the footer
         ($load_header) ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlFooter.php') : '';
     }
 
