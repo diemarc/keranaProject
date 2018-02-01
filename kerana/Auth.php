@@ -19,39 +19,39 @@
 
 namespace kerana;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : "";
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /*
   |--------------------------------------------------------------------------
   | AUTH CLASS
   |--------------------------------------------------------------------------
   |
-  | Controla las autentificaciones del usuario
+  | Handler the user-login stuff
   |
  */
 
 class Auth
 {
 
+    /** @object , session handler */
     public $ka_session;
 
     /**
      * -------------------------------------------------------------------------
-     * Comprueba que el usuario este logado
+     * Check if user is logged
      * -------------------------------------------------------------------------
      */
     public static function checkAuthentication()
     {
-        // iniciliazamos las sesiones
+        // start a new session
         $ka_session = New \kerana\SessionHandler();
         $ka_session->startSession();
         
-        // cargamos el modelo de login
+        /** @object, login model */
         $login = New \application\modules\system\model\LoginModel();
 
-        // comprobamos si existe un login valido
+        // if login is false, redirect to the login page
         if ($login->checkAccessUser() == false) {
-            
             $ka_session->cleanSession();
             \helpers\Redirect::to('/welcome/login/introduceMySelf');
             exit();
