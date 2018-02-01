@@ -20,6 +20,8 @@
 namespace kerana;
 use Exception;
 
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
+
 class Exceptions extends Exception {
 
     /**
