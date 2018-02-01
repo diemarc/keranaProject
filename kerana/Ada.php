@@ -421,7 +421,7 @@ abstract class Ada
      */
     public function save($array = '', $csrf_protected = true)
     {
-        ($csrf_protected) ? \kerana\Security::csrfCheckToken() : '';
+        ($csrf_protected) ? \helpers\Security::csrfCheckToken() : '';
         return (!isset($this->_id_value)) ? $this->insert($array) : $this->update($array);
     }
 
