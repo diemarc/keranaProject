@@ -18,15 +18,15 @@
  */
 namespace application\modules\system\model;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : '';
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /**
  * -----------------------------------------------------------------------------
- * class badLoginModel, gestion de logins incorrectos
+ * class badLoginModel, badLogins hanlders
  * -----------------------------------------------------------------------------
- *
  * @author diemarc
  */
+
 class BadLoginModel extends \Kerana\Ada
 {
 
@@ -40,67 +40,68 @@ class BadLoginModel extends \Kerana\Ada
     
     /**
      * -------------------------------------------------------------------------
-     * Comprueba si un usuario fallo mas de 4 veces en un inicio de sesion
-     * si es asi lo bloquea
+     * If the user has 4 failed attempts, block the user account
      * -------------------------------------------------------------------------
-     * @param type $id_usuario
+     * @param int $id_user
      */
-    public function checkBadLogin($id_usuario){
+    public function checkBadLogin($id_user){
         
-        // obtenemos los badlogins de un usuario
-        $rsBadLoginsUser = $this->getBadLoginForUser($id_usuario);
+        // get the user badLogins
+        $rsBadLoginsUser = $this->getBadLoginForUser($id_user);
         $n_bl = count($rsBadLoginsUser);
         
-        // si tiene mas de 4 intentos bloqueamos al usuario
+        // had 4 or more failed attemps?
         if($n_bl > 4){
-            // bloqueamos al usuario
-            $objUser = new \application\modules\system\model\UserModel();
-            $objUser->blockUserAccount($id_usuario);
             
-            \kerana\Exceptions::showError('Error de inicio de sesion', 
-                    'Superaste el maximo de intentos de login(4)');
+            /** @object , userModel Object */
+            $objUser = new \application\modules\system\model\UserModel();
+            
+            // block the user account
+            $objUser->blockUserAccount($id_user);
+            
+            \kerana\Exceptions::showError('LoginError', 
+                    'To many failed attempts in login (>4)');
             
         }
    
     }
     
     
-    
     /**
      * -------------------------------------------------------------------------
-     * Obtiene los intentos erroneos de sesion de un usuario
+     * Get the badLogin list for a user
      * -------------------------------------------------------------------------
-     * @param type $id_usuario
-     * @return type
+     * @param int $id_user
+     * @return rs
      */
-    public function getBadLoginForUser($id_usuario)
+    public function getBadLoginForUser($id_user)
     {
 
         return $this->find('time', [
-                    'id_usuario' => filter_var($id_usuario, FILTER_SANITIZE_NUMBER_INT)
+                    'id_user' => filter_var($id_user, FILTER_SANITIZE_NUMBER_INT)
                         ],'all'
         );
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Se registra un intento erroneo de logeo de un usuario/ip
+     * Register a new badLogin
      * -------------------------------------------------------------------------
-     * @param string $string , descripcion del error
-     * @param int $id_usuario
-     * @return type
+     * @param string $string , error description
+     * @param int $id_user
+     * @return boolean
      */
-    public function registerBadLogin($string, $id_usuario = 0)
+    public function registerBadLogin($string, $id_user = 0)
     {
         
         $this->_query = ' INSERT INTO ' . $this->table_name
-                . '(id_usuario,remote_address,time,string_attempt)'
+                . '(id_user,remote_address,time,string_attempt)'
                 . ' VALUES '
-                . ' (:id_usuario,INET_ATON(:ip),:time,:string_attemp)';
+                . ' (:id_user,INET_ATON(:ip),:time,:string_attemp)';
 
         // seteamos los bins
         $this->_binds = [
-            ':id_usuario' => filter_var($id_usuario, FILTER_SANITIZE_NUMBER_INT),
+            ':id_user' => filter_var($id_user, FILTER_SANITIZE_NUMBER_INT),
             ':ip' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP),
             ':time' => time(),
             ':string_attemp' => filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS)
