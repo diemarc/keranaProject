@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -19,14 +20,13 @@
 
 namespace kerana;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : "";
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 /*
   |--------------------------------------------------------------------------
   | SESSIONHANDLER CLASSS
   |--------------------------------------------------------------------------
-  |
-  | Sobreescribimos los metodos de sesiones para que se guarden una base de datos
-  | y creamos sesiones seguras
+  | Will stored the session values in a mysql-table, this is the implentation
+  | of the session-handler
   |
  */
 
@@ -34,20 +34,20 @@ class SessionHandler
 {
 
     private
-    /** @var mixed, instancia del modelo de sesiones */
+    /** @object , model object for session */
             $_model_session;
 
     public function __construct()
     {
-        // usamos solo http para las cookies, si no es posible, die
+        // use only http cookies, otherwise kerana die
         if (ini_set('session.use_only_cookies', 1) === FALSE) {
             \kerana\Exceptions::showError('Sesiones', 'No se puede iniciar sesion segura');
         }
 
-        // modelo donde se guardara las sesiones 
+        /** @object, crear a model_session object */
         $this->_model_session = new \kerana\SessionStore();
 
-        // handler para la sobrescritura de sesiones
+        // Register the methods to handle the sessions
         session_set_save_handler
                 (
                 [$this, '_open'], [$this, '_close'], [$this, '_read'], [$this, '_write'], [$this, '_destroy'], [$this, '_gc']
@@ -56,34 +56,31 @@ class SessionHandler
 
     /**
      * -------------------------------------------------------------------------
-     * Inicia una session segura
+     * Start secure Session
      * -------------------------------------------------------------------------
      */
     public function startSession()
     {
         $config = Configuration::singleton();
 
-        // forzamos que las sesiones se gestionen solo por cookie y no que se 
-        // propague por url.
+        // cookies propagation only via cookies, not url
         ini_set('session.use_only_cookies', 1);
 
-        // archivo de entropia, para dar mas random a la generacion de SID
+        // entropy file to generate sessions 
         ini_set('session.entropy_file', '/dev/urandom');
 
-        // obtenemos parametros de las cookies y seteamos
-        // algunos parametros de seguridad
+        // get cookies parameters
         $cookie_params = session_get_cookie_params();
         session_set_cookie_params(
                 $cookie_params['lifetime'], $cookie_params['path'], $cookie_params['domain'], $config->get('_session_https_'), $config->get('_session_http_only_')
         );
 
-        // comprobamos que el hash seteado en el archivo de configuracion 
-        // se pueda usar para encriptar las sesiones
+        // encrypt the sessions if is seted in keranaConf
         if (in_array($config->get('_session_hash_'), hash_algos())) {
             ini_set('session.hash_function', $config->get('_session_hash_'));
         }
 
-        // start session y regeneramos id en cada peticion
+        // start the secure session, and regenerate for each petition.
         session_name($config->get('_session_name_'));
         session_start();
         session_regenerate_id(true);
@@ -91,37 +88,33 @@ class SessionHandler
 
     /**
      * -------------------------------------------------------------------------
-     * Elimina todas las variables de sesion
+     * Purge all sessions vars
      * -------------------------------------------------------------------------
      */
     public function cleanSession()
     {
 
-        // unset de todas las variables de sesion iniciadas
         $_SESSION = [];
-
-        // parametros de sesion
         $params = session_get_cookie_params();
 
-        // borra el cookie actual
+        // delete current cookie
         setcookie(
                 session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']
         );
         // destruye la sesion
         session_destroy();
-        
     }
 
     /*
       |--------------------------------------------------------------------------
-      | HANDLER PARA GESTIONAR LAS SESIONES EN UNA TABLA MYSQL
+      | HANDLER FOR SESSIONS IN A DB-TABLE
       |--------------------------------------------------------------------------
       |
      */
 
     /**
      * -------------------------------------------------------------------------
-     * Solo comprueba que el modelo de sesiones esta cargado
+     * Check if model_session is created
      * -------------------------------------------------------------------------
      */
     public function _open()
@@ -136,11 +129,7 @@ class SessionHandler
 
     /**
      * -------------------------------------------------------------------------
-     * Cerramos la conexion a la db , estableciendo a null, 
-     * PHP ya lo hace por nosotros, esto lo hacemos para cumplir
-     * los requisitos de sobreescribir los metodos de gestion de sesiones
-     * COmo usamos PDO para el acceso a la base de datos, destruyendo el
-     * objeto , matamos la conexion.
+     * Destroy the model_session object
      * -------------------------------------------------------------------------
      */
     public function _close()
@@ -150,10 +139,10 @@ class SessionHandler
 
     /**
      * -------------------------------------------------------------------------
-     * Recupera una variable de sesion
+     * Get a session var
      * -------------------------------------------------------------------------
-     * @param type $id
-     * @return type
+     * @param string $id
+     * @return @rs session data
      */
     public function _read($id)
     {
@@ -164,11 +153,11 @@ class SessionHandler
 
     /**
      * -------------------------------------------------------------------------
-     * Guarda una sesion 
+     * Store a session value
      * -------------------------------------------------------------------------
-     * @param type $id
-     * @param type $data
-     * @return type
+     * @param string $id
+     * @param string $data
+     * @return boolean
      */
     public function _write($id, $data)
     {
@@ -184,9 +173,9 @@ class SessionHandler
 
     /**
      * -------------------------------------------------------------------------
-     * Destryue una sesion
+     * Destroy a session
      * -------------------------------------------------------------------------
-     * @param type $id
+     * @param string $id
      */
     public function _destroy($id)
     {
@@ -199,10 +188,10 @@ class SessionHandler
      * -------------------------------------------------------------------------
      * Garbage Collector
      * -------------------------------------------------------------------------
+     * @TODO : this methods it seems not executed, needs to do tests!!!
      */
     public function _gc($max)
     {
-        // lo que consideramos obsoleto
         $old = time() - $max;
         return $this->_model_session->deleteOldSession($old);
     }
