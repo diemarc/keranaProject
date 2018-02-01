@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
