@@ -54,8 +54,8 @@ class UserModel extends \kerana\Ada
     public function __construct()
     {
         parent::__construct();
-        $this->table_name = 'sys_usuario';
-        $this->table_id = 'id_usuario';
+        $this->table_name = 'sys_user';
+        $this->table_id = 'id_user';
     }
 
     /**
@@ -65,9 +65,9 @@ class UserModel extends \kerana\Ada
      */
     public function _checkAndGetUserActive()
     {
-        return $this->find('id_usuario,nombres,apellidos,email,salt,password', [
+        return $this->find('id_user,name,lastname,email,salt,password', [
                     'username' => $this->username,
-                    'sw_activo' => 1
+                    'sw_active' => 1
         ]);
     }
 
@@ -80,7 +80,7 @@ class UserModel extends \kerana\Ada
     {
         $this->username = Request::varchar('f_username',true);
         $this->password = Request::varchar('f_password');
-        $this->name = Request::varchar('f_nombres', true);
+        $this->name = Request::varchar('f_name', true);
         $this->email = Request::email();
     }
 
@@ -101,9 +101,9 @@ class UserModel extends \kerana\Ada
                             'password' => $this->password,
                             'salt' => $this->_salt,
                             'email' => $this->email,
-                            'nombres' => $this->name,
-                            'apellidos' => $this->lastname,
-                            'sw_activo' => 1
+                            'name' => $this->name,
+                            'lastname' => $this->lastname,
+                            'sw_active' => 1
                         ],true
         );
     }
@@ -112,36 +112,36 @@ class UserModel extends \kerana\Ada
      * -------------------------------------------------------------------------
      * Generate password salt and store into a table
      * -------------------------------------------------------------------------
-     * @return type
+     * @return avoid
      */
     public function generateSecurePassword()
     {
 
         try {
-            // lets do generate the random salt, 
+            // Generate the random salt, 
             // replace byte por byte for utf8 support
             $this->_salt = strtr(base64_encode(mcrypt_create_iv(22, MCRYPT_DEV_URANDOM)), '+', '.');
 
             // generate the password with the salt
             $this->password = password_hash($this->password, PASSWORD_BCRYPT, ['salt' => $this->_salt]);
         } catch (\Exception $ex) {
-            \kerana\Exceptions::showError('LOGIN ERROR', $ex);
+            \kerana\Exceptions::showError('LoginError', $ex);
         }
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Set inactive one user
+     * Set inactive a user
      * -------------------------------------------------------------------------
-     * @param int $id_usuario
+     * @param int $id_user
      * @return boolean
      */
-    public function blockUserAccount($id_usuario)
+    public function blockUserAccount($id_user)
     {
-        $this->_setIdTableValue($id_usuario);
+        $this->_setIdTableValue($id_user);
         return $this->update(
                         [
-                            'sw_activo' => 0
+                            'sw_active' => 0
                         ]
         );
     }
