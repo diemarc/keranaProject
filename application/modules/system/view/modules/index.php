@@ -25,7 +25,7 @@
                     <tr>
                         <td><?php echo $module->id_module;?></td>
                         <td><?php echo $module->module;?></td>
-                        <td><?php echo $module->sw_active_modulo;?></td>
+                        <td><?php echo $module->sw_active_module;?></td>
                         <td><?php echo $module->sw_restricted;?></td>
                         <td class="well">
                             <a href='<?php echo __URL__;?>/system/module/detail/<?php echo $module->id_module; ?>' 
