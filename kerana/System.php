@@ -130,7 +130,7 @@ class System
                     . " controlador= <b>$this->_controller</b> <br> "
                     . " metodo = <b> $this->_action</b><br>"
                     . "full_namespace =<b> $this->_namespace'</b><br>";
-            \helpers\Exceptions::showError('Error en resolver la peticion', $descripcion);
+            \kerana\Exceptions::showError('Error en resolver la peticion', $descripcion);
             return false;
         }
     }
