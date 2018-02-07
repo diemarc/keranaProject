@@ -90,7 +90,7 @@ class ModuleModel extends \Kerana\Ada
             }
         }
         else{
-            \kerana\Exceptions::showError('Creator', 'Module name, is a reserved by kErana.');
+            \kerana\Exceptions::showError('Creator', 'Module is reserved by kerana.');
         }
     }
 
