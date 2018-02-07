@@ -1,6 +1,6 @@
 <div id="page-wrapper">
     <h4 class='text-primary'> 
-        <i class="fa fa-users fa-2x"></i>
+        <i class="fa fa-user fa-2x"></i>
         <span class='text-muted'>system</span>Users->
         <span class="text-success">EditUser</span>-><?php echo $rs->username; ?>
     </h4>
