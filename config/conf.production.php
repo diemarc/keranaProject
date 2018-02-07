@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -23,26 +22,13 @@ namespace kerana;
 defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 
-/*
-  |--------------------------------------------------------------------------
-  | DevelopmentConfiguration for Kerana
-  |--------------------------------------------------------------------------
-  |
- */
-
-
 $config = Configuration::singleton();
-
-
 /*
   |--------------------------------------------------------------------------
-  | URL del proyecto
+  | ProductionConfiguration for Kerana
   |--------------------------------------------------------------------------
   |
  */
-
-//$config->set('_URL_', filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '');
-
 
 /*
   |--------------------------------------------------------------------------
@@ -85,9 +71,9 @@ define('_DEFAULT_ACTION_', 'index');
 // segmentos de url, configuramos en que posicion de la url se encuentra
 // informacion sobre el modulo/controller/action
 
-$config->set('position_module', 0);
-$config->set('position_controller', 1);
-$config->set('position_action', 2);
+$config->set('position_module',0);
+$config->set('position_controller',1);
+$config->set('position_action',2);
 
 
 /*
@@ -106,6 +92,8 @@ $config->set('_public_modules_', [
 
     'web',
     'welcome'
+  
+  
 ]);
 
 
@@ -123,7 +111,8 @@ $config->set('_aeskey_', 'vnaT497*_N');
  * Sesiones
  * -----------------------------------------------------------------------------
  */
-/** @var mixed , nombre de la session a utilizar */
+
+/** @var mixed , nombre de la session a utilizar*/
 $config->set('_session_name_', '_keRsess_');
 
 /** @var boolean, si la app esta sobre https, activarlo true */
@@ -135,7 +124,7 @@ $config->set('_session_http_only_', true);
 
 /** @var mixed, algoritmo hash para encriptar las sesiones
  *  usar (hash_algos() para ver los disponibles) */
-$config->set('_session_hash_', 'sha512');
+$config->set('_session_hash_','sha512');
 
 
 
