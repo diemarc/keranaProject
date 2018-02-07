@@ -20,7 +20,7 @@
                     <label for='f_group' class='col-sm-2 control-label'>Group</label> 
                     <div class='col-sm-6'> 
                         <div class='input-group col-sm-8'> 
-                            <input type="text" id="f_group" name="f_group" class="form-control"  maxlength="45"   />
+                            <input type="text" id="f_group_name" name="f_group_name" class="form-control"  maxlength="45"   />
                         </div> 
                     </div> 
                 </div> 
