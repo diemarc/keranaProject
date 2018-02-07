@@ -57,7 +57,8 @@ class System
     public function __construct()
     {
 
-        require_once(__APPFOLDER__ . '/../config/conf.php');
+        // load the configuration file depending on environment value constant
+        require_once(__APPFOLDER__ . '/../config/conf.'.__ENVIRONMENT__.'.php');
 
         //load kerana confguration file.
         $this->config = \kerana\Configuration::singleton();
