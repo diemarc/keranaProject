@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -16,47 +17,49 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace application\modules\system\model;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : '';
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
-/**
- * Description of AccessLogin
- *
- * @author diemarc
+/*
+  |--------------------------------------------------------------------------
+  | Handle the AccessLogin of Kerana
+  |--------------------------------------------------------------------------
+  |
  */
+
 class AccessLogin extends \Kerana\Ada
 {
-   
+
     public function __construct()
     {
         parent::__construct();
         $this->table_name = 'sys_access_log';
         $this->table_id = 'id_access_log';
     }
-    
+
     /**
      * -------------------------------------------------------------------------
-     * Regisrta una nueva session, acceso al sistema
+     * Save a new loginLogAccess
      * -------------------------------------------------------------------------
-     * @param type $id_usuario
+     * @param int $id_user
      */
-    public function registerAccessUser($id_usuario){
-        
-        $this->_query = ' INSERT INTO '.$this->table_name.' '
-                . ' (id_usuario,remote_address_access,time_access)'
+    public function registerAccessUser($id_user)
+    {
+
+        $this->_query = ' INSERT INTO ' . $this->table_name . ' '
+                . ' (id_user,remote_address_access,time_access)'
                 . ' VALUES'
-                . ' (:id_usuario,INET_ATON(:ip),:time) ';
-        
+                . ' (:id_user,INET_ATON(:ip),:time) ';
+
         $this->_binds = [
-            ':id_usuario' => filter_var($id_usuario,FILTER_SANITIZE_NUMBER_INT),
-            ':ip' => filter_input(INPUT_SERVER,'REMOTE_ADDR',FILTER_VALIDATE_IP),
+            ':id_user' => filter_var($id_user, FILTER_SANITIZE_NUMBER_INT),
+            ':ip' => filter_input(INPUT_SERVER, 'REMOTE_ADDR', FILTER_VALIDATE_IP),
             ':time' => time()
         ];
-        
+
         return $this->runQuery();
-        
     }
-    
-    
+
 }
