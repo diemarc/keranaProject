@@ -62,7 +62,7 @@ class LoginModel extends \application\modules\system\model\UserModel
             if ((empty($this->username)) OR ( empty($this->password))) {
                 throw new \Exception('Username & password is empty, fix it!!!!');
             }
-            // veerificamos si existe un usuario activo con username y creamos
+            // veerificamos si existe un user activo con username y creamos
             // un objeto con el resultado.
             $this->user = $this->_checkAndGetUserActive();
         } catch (\Exception $ex) {
@@ -83,12 +83,12 @@ class LoginModel extends \application\modules\system\model\UserModel
         if ($this->user == false) {
             
             // register a badLogin 
-            $this->bl->registerBadLogin('User not exists' . $this->username);
+            $this->bl->registerBadLogin('User not exists ' . $this->username);
             \kerana\Exceptions::showError('LoginError', 'Username & password is empty');
         } else {
 
             // check login attempts in badLogins
-            $this->bl->checkBadLogin($this->user->id_usuario);
+            $this->bl->checkBadLogin($this->user->id_user);
 
             // check the password sent from the form
             $password_received = password_hash($this->password, PASSWORD_BCRYPT, ['salt' => $this->user->salt]);
@@ -98,7 +98,7 @@ class LoginModel extends \application\modules\system\model\UserModel
                 $this->_createSessionSucces();
             } else {
                 $string = 'Password for ' . $this->username . ' is wrong ';
-                $this->bl->registerBadLogin($string, $this->user->id_usuario);
+                $this->bl->registerBadLogin($string, $this->user->id_user);
                 \kerana\Exceptions::showError('LoginError', 'Username & password not match');
             }
         }
@@ -116,7 +116,7 @@ class LoginModel extends \application\modules\system\model\UserModel
             // get the ip, and the user_agent(browser)
             $user_browser = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT', FILTER_SANITIZE_SPECIAL_CHARS);
             $user_name = preg_replace('/[^a-zA-Z0-9_\-]+/', '', $this->username);
-            $user_id = preg_replace('/[^0-9]/', '', $this->user->id_usuario);
+            $user_id = preg_replace('/[^0-9]/', '', $this->user->id_user);
 
             // start a secure session
             $ka_session = New \kerana\SessionHandler();
@@ -124,7 +124,7 @@ class LoginModel extends \application\modules\system\model\UserModel
 
 
             // create a session data
-            $_SESSION['id_usuario'] = $user_id;
+            $_SESSION['id_user'] = $user_id;
             $_SESSION['username'] = $user_name;
             
             // to prevent session-hijack, create a hash from concat(user_agent, user_password_salt)
@@ -154,8 +154,8 @@ class LoginModel extends \application\modules\system\model\UserModel
         try {
 
             // first check if session user is setted
-            if (isset($_SESSION['id_usuario'], $_SESSION['username'], $_SESSION['login_string'])) {
-                $user_id = $_SESSION['id_usuario'];
+            if (isset($_SESSION['id_user'], $_SESSION['username'], $_SESSION['login_string'])) {
+                $user_id = $_SESSION['id_user'];
                 
                 // contains the concat(user_agent + user_password_salt)
                 $login_string = $_SESSION['login_string'];
