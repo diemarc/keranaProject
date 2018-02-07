@@ -11,6 +11,9 @@
                     <li>
                         <a href="<?php echo __URL__; ?>/system/user/index">Users</a>
                     </li>
+                    <li>
+                        <a href="<?php echo __URL__; ?>/system/group/index">Groups</a>
+                    </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
