@@ -161,8 +161,8 @@ define('_ENABLE_PROFILER_', true);
 
 $config->set('_dbhost_', 'localhost');
 $config->set('_dbname_', 'kerana');
-$config->set('_dbuser_', 'oper_ker');
-$config->set('_dbpass_', 'darksky');
+$config->set('_dbuser_', '');
+$config->set('_dbpass_', '');
 $config->set('_dbport_', '3306');
 
 
