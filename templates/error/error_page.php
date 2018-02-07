@@ -19,12 +19,12 @@
                     <div class="panel-heading">
                         <h2 class="text-danger">
                             <i class="glyphicon glyphicon-thumbs-down"></i>
-                             <?php echo $titulo; ?>
+                             <?php echo $title; ?>
                         </h2>
                     </div>
                     <div class="panel-body">
                         <p>
-                            <?php echo $descripcion; ?>
+                            <?php echo $description; ?>
                         </p>
                     </div>
                     <div class="panel-footer">
