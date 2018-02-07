@@ -11,14 +11,18 @@
     </header>
     <section id='results' class='table-responsive'>
         <table class="table table-bordered table-condensed table-hover">
-            <thead class='bg-warning'>
+           <thead class='bg-info'>
                 <tr>
-                    <th class="bg-primary">Options</th> 
+                    <th>ID</th> 
+                    <th>GroupName</th> 
+                    <th class='bg-primary'>Tools</th> 
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($rsGroups AS $group): ?>
                     <tr> 
+                        <td><?php echo $group->id_group;?></td>
+                        <td><?php echo $group->group_name;?></td>
                         <td> 
                             <a href='/system/group/edit/<?php echo $group->id_group; ?>' 
                                class='btn btn-default btn-xs' title='Edit'>
