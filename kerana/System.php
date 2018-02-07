@@ -142,6 +142,7 @@ class System
      */
     private function _checkAccessPetition()
     {
+        
         if (!in_array($this->_module, $this->config->get('_public_modules_'))) {
             \kerana\Auth::checkAuthentication();
         }
