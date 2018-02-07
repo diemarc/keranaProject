@@ -28,10 +28,10 @@ class Exceptions extends Exception {
      * -------------------------------------------------------------------------
      * Show a error page
      * -------------------------------------------------------------------------
-     * @param string $titulo
-     * @param string $descripcion
+     * @param string $title
+     * @param string $description
      */
-    static function showError($titulo , $descripcion) {
+    static function showError($title , $description) {
 
         include __DOCUMENTROOT__. '/../templates/error/error_page.php';
         die();
