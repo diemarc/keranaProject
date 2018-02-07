@@ -19,7 +19,7 @@
 
 namespace kerana;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : "";
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 
 $config = Configuration::singleton();
@@ -97,6 +97,8 @@ $config->set('_public_modules_', [
 
     'web',
     'welcome'
+  
+  
 ]);
 
 
@@ -152,16 +154,6 @@ define('_NUMBER_FORMAT_', '2|,|.');
  */
 
 define('_ENABLE_PROFILER_', true);
-/*
- * ---------------------------------------------------------------
- * PLANTILLAS DE HTML 
- * ---------------------------------------------------------------
- * Se define dos plantillas, una de la parte privada/administracion
- * en private_layout
- * 
- * En public_layout la plantilla para la parte publica,
- * la www
- */
 
 
 
@@ -173,8 +165,9 @@ define('_ENABLE_PROFILER_', true);
  */
 
 $config->set('_dbhost_', 'localhost');
-$config->set('_dbname_', '');
-$config->set('_dbuser_', '');
-$config->set('_dbpass_', '');
+$config->set('_dbname_', 'kerana');
+$config->set('_dbuser_', 'oper_ker');
+$config->set('_dbpass_', 'darksky');
 $config->set('_dbport_', '3306');
+
 
