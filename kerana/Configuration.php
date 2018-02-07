@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -19,58 +20,82 @@
 
 namespace kerana;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo'):"";
-/**
- * Configuración general, creamos una clase Configuracion
- * creamos dos metodos uno para setear y otra para recuperar valores de una variable
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
+
+
+/*
+  |--------------------------------------------------------------------------
+  | Singleton implementation to get or set variables-data
+  |--------------------------------------------------------------------------
+  |
+  | Descripcion del metodo
+  |
  */
 
-class Configuration {
-	
-	private $variables;
-	private static $instance;
-	
-	//Constructor
-           
-	private function __construct(){
-		
-		$this->variables = array();
-	}
-	
-	//método para asignar variables, recibe dos parametros, nombre y su valor correspondiente a asignar
-	
-	public function set($nombre,$valor){
-		
-		if (!isset($this->variables[$nombre])) {
-			
-			$this->variables[$nombre] = $valor;
-			
-		}
-	}
-	
-	// método para recuperar valor de una variable
-	
-	public function get($nombre){
-		
-		if(isset($this->variables[$nombre])){
-			
-			return $this->variables[$nombre];
-		}
-	
-	}
-	
-	// método estático para el patrón singleton
-	
-	public static function singleton(){
-		
-		if (!isset(self::$instance)) {
-			
-			$c = __CLASS__;
-			self::$instance = new $c;
-			
-		}
-		
-		return self::$instance;
-		
-	}
+class Configuration
+{
+
+    private
+    /** @array, associative array to contains the var data-value */
+            $variables;
+    private static
+    /** @singleton instance of the object */
+            $instance;
+
+    private function __construct()
+    {
+
+        $this->variables = array();
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Set a variable value
+     * -------------------------------------------------------------------------
+     * @param string $name
+     * @param string $value
+     */
+    public function set($name, $value)
+    {
+
+        if (!isset($this->variables[$name])) {
+            $this->variables[$name] = $value;
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Get a name value
+     * -------------------------------------------------------------------------
+     * @param type $name
+     * @return type
+     */
+    public function get($name)
+    {
+
+        if (isset($this->variables[$name])) {
+
+            return $this->variables[$name];
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Singleton implementation
+     * -------------------------------------------------------------------------
+     * @return type
+     */
+    public static function singleton()
+    {
+
+        // if instance is not a object, lets create a new object
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
+        }
+
+        // always return the object instance of
+        return self::$instance;
+    }
+
 }
