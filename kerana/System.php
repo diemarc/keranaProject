@@ -125,12 +125,12 @@ class System
         // Si no existe la clase y la accion
         if (is_callable(array($this->_namespace, $this->_action)) == false) {
 
-            $descripcion = "<strong>El metodo no existen o no puede ser llamado :</strong><hr> "
-                    . " modulo= <b>$this->_module</b> <br> "
-                    . " controlador= <b>$this->_controller</b> <br> "
-                    . " metodo = <b> $this->_action</b><br>"
+            $descripcion = "<strong>The method is not available for use :</strong><hr> "
+                    . " module= <b>$this->_module</b> <br> "
+                    . " controller= <b>$this->_controller</b> <br> "
+                    . " method = <b> $this->_action</b><br>"
                     . "full_namespace =<b> $this->_namespace'</b><br>";
-            \kerana\Exceptions::showError('Error en resolver la peticion', $descripcion);
+            \kerana\Exceptions::showError('RequestPetitionError', $descripcion);
             return false;
         }
     }
