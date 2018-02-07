@@ -25,17 +25,17 @@
             <tbody>
                 <?php foreach ($rsUsers AS $user): ?>
                     <tr> 
-                        <td><?php echo $user->id_usuario; ?></td> 
+                        <td><?php echo $user->id_user; ?></td> 
                         <td><?php echo $user->username; ?></td> 
                         <td><?php echo $user->email; ?></td> 
-                        <td><?php echo $user->nombres . ' ' . $user->apellidos; ?></td> 
-                        <td><?php echo $user->sw_activo; ?></td> 
+                        <td><?php echo $user->name . ' ' . $user->lastname; ?></td> 
+                        <td><?php echo $user->sw_active; ?></td> 
                         <td class='well'> 
-                            <a href='/system/user/edit/<?php echo $user->id_usuario; ?>' 
+                            <a href='/system/user/edit/<?php echo $user->id_user; ?>' 
                                class='btn btn-default btn-xs' title='Edit'>
                                 <i class='fa fa-edit'></i>
                             </a> 
-                            <a href='/system/user/delete/<?php echo $user->id_usuario; ?>' 
+                            <a href='/system/user/delete/<?php echo $user->id_user; ?>' 
                                class='btn btn-danger btn-xs' title='Delete'>
                                 <i class='fa fa-trash'></i></a> 
                         </td> 
