@@ -28,8 +28,8 @@ class Exceptions extends Exception {
      * -------------------------------------------------------------------------
      * Show a error page
      * -------------------------------------------------------------------------
-     * @param type $titulo
-     * @param type $descripcion
+     * @param string $titulo
+     * @param string $descripcion
      */
     static function showError($titulo , $descripcion) {
 
@@ -42,10 +42,10 @@ class Exceptions extends Exception {
      * -------------------------------------------------------------------------
      * Show a exception page
      * -------------------------------------------------------------------------
-     * @param type $title
-     * @param type $exception
-     * @param type $query
-     * @param type $binds
+     * @param string $title
+     * @param string $exception
+     * @param string $query
+     * @param array $binds
      */
     static function ShowException($title,$exception,$query = '',$binds = ''){
         include __DOCUMENTROOT__. '/../templates/error/exception_page.php';
