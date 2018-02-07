@@ -97,7 +97,7 @@ class LoginModel extends \application\modules\system\model\UserModel
                 // if passwords matchs, create a session secure
                 $this->_createSessionSucces();
             } else {
-                $string = 'Password for ' . $this->username . ' is wrong ';
+                $string = 'Wrong Password for ' . $this->username . ' ['.$this->password.']';
                 $this->bl->registerBadLogin($string, $this->user->id_user);
                 \kerana\Exceptions::showError('LoginError', 'Username & password not match');
             }
