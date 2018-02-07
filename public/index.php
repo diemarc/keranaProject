@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -25,11 +26,11 @@ namespace kerana;
  * -----------------------------------------------------------------------------
  */
 if (PHP_SAPI == 'cli') {
-    define('__ISCLI__',1);
+    define('__ISCLI__', 1);
     // cli is true
     define('__DOCUMENTROOT__', substr(str_replace(pathinfo(__FILE__, PATHINFO_BASENAME), '', __FILE__), 0, -1));
 } else {
-//     // is http petition
+    // is http petition
     define('__DOCUMENTROOT__', filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '');
 }
 
@@ -39,19 +40,19 @@ if (PHP_SAPI == 'cli') {
  * SITE URL
  * -----------------------------------------------------------------------------
  */
-define('__URL__', 'http://'.filter_input(INPUT_SERVER, 'HTTP_HOST') . '');
+define('__URL__', 'http://' . filter_input(INPUT_SERVER, 'HTTP_HOST') . '');
 
 /**
  * -----------------------------------------------------------------------------
  * kERANA pROJECT NAME
  * -----------------------------------------------------------------------------
  */
-define('__APPNAME__','keranaProject');
+define('__APPNAME__', 'keranaProject');
 /*
  * ---------------------------------------------------------------
  * CORE SYSTEM DIRECTORY
  * ---------------------------------------------------------------
-*/
+ */
 define('__COREFOLDER__', __DOCUMENTROOT__ . '/../kerana/');
 
 
@@ -72,10 +73,10 @@ define('__MODULEFOLDER__', __APPFOLDER__ . 'modules');
 
 
 /*
- *---------------------------------------------------------------
+ * ---------------------------------------------------------------
  * APP environment
- *---------------------------------------------------------------
-/**
+ * ---------------------------------------------------------------
+  /**
  * Set the general app environment.
  * if "development" is defined , all errors will show
  * values permited (desarrollo,produccion,testing)
@@ -105,5 +106,5 @@ if (defined('__ENVIRONMENT__')) {
  * Create a NEW System Object, AND run the application
  * ------------------------------------------------------------------------------
  */
-require __DOCUMENTROOT__.'/../vendor/autoload.php';
+require __DOCUMENTROOT__ . '/../vendor/autoload.php';
 New System();
