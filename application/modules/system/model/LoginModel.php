@@ -46,7 +46,7 @@ class LoginModel extends \application\modules\system\model\UserModel
 
     /**
      * -------------------------------------------------------------------------
-     * Start the login system,ç
+     * Start the login system,
      * -------------------------------------------------------------------------
      * Set the username and password
      * Create a user_object if the user exists
