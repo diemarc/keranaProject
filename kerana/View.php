@@ -95,7 +95,7 @@ class View
     {
 
         //$token_string = \kerana\Security::csrfGetTokenId();
-        $token_value = \kerana\Security::csrfGetTokenValue();
+        $token_value = \helpers\Security::csrfGetTokenValue();
         ($model != false) ? self::$model = $model : '';
 
         $params['kerana_token'] = '<input type="hidden" name="_kerana_token_" value="' . $token_value . '">';
