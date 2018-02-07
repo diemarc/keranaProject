@@ -8,7 +8,13 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="">
-            <span class="pull-left"><?php echo __APPNAME__; ?></span>
+            <span class="pull-left text-success">
+                <?php echo __APPNAME__; ?>
+            </span>
+            <span class="small">
+                <span class="small"><?php echo __ENVIRONMENT__; ?></span>
+            </span>
+            
         </a>
     </div>
     <!-- /.navbar-header -->
@@ -17,7 +23,7 @@
         <!-- /.dropdown -->
         <li class="dropdown">
             <a class="dropdown-toggle" href="<?php __URL__;?>/welcome/login/closeSession">
-                 <i class="glyphicon glyphicon-log-out"></i>
+                 <?php echo $_SESSION['username'];?> <i class="glyphicon glyphicon-log-out"></i>
             </a>
             <!-- /.dropdown-tasks -->
         </li>
