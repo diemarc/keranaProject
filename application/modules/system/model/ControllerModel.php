@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -16,6 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace application\modules\system\model;
 
 defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
@@ -32,7 +34,7 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 class ControllerModel extends \kerana\Ada
 {
 
-    private
+    public
 
     /** @var mixed, module name */
             $controller_module,
@@ -44,6 +46,8 @@ class ControllerModel extends \kerana\Ada
             $controller_description,
             /** @var mixed, controller path */
             $controller_path;
+    protected
+            $values_c = [];
 
     public function __construct()
     {
@@ -102,11 +106,11 @@ class ControllerModel extends \kerana\Ada
     private function _setupNewController()
     {
 
-        $this->controller_module = filter_input(INPUT_POST, 'sw_module', FILTER_SANITIZE_SPECIAL_CHARS);
-        $this->controller_model_id = filter_input(INPUT_POST, 'sw_id_model', FILTER_VALIDATE_INT);
-        $this->controller_name = filter_input(INPUT_POST, 'f_controller', FILTER_SANITIZE_SPECIAL_CHARS);
-        $this->controller_description = filter_input(INPUT_POST, 'f_controller_description', FILTER_SANITIZE_SPECIAL_CHARS);
-        $this->controller_path = __MODULEFOLDER__ . '/' . filter_input(INPUT_POST, 'sw_module', FILTER_SANITIZE_SPECIAL_CHARS) . '/controller/';
+        $this->controller_module = (!isset($this->controller_module)) ? \filter_input(\INPUT_POST, 'sw_module', \FILTER_SANITIZE_SPECIAL_CHARS) : $this->controller_module;
+        $this->controller_model_id = (!isset($this->controller_model_id)) ? \filter_input(\INPUT_POST, 'sw_id_model', \FILTER_VALIDATE_INT):$this->controller_model_id;
+        $this->controller_name = (!isset($this->controller_name)) ? \filter_input(\INPUT_POST, 'f_controller', \FILTER_SANITIZE_SPECIAL_CHARS):$this->controller_name;
+        $this->controller_description = (!isset($this->controller_description)) ? filter_input(\INPUT_POST, 'f_controller_description', \FILTER_SANITIZE_SPECIAL_CHARS):$this->controller_description;
+        $this->controller_path = (!isset($this->controller_path)) ? __MODULEFOLDER__ . '/' .$this->controller_module . '/controller/':$this->controller_path;
     }
 
     /**
@@ -188,12 +192,13 @@ class ControllerModel extends \kerana\Ada
             '[{controller_implements}]' => ($this->controller_model_id > 0) ? 'implements \\kerana\\KeranaInterface' : '',
             '[{controller_model}]' => ($this->controller_model_id > 0) ? 'protected $_' . $model_attribute_name . ';' : '',
             '[{model_object}]' => ($this->controller_model_id > 0) ? $model_object_to_create : '',
-            '[{model_name}]'=> '$this->_'.$model_attribute_name, 
+            '[{model_name}]' => '$this->_' . $model_attribute_name,
             '[{model_rs}]' => ($this->controller_model_id > 0) ? $model_resultset : '',
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
         // put the replacement into a model class
         file_put_contents($path_controller, $file_new_contents);
     }
+
 
 }
