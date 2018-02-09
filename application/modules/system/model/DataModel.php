@@ -33,23 +33,24 @@ class DataModel extends \kerana\Ada
 
     private
     /** @var int, module id */
-            $module_id,
+            $_module_id,
             /** @var string, module name */
-            $module_name,
+            $_module_name,
             /** @var string, model name */
-            $model_name,
+            $_model_name,
             /** @var string, model path */
-            $model_path,
+            $_model_path,
             /** @var mixed, the database table to handled the new model */
-            $model_table,
-            
+            $_model_table,
+            /**  @var boolean, need controller for the new model?*/
+            $_need_controller,
             /** @var mixed, description model, used to put into a comment */
-            $model_description;
+            $_model_description;
 
     public function __construct()
     {
         parent::__construct();
-        $this->table_name = 'sys_model';
+        $this->table_name = 'sys_models';
         $this->table_id = 'id_model';
     }
 
@@ -95,10 +96,11 @@ class DataModel extends \kerana\Ada
      */
     private function _setupNewModel()
     {
-        $this->module_id = filter_input(INPUT_POST, 'f_id_module', FILTER_VALIDATE_INT);
-        $this->model_name = ucwords(filter_input(INPUT_POST, 'f_model', FILTER_SANITIZE_SPECIAL_CHARS));
-        $this->model_table = filter_input(INPUT_POST, 'f_table_reference', FILTER_SANITIZE_SPECIAL_CHARS);
-        $this->model_description = filter_input(INPUT_POST, 'f_model_description', FILTER_SANITIZE_SPECIAL_CHARS);
+        $this->_module_id = filter_input(INPUT_POST, 'f_id_module', FILTER_VALIDATE_INT);
+        $this->_model_name = ucwords(filter_input(INPUT_POST, 'f_model', FILTER_SANITIZE_SPECIAL_CHARS));
+        $this->_model_table = filter_input(INPUT_POST, 'f_table_reference', FILTER_SANITIZE_SPECIAL_CHARS);
+        $this->_model_description = filter_input(INPUT_POST, 'f_model_description', FILTER_SANITIZE_SPECIAL_CHARS);
+        $this->_need_controller = filter_input(INPUT_POST, 'f_sw_controller', FILTER_VALIDATE_INT);
 
         // setup the model path
         $this->_setPathModel();
@@ -114,11 +116,11 @@ class DataModel extends \kerana\Ada
     {
         // get the id_module data
         $module = new ModuleModel();
-        $module->_setIdTableValue($this->module_id);
+        $module->_setIdTableValue($this->_module_id);
         $module_data = $module->getRecord();
-        $this->module_name = $module_data->module;
+        $this->_module_name = $module_data->module;
 
-        $this->model_path = __MODULEFOLDER__ . '/' . $this->module_name . '/model/';
+        $this->_model_path = __MODULEFOLDER__ . '/' . $this->_module_name . '/model/';
 
     }
 
@@ -134,10 +136,10 @@ class DataModel extends \kerana\Ada
         
         //create a model record
         $data_model = [
-            'id_module' => $this->module_id,
-            'model' => $this->model_name.'Model',
-            'table_reference' =>  $this->model_table,
-            'model_description' => $this->model_description,
+            'id_module' => $this->_module_id,
+            'model' => $this->_model_name.'Model',
+            'table_reference' =>  $this->_model_table,
+            'model_description' => $this->_model_description,
             'time_creation' => time()
         ];
         
@@ -157,8 +159,8 @@ class DataModel extends \kerana\Ada
     {
 
         try {
-            fopen($this->model_path . $this->model_name . 'Model.php', 'w');
-            $this->_makeCodeModelClass();
+            fopen($this->_model_path . $this->_model_name . 'Model.php', 'w');
+            return $this->_makeCodeModelClass();
         } catch (Exception $ex) {
             $descripcion = 'Model file cant be created, resolve this, and go back!! MDF ' . $ex;
             \kerana\Exceptions::showError('Creator', $descripcion);
@@ -178,24 +180,54 @@ class DataModel extends \kerana\Ada
        $path_tpl = realpath(__DOCUMENTROOT__.'/../templates/creator/tpl_model.ker');
        
        // path to the new model created
-       $path_tpl_1 = realpath($this->model_path . $this->model_name . 'Model.php');
+       $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
        $file_contents = file_get_contents($path_tpl);
        
        // replacement parse file
        $code_replace = [
-           '[{model_name}]' => $this->model_name.'Model',
-           '[{module_name}]' => $this->module_name,
-           '[{model_description}]' => $this->model_description,
+           '[{model_name}]' => $this->_model_name.'Model',
+           '[{module_name}]' => $this->_module_name,
+           '[{model_description}]' => $this->_model_description,
            '[{model_date}]' => date('d-m-Y H:i:s'),
-           '[{model_table}]' => $this->model_table,
-           '[{model_table_id}]' => $this->getPrimaryKeyTable($this->model_table),
+           '[{model_table}]' => $this->_model_table,
+           '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
            
        ];
        $file_new_contents = strtr($file_contents,$code_replace);
+       
        // put the replacement into a model class
-       file_put_contents($path_tpl_1, $file_new_contents);
+       file_put_contents($path_model_file, $file_new_contents);
+       
+       // need create a controller for this model?
+       ($this->_need_controller) ? $this->_createControllerModel():'';
         
        return true;
+        
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Create a new controller for handle this model, only if _need_controller
+     * is true
+     * -------------------------------------------------------------------------
+     */
+    
+    private function _createControllerModel(){
+        
+        
+        $model_controller = new \application\modules\system\model\ControllerModel();
+        $model_module = new \application\modules\system\model\ModuleModel();
+        
+        // lets set the controller params
+        $model_controller->controller_description = 'Controller created automatically '
+                . ' from model';
+        $model_controller->controller_model_id = $this->_id_value;
+        $model_controller->controller_name = $this->_model_name;
+        $model_controller->controller_module = $model_module->find('module',['id_module'=>$this->_module_id],'one')->module;
+        $model_controller->controller_path = __MODULEFOLDER__.'/'.$model_controller->controller_module.'/controller/';
+        
+       //create a new controller for this model
+        $model_controller->createController();
         
     }
     
