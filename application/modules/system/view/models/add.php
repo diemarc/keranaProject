@@ -1,5 +1,4 @@
 <div id="page-wrapper">
-
     <h4 class='text-primary'> 
         <i class="fa fa-database fa-2x"></i>
         <span class='text-muted'>apps</span>Models->
@@ -39,6 +38,17 @@
                                     <option value="<?php echo $table->table_name; ?>"><?php echo $table->table_name; ?></option>
                                 <?php endforeach; ?>
                             </select>
+                        </div> 
+                    </div> 
+                </div>
+                <div class='form-group form-group-sm'> 
+                    <label for='f_sw_controller' class='col-sm-2 control-label'>Need controller?</label> 
+                    <div class='col-sm-6'> 
+                        <div class='input-group col-sm-8'> 
+                            <input type="radio" id="f_sw_controller" name="f_sw_controller" 
+                                   class="radio_inline" value="1">Yes 
+                            <input type="radio" id="f_sw_controller" name="f_sw_controller" 
+                                   class="radio_inline" value="0">No
                         </div> 
                     </div> 
                 </div> 
