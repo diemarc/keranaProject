@@ -264,10 +264,11 @@ abstract class Ada
      * -------------------------------------------------------------------------
      * @return boolean
      */
-    public function descTable()
+    public function descTable($table_name = '')
     {
 
-        $this->_query = ' DESC ' . $this->table_name;
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name,FILTER_SANITIZE_SPECIAL_CHARS);
+        $this->_query = ' DESC ' . $table;
 
         try {
             $rs = $this->_db->prepare($this->_query);
