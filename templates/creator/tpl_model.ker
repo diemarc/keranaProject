@@ -14,7 +14,8 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 
 class [{model_name}] extends \kerana\Ada {
 
-    [{attributes}]
+    public
+    [{properties}];
 
      public function __construct()
     {
