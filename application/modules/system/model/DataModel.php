@@ -42,10 +42,12 @@ class DataModel extends \kerana\Ada
             $_model_path,
             /** @var mixed, the database table to handled the new model */
             $_model_table,
-            /**  @var boolean, need controller for the new model?*/
+            /**  @var boolean, need controller for the new model? */
             $_need_controller,
             /** @var mixed, description model, used to put into a comment */
-            $_model_description;
+            $_model_description,
+            /** @var array, contains attributes matched with the field of the table */
+            $_model_attributes;
 
     public function __construct()
     {
@@ -88,7 +90,6 @@ class DataModel extends \kerana\Ada
       |
      */
 
-    
     /**
      * -------------------------------------------------------------------------
      * Setup some atributes  
@@ -121,7 +122,6 @@ class DataModel extends \kerana\Ada
         $this->_module_name = $module_data->module;
 
         $this->_model_path = __MODULEFOLDER__ . '/' . $this->_module_name . '/model/';
-
     }
 
     /**
@@ -133,24 +133,22 @@ class DataModel extends \kerana\Ada
     {
         // first set the model attributes
         $this->_setupNewModel();
-        
+
         //create a model record
         $data_model = [
             'id_module' => $this->_module_id,
-            'model' => $this->_model_name.'Model',
-            'table_reference' =>  $this->_model_table,
+            'model' => $this->_model_name . 'Model',
+            'table_reference' => $this->_model_table,
             'model_description' => $this->_model_description,
             'time_creation' => time()
         ];
-        
-        if($this->insert($data_model)){
+
+        if ($this->insert($data_model)) {
             return $this->_createModelClass();
         }
-        
     }
-    
-    
-     /**
+
+    /**
      * -------------------------------------------------------------------------
      * Make the model class file
      * -------------------------------------------------------------------------
@@ -167,68 +165,93 @@ class DataModel extends \kerana\Ada
         }
     }
 
-    
     /**
      * -------------------------------------------------------------------------
      * Create the code for a model class, using a template and replace
      * the code inside.
      * -------------------------------------------------------------------------
      */
-    private function _makeCodeModelClass(){
+    private function _makeCodeModelClass()
+    {
+
+        // load the creator-template to a model class 
+        $path_tpl = realpath(__DOCUMENTROOT__ . '/../templates/creator/tpl_model.ker');
+
+        // path to the new model created
+        $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
+        $file_contents = file_get_contents($path_tpl);
+
+        $this->_parseFieldsTableToAttributes();
         
-       // load the creator-template to a model class 
-       $path_tpl = realpath(__DOCUMENTROOT__.'/../templates/creator/tpl_model.ker');
-       
-       // path to the new model created
-       $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
-       $file_contents = file_get_contents($path_tpl);
-       
-       // replacement parse file
-       $code_replace = [
-           '[{model_name}]' => $this->_model_name.'Model',
-           '[{module_name}]' => $this->_module_name,
-           '[{model_description}]' => $this->_model_description,
-           '[{model_date}]' => date('d-m-Y H:i:s'),
-           '[{model_table}]' => $this->_model_table,
-           '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
-           
-       ];
-       $file_new_contents = strtr($file_contents,$code_replace);
-       
-       // put the replacement into a model class
-       file_put_contents($path_model_file, $file_new_contents);
-       
-       // need create a controller for this model?
-       ($this->_need_controller) ? $this->_createControllerModel():'';
-        
-       return true;
-        
+        // replacement parse file
+        $code_replace = [
+            '[{model_name}]' => $this->_model_name . 'Model',
+            '[{module_name}]' => $this->_module_name,
+            '[{model_description}]' => $this->_model_description,
+            '[{model_date}]' => date('d-m-Y H:i:s'),
+            '[{model_table}]' => $this->_model_table,
+            '[{properties}]' => $this->_model_attributes,
+            '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
+        ];
+        $file_new_contents = strtr($file_contents, $code_replace);
+
+        // put the replacement into a model class
+        file_put_contents($path_model_file, $file_new_contents);
+
+        // need create a controller for this model?
+        ($this->_need_controller) ? $this->_createControllerModel() : '';
+
+        return true;
     }
-    
+
+    /**
+     * -------------------------------------------------------------------------
+     * COnvert each field from the table in object properties
+     * -------------------------------------------------------------------------
+     */
+    private function _parseFieldsTableToAttributes()
+    {
+
+        $rsInfoTable = $this->descTable($this->_model_table);
+        foreach ($rsInfoTable AS $info_table):
+            $ex = preg_split("/[\()s]+/", $info_table->Type);
+            $field_type = $ex[0];
+            $field_lenght = $ex[1];
+            if($this->_model_attributes !=''){
+                $this->_model_attributes .= ", \n";
+            }else{
+                $this->_model_attributes .= "";
+            }
+            $this->_model_attributes .= "/** @var $field_type($field_lenght), $info_table->Field  */ \n".'$'.$info_table->Field;
+            
+
+
+        endforeach;
+    }
+
     /**
      * -------------------------------------------------------------------------
      * Create a new controller for handle this model, only if _need_controller
      * is true
      * -------------------------------------------------------------------------
      */
-    
-    private function _createControllerModel(){
-        
-        
+    private function _createControllerModel()
+    {
+
+
         $model_controller = new \application\modules\system\model\ControllerModel();
         $model_module = new \application\modules\system\model\ModuleModel();
-        
+
         // lets set the controller params
         $model_controller->controller_description = 'Controller created automatically '
                 . ' from model';
         $model_controller->controller_model_id = $this->_id_value;
         $model_controller->controller_name = $this->_model_name;
-        $model_controller->controller_module = $model_module->find('module',['id_module'=>$this->_module_id],'one')->module;
-        $model_controller->controller_path = __MODULEFOLDER__.'/'.$model_controller->controller_module.'/controller/';
-        
-       //create a new controller for this model
+        $model_controller->controller_module = $model_module->find('module', ['id_module' => $this->_module_id], 'one')->module;
+        $model_controller->controller_path = __MODULEFOLDER__ . '/' . $model_controller->controller_module . '/controller/';
+
+        //create a new controller for this model
         $model_controller->createController();
-        
     }
-    
+
 }
