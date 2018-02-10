@@ -188,7 +188,7 @@ class KeranaForm
                 // if is boolean (tinyint 1)
                 if ($length == 1) {
                     $element = '<input type="radio" id="f_' . $field_name . '" name="f_'
-                            . '' . $field_name . '" class="radio_inline" value="1">Si';
+                            . '' . $field_name . '" class="radio_inline" value="1">Yes';
                     $element .= ' <input type="radio" id="f_' . $field_name . '" name="f_'
                             . '' . $field_name . '" class="radio_inline" value="0">No';
                     break;
