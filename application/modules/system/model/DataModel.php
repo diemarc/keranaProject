@@ -246,7 +246,7 @@ class DataModel extends \kerana\Ada
         $model_controller->controller_description = 'Controller created automatically '
                 . ' from model';
         $model_controller->controller_model_id = $this->_id_value;
-        $model_controller->controller_name = $this->_model_name;
+        $model_controller->controller_name = strtolower($this->_model_name);
         $model_controller->controller_module = $model_module->find('module', ['id_module' => $this->_module_id], 'one')->module;
         $model_controller->controller_path = __MODULEFOLDER__ . '/' . $model_controller->controller_module . '/controller/';
 
