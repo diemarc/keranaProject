@@ -54,7 +54,7 @@ class ModuleModel extends \Kerana\Ada
      */
     private function _setPathAndModuleName()
     {
-        $this->_module_name = filter_input(INPUT_POST, 'f_module', FILTER_SANITIZE_SPECIAL_CHARS);
+        $this->_module_name = strtolower(\helpers\Request::varchar('f_module'));
         $this->_module_path = __MODULEFOLDER__ . '/' . $this->_module_name;
     }
 
