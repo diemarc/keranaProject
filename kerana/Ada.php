@@ -451,7 +451,7 @@ abstract class Ada
             $this->_id_value = $this->_db->lastInsertId();
             return true;
         } catch (\PDOException $e) {
-            $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
+            $error = 'Error in' . __CLASS__ . '->' . __FUNCTION__;
             \kerana\Exceptions::ShowException($error, New \Exception($e), $this->_query, $this->_binds);
         }
     }
