@@ -4,7 +4,7 @@
         <span class='text-muted'>apps</span>Modules
     </h4>
     <header class="breadcrumb">
-        <a href="<?php echo __URL__;?>/system/module/add" 
+        <a href="<?php echo __URL__; ?>/system/module/add" 
            class="btn btn-success btn-sm">
             <i class='fa fa-plus'></i> add
         </a>
@@ -23,22 +23,24 @@
             <tbody>
                 <?php foreach ($rsModules AS $module) : ?>
                     <tr>
-                        <td><?php echo $module->id_module;?></td>
-                        <td><?php echo $module->module;?></td>
-                        <td><?php echo $module->sw_active_module;?></td>
-                        <td><?php echo $module->sw_restricted;?></td>
+                        <td><?php echo $module->id_module; ?></td>
+                        <td><?php echo $module->module; ?></td>
+                        <td><?php echo $module->sw_active_module; ?></td>
+                        <td><?php echo $module->sw_restricted; ?></td>
                         <td class="well">
-                            <a href='<?php echo __URL__;?>/system/module/detail/<?php echo $module->id_module; ?>' 
-                               class='btn btn-default btn-xs'>
-                                <i class='fa fa-eye'></i>
-                            </a>
-                            <a href='' class='btn btn-info btn-xs'>
-                                <i class='fa fa-pencil'></i>
-                            </a>
-                            <a href='<?php echo __URL__;?>/system/module/delete/<?php echo $module->id_module;?>' 
-                               class='btn btn-danger btn-xs'>
-                                <i class='fa fa-trash-o'></i>
-                            </a>
+                            <?php if (!$module->is_system_module) : ?>
+                                <a href='<?php echo __URL__; ?>/system/module/detail/<?php echo $module->id_module; ?>' 
+                                   class='btn btn-default btn-xs'>
+                                    <i class='fa fa-eye'></i>
+                                </a>
+                                <a href='' class='btn btn-info btn-xs'>
+                                    <i class='fa fa-pencil'></i>
+                                </a>
+                                <a href='<?php echo __URL__; ?>/system/module/delete/<?php echo $module->id_module; ?>' 
+                                   class='btn btn-danger btn-xs'>
+                                    <i class='fa fa-trash-o'></i>
+                                </a>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
