@@ -6,18 +6,14 @@
         <meta name="organization" content="diemarc" />
         <meta name="locality" content="Madrid" />
         <title>:-( Kerana-Ooops, hay una excepcion!!!!</title>
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap-theme.css" rel="stylesheet" type="text/css">
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap-theme.css.map" rel="stylesheet" type="text/css">
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap.css" rel="stylesheet" type="text/css">
-        <link href="/_styles/bootstrap/src/css/singin.css" rel="stylesheet" type="text/css"> 
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap.css.map" rel="stylesheet" type="text/css">
+        <link href="/_styles/sb_admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
             <div class="col-xs-10 col-sm-5 col-md-7 col-sm-offset-2">
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        <h2>
+                        <h2 class="text-danger">
                             <i class="glyphicon glyphicon-thumbs-down"></i>
                             <?php echo $title; ?>
                         </h2>
