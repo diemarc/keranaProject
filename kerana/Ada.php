@@ -324,7 +324,7 @@ abstract class Ada
 
                 case 'onecheck':
                     $result = $rs->fetch(\PDO::FETCH_OBJ);
-                    return (is_object($result)) ? $result : \kerana\Exceptions::showError('ooPs', 'No existe registro.');
+                    return (is_object($result)) ? $result : \kerana\Exceptions::showError('ooPs', 'No record found!!');
 
                 case 'count':
                     return $rs->rowCount();
