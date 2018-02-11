@@ -66,11 +66,10 @@ class Acl
      */
     private function _checkUserPetition()
     {
-
         $obj_user_module = $this->_model_acl_user->getUserModuleControllerAction();
-        $error = 'You <strong>(' . $this->_model_acl_user->id_user . ')</strong>'
-                . ' dont have privileges to run this ';
-        (!is_object($obj_user_module)) ? \kerana\Exceptions::showError('AccessControlList', $error) : '';
+        (!is_object($obj_user_module)) ? \kerana\Exceptions::showError('AccessControlList', 
+                'You <strong>(' . $this->_model_acl_user->id_user . ')</strong>'
+                                . ' dont have privileges to run this ') : '';
     }
 
 }
