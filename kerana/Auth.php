@@ -55,6 +55,8 @@ class Auth
             $ka_session->cleanSession();
             \helpers\Redirect::to('/welcome/login/introduceMySelf');
             exit();
+        }else{
+            return true;
         }
     }
     
