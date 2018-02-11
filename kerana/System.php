@@ -139,12 +139,16 @@ class System
      * -------------------------------------------------------------------------
      * Check Access Petition
      * -------------------------------------------------------------------------
+     * Check if the module requested is not a public module, specified in conf file,
+     * If false, check user autentification.
+     * If user user is autentificated, then check ACL
      */
     private function _checkAccessPetition()
     {
         
         if (!in_array($this->_module, $this->config->get('_public_modules_'))) {
-            \kerana\Auth::checkAuthentication();
+           (\kerana\Auth::checkAuthentication()) ? New \kerana\acl\Acl($this->_module,$this->_controller,$this->_action) : '';
+           //\kerana\Auth::checkAuthentication();
         }
     }
 
