@@ -6,11 +6,7 @@
         <meta name="organization" content="diemarc" />
         <meta name="locality" content="Madrid" />
         <title>:-( Kerana-Ooops, shit happens!!!!</title>
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap-theme.css" rel="stylesheet" type="text/css">
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap-theme.css.map" rel="stylesheet" type="text/css">
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap.css" rel="stylesheet" type="text/css">
-        <link href="/_styles/bootstrap/src/css/singin.css" rel="stylesheet" type="text/css"> 
-        <link href="/_styles/bootstrap/src/css/bootstrap3/bootstrap.css.map" rel="stylesheet" type="text/css">
+        <link href="/_styles/sb_admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
@@ -19,7 +15,7 @@
                     <div class="panel-heading">
                         <h2 class="text-danger">
                             <i class="glyphicon glyphicon-thumbs-down"></i>
-                             <?php echo $title; ?>
+                            <?php echo $title; ?>
                         </h2>
                     </div>
                     <div class="panel-body">
