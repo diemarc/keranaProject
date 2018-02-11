@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -16,6 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Kerana\acl;
 
 defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
@@ -32,32 +34,43 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 class Acl
 {
 
-    private 
-            /** @object, model acl, referenc from sys_acl_user_action */
-            $_model_acl_action,
-            /** @object, model acl user-module, referenc from sys_acl_user_module */
-            $_model_acl_module;
-            
+    private
 
-    public function __construct()
+    /** @object, model acl user-module-controller-action, 
+     * referenced by table  sys_acl_user_action */
+            $_model_acl_user;
+
+    /**
+     * -------------------------------------------------------------------------
+     * Acl Construct
+     * -------------------------------------------------------------------------
+     * @param string $module
+     * @param string $controller
+     * @param string $action
+     */
+    public function __construct($module, $controller, $action)
     {
-        $this->_model_acl_action = load::Model('sistema', 'permiso_usuario');
-        Auth::checkAuthentication();
+        $this->_model_acl_user = New \kerana\acl\AclControllerUserActionModel();
+        $this->_model_acl_user->module_name = \helpers\Validator::varchar($module);
+        $this->_model_acl_user->controller_name = \helpers\Validator::varchar($controller);
+        $this->_model_acl_user->action_name = \helpers\Validator::varchar($action);
+        $this->_model_acl_user->id_user = \helpers\Validator::int($_SESSION['id_user']);
+        $this->_checkUserPetition();
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Verifica si el usuario puede ejecutar el controlador que desea ejecutar
+     * check if user id is granted to acces to he module requested
      * -------------------------------------------------------------------------
-     * @param type $controller
+     * @param type $module_name
      */
-    public function checkUserRequestControllerAccess($controller)
+    private function _checkUserPetition()
     {
-        if(!$this->_model_acl->selectUserPermissionRequest(Session::get('user_id'),$controller)){
-            $descripcion = Session::get('user_name').
-                    " , <strong>NO</strong> tienes permiso suficiente para ejecutar esta petici&oacute;n.";
-            Exceptions::showError('Error de permiso de controlador', $descripcion);
-        }
+
+        $obj_user_module = $this->_model_acl_user->getUserModuleControllerAction();
+        $error = 'You <strong>(' . $this->_model_acl_user->id_user . ')</strong>'
+                . ' dont have privileges to run this ';
+        (!is_object($obj_user_module)) ? \kerana\Exceptions::showError('AccessControlList', $error) : '';
     }
 
 }
