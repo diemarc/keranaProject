@@ -43,7 +43,7 @@ class AclControllerUserActionModel extends \kerana\Ada
      * -------------------------------------------------------------------------
      * @return @object
      */
-    public function getUserModuleControllerActionRestricted()
+    public function getUserModuleControllerAction()
     {
 
         $this->_setQuery(' SELECT A.id_user FROM ' . $this->table_name . ' A '
@@ -52,7 +52,6 @@ class AclControllerUserActionModel extends \kerana\Ada
                 . ' INNER JOIN sys_action D ON (A.id_action = D.id_action)'
                 . ' WHERE A.id_user = :id_user'
                 . ' AND B.module = :module'
-                . ' AND B.sw_restricted = 1'
                 . ' AND C.controller = :controller '
                 . ' AND D.action_name = :action'
                 . ' LIMIT 1 ');
