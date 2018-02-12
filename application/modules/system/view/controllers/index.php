@@ -37,7 +37,7 @@
                             <a href='' class='btn btn-info btn-xs'>
                                 <i class='fa fa-pencil'></i>
                             </a>
-                            <a href='<?php echo __URL__ . '/' . $controller->controller_module . '/' . $controller->controller . '/index'; ?>' 
+                            <a href='<?php echo __URL__ . '/' . $controller->module . '/' . $controller->controller . '/index'; ?>' 
                                target='_blank' class='btn btn-success btn-xs'>
                                 <i class='fa fa-road'></i>
                             </a>
