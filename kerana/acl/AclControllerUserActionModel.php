@@ -47,9 +47,9 @@ class AclControllerUserActionModel extends \kerana\Ada
     {
 
         $this->_setQuery(' SELECT A.id_user FROM ' . $this->table_name . ' A '
-                . ' INNER JOIN sys_module B ON (A.id_module = B.id_module)'
-                . ' INNER JOIN sys_controller C ON (A.id_controller = C.id_controller)'
-                . ' INNER JOIN sys_action D ON (A.id_action = D.id_action)'
+                . ' INNER JOIN sys_modules B ON (A.id_module = B.id_module)'
+                . ' INNER JOIN sys_controllers C ON (A.id_controller = C.id_controller)'
+                . ' INNER JOIN sys_actions D ON (A.id_action = D.id_action)'
                 . ' WHERE A.id_user = :id_user'
                 . ' AND B.module = :module'
                 . ' AND C.controller = :controller '
