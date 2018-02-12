@@ -43,7 +43,7 @@ class ModuleModel extends \Kerana\Ada
     public function __construct()
     {
         parent::__construct();
-        $this->table_name = 'sys_module';
+        $this->table_name = 'sys_modules';
         $this->table_id = 'id_module';
     }
 
