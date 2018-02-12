@@ -124,7 +124,7 @@ class ControllerModel extends \kerana\Ada
     private function _setPathController(){
         
         // load the module_model to determine the name of module, used by create a path
-        $model_module = new \application\modules\system\model\ModuleModel();
+        $model_module = new ModuleModel();
         $this->controller_module = $model_module->find('module',['id_module'=>$this->controller_module_id],'one')->module;
         
         // set the path
@@ -217,6 +217,8 @@ class ControllerModel extends \kerana\Ada
         $file_new_contents = strtr($file_contents, $code_replace);
         // put the replacement into a model class
         file_put_contents($path_controller, $file_new_contents);
+        
+        return true;
     }
 
 }
