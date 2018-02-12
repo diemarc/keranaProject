@@ -147,8 +147,8 @@ class System
     {
         
         if (!in_array($this->_module, $this->config->get('_public_modules_'))) {
-           (\kerana\Auth::checkAuthentication()) ? New \kerana\acl\Acl($this->_module,$this->_controller,$this->_action) : '';
-           //\kerana\Auth::checkAuthentication();
+          // (\kerana\Auth::checkAuthentication()) ? New \kerana\acl\Acl($this->_module,$this->_controller,$this->_action) : '';
+           \kerana\Auth::checkAuthentication();
         }
     }
 
