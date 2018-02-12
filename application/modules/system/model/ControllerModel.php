@@ -38,6 +38,8 @@ class ControllerModel extends \kerana\Ada
 
     /** @var mixed, module name */
             $controller_module,
+            /** @var int, id_module */
+            $controller_module_id,
             /** @var mixed, controller name */
             $controller_name,
             /** @var int, controller model */
@@ -106,13 +108,29 @@ class ControllerModel extends \kerana\Ada
      */
     private function _setupNewController()
     {
-
-        $this->controller_module = (!isset($this->controller_module)) ? \filter_input(\INPUT_POST, 'sw_module', \FILTER_SANITIZE_SPECIAL_CHARS) : $this->controller_module;
-        $this->controller_model_id = (!isset($this->controller_model_id)) ? \filter_input(\INPUT_POST, 'sw_id_model', \FILTER_VALIDATE_INT):$this->controller_model_id;
-        $this->controller_name = (!isset($this->controller_name)) ? \filter_input(\INPUT_POST, 'f_controller', \FILTER_SANITIZE_SPECIAL_CHARS):$this->controller_name;
-        $this->controller_description = (!isset($this->controller_description)) ? filter_input(\INPUT_POST, 'f_controller_description', \FILTER_SANITIZE_SPECIAL_CHARS):$this->controller_description;
-        $this->controller_path = (!isset($this->controller_path)) ? __MODULEFOLDER__ . '/' .$this->controller_module . '/controller/':$this->controller_path;
+        $this->controller_module_id = (!isset($this->controller_module_id)) ? \filter_input(\INPUT_POST, 'id_module', \FILTER_SANITIZE_SPECIAL_CHARS) : $this->controller_module_id;
+        $this->controller_model_id = (!isset($this->controller_model_id)) ? \filter_input(\INPUT_POST, 'sw_id_model', \FILTER_VALIDATE_INT) : $this->controller_model_id;
+        $this->controller_name = (!isset($this->controller_name)) ? \filter_input(\INPUT_POST, 'f_controller', \FILTER_SANITIZE_SPECIAL_CHARS) : $this->controller_name;
+        $this->controller_description = (!isset($this->controller_description)) ? filter_input(\INPUT_POST, 'f_controller_description', \FILTER_SANITIZE_SPECIAL_CHARS) : $this->controller_description;
+     
+        $this->_setPathController();
     }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Create path for controller
+     * -------------------------------------------------------------------------
+     */
+    private function _setPathController(){
+        
+        // load the module_model to determine the name of module, used by create a path
+        $model_module = new \application\modules\system\model\ModuleModel();
+        $this->controller_module = $model_module->find('module',['id_module'=>$this->controller_module_id],'one')->module;
+        
+        // set the path
+        $this->controller_path = (!isset($this->controller_path)) ? __MODULEFOLDER__ . '/' . $this->controller_module . '/controller/' : $this->controller_path;
+    }
+    
 
     /**
      * -------------------------------------------------------------------------
@@ -126,9 +144,9 @@ class ControllerModel extends \kerana\Ada
         $this->_setupNewController();
 
         $controller_attr = [
+            'id_module' => $this->controller_module_id,
             'controller' => $this->controller_name,
             'controller_description' => 'Creator controller',
-            'controller_module' => $this->controller_module,
             'time_creation' => time()
         ];
 
@@ -200,6 +218,5 @@ class ControllerModel extends \kerana\Ada
         // put the replacement into a model class
         file_put_contents($path_controller, $file_new_contents);
     }
-
 
 }
