@@ -31,10 +31,10 @@
                     <label for='sw_module' class='col-sm-2 control-label'>Module</label> 
                     <div class='col-sm-4'> 
                         <div class='input-group col-sm-4'> 
-                            <select name="sw_module" id="sw_module"
+                            <select name="id_module" id="sw_module"
                                     class="form-control">
                                         <?php foreach ($rsModules AS $module): ?>
-                                    <option value="<?php echo $module->module; ?>">
+                                    <option value="<?php echo $module->id_module; ?>">
                                         <?php echo $module->module; ?></option>
                                 <?php endforeach; ?>
                             </select>
