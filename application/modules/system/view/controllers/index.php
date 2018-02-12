@@ -27,7 +27,7 @@
                     <tr>
                         <td><?php echo $controller->id_controller; ?></td>
                         <td><?php echo $controller->controller; ?></td>
-                        <td><?php echo strtoupper($controller->controller_module); ?></td>
+                        <td><strong><?php echo $controller->module; ?></strong></td>
                         <td><?php echo $controller->controller_description; ?></td>
                         <td class="well">
                             <a href='<?php echo __URL__; ?>/system/controller/detail/<?php echo $controller->id_controller; ?>' 
