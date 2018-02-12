@@ -64,10 +64,9 @@ class DataModel extends \kerana\Ada
     private function _setQueryModel()
     {
 
-        $this->_query = ' SELECT A.id_model,A.id_module,A.model,A.table_reference, '
-                . ' A.model_description,B.module '
+        $this->_query = ' SELECT A.id_model,A.model,A.table_reference, '
+                . ' A.model_description'
                 . ' FROM ' . $this->table_name . ' A '
-                . ' INNER JOIN sys_module B ON (A.id_module = B.id_module)'
                 . ' WHERE A.id_model IS NOT NULL';
     }
 
@@ -117,9 +116,7 @@ class DataModel extends \kerana\Ada
     {
         // get the id_module data
         $module = new ModuleModel();
-        $module->_setIdTableValue($this->_module_id);
-        $module_data = $module->getRecord();
-        $this->_module_name = $module_data->module;
+        $this->_module_name = $module->find('module', ['id_module' => $this->_module_id, 'one'])->module;
 
         $this->_model_path = __MODULEFOLDER__ . '/' . $this->_module_name . '/model/';
     }
@@ -136,7 +133,6 @@ class DataModel extends \kerana\Ada
 
         //create a model record
         $data_model = [
-            'id_module' => $this->_module_id,
             'model' => $this->_model_name . 'Model',
             'table_reference' => $this->_model_table,
             'model_description' => $this->_model_description,
@@ -182,7 +178,7 @@ class DataModel extends \kerana\Ada
         $file_contents = file_get_contents($path_tpl);
 
         $this->_parseFieldsTableToAttributes();
-        
+
         // replacement parse file
         $code_replace = [
             '[{model_name}]' => $this->_model_name . 'Model',
@@ -217,14 +213,12 @@ class DataModel extends \kerana\Ada
             $ex = preg_split("/[\()s]+/", $info_table->Type);
             $field_type = $ex[0];
             $field_lenght = $ex[1];
-            if($this->_model_attributes !=''){
+            if ($this->_model_attributes != '') {
                 $this->_model_attributes .= ", \n";
-            }else{
+            } else {
                 $this->_model_attributes .= "";
             }
-            $this->_model_attributes .= "/** @var $field_type($field_lenght), $info_table->Field  */ \n".'$'.$info_table->Field;
-            
-
+            $this->_model_attributes .= "/** @var $field_type($field_lenght), $info_table->Field  */ \n" . '$' . $info_table->Field;
 
         endforeach;
     }
@@ -239,6 +233,8 @@ class DataModel extends \kerana\Ada
     {
 
 
+        //echo "creando archivo de controller";
+
         $model_controller = new \application\modules\system\model\ControllerModel();
         $model_module = new \application\modules\system\model\ModuleModel();
 
@@ -248,10 +244,20 @@ class DataModel extends \kerana\Ada
         $model_controller->controller_model_id = $this->_id_value;
         $model_controller->controller_name = strtolower($this->_model_name);
         $model_controller->controller_module = $model_module->find('module', ['id_module' => $this->_module_id], 'one')->module;
+        $model_controller->controller_module_id = $this->_module_id;
         $model_controller->controller_path = __MODULEFOLDER__ . '/' . $model_controller->controller_module . '/controller/';
 
         //create a new controller for this model
         $model_controller->createController();
+        
+        // create asociatcion , module,controller->model
+        $model_controller_model = new ModuleControllerModel();
+        $model_controller_model->id_controller = $model_controller->_id_value;
+        $model_controller_model->id_module = $this->_module_id;
+        $model_controller_model->id_model = $this->_id_value;
+        $model_controller_model->createModelControllerModule();
     }
+
+    
 
 }
