@@ -16,7 +16,6 @@
                     <th>ID</th>
                     <th>Model</th>
                     <th>Table</th>
-                    <th>Module</th>
                     <th>Description</th>
                     <th class="bg-primary">Tools</th>
                 </tr>
@@ -27,7 +26,6 @@
                         <td><?php echo $modelo->id_model;?></td>
                         <td><?php echo $modelo->model;?></td>
                         <td><?php echo $modelo->table_reference;?></td>
-                        <td><?php echo strtoupper($modelo->module);?></td>
                         <td><?php echo $modelo->model_description;?></td>
                         <td class="well">
                             <a href='<?php echo __URL__;?>/system/model/detail/<?php echo $modelo->id_model; ?>' 
