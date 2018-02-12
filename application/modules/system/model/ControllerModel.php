@@ -52,7 +52,7 @@ class ControllerModel extends \kerana\Ada
     public function __construct()
     {
         parent::__construct();
-        $this->table_name = 'sys_controller';
+        $this->table_name = 'sys_controllers';
         $this->table_id = 'id_controller';
     }
 
@@ -63,9 +63,10 @@ class ControllerModel extends \kerana\Ada
      */
     private function _setQueryController()
     {
-        $this->_query = ' SELECT A.id_controller,A.controller,A.controller_module,'
+        $this->_query = ' SELECT A.id_controller,A.controller,B.module,'
                 . ' A.controller_description '
                 . ' FROM ' . $this->table_name . ' A '
+                . ' INNER JOIN sys_modules B ON (A.id_module = B.id_module)'
                 . ' WHERE A.id_controller IS NOT NULL';
     }
 
