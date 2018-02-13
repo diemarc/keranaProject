@@ -31,6 +31,10 @@
                         <td><?php echo $user->name . ' ' . $user->lastname; ?></td> 
                         <td><?php echo $user->sw_active; ?></td> 
                         <td class='well'> 
+                            <a href='/system/user/detail/<?php echo $user->id_user; ?>' 
+                               class='btn btn-default btn-xs' title='Edit'>
+                                <i class='fa fa-tasks'></i>
+                            </a> 
                             <a href='/system/user/edit/<?php echo $user->id_user; ?>' 
                                class='btn btn-default btn-xs' title='Edit'>
                                 <i class='fa fa-edit'></i>
