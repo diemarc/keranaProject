@@ -70,7 +70,6 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface
      */
     public function save()
     {
-
         ($this->_user->saveUser()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
 
