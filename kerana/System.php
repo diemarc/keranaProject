@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -33,7 +34,7 @@ class System
 {
 
     private
-            /** @var mixed, full namespace  */
+    /** @var mixed, full namespace  */
             $_namespace,
             /** @var mixed, module to load */
             $_module,
@@ -58,7 +59,7 @@ class System
     {
 
         // load the configuration file depending on environment value constant
-        require_once(__APPFOLDER__ . '/../config/conf.'.__ENVIRONMENT__.'.php');
+        require_once(__APPFOLDER__ . '/../config/conf.' . __ENVIRONMENT__ . '.php');
 
         //load kerana confguration file.
         $this->config = \kerana\Configuration::singleton();
@@ -68,7 +69,7 @@ class System
         $this->_setAndCheckNamespace();
 
         // if kerana is not running in CLI mode, check access
-        (!defined('__ISCLI__')) ? $this->_checkAccessPetition() :'';
+        (!defined('__ISCLI__')) ? $this->_checkAccessPetition() : '';
 
         // object controller is created now
         $this->_object_controller = new $this->_namespace;
@@ -76,11 +77,11 @@ class System
         // if exists some parameters will stored in a array 
         // ej: indexController->index($i,$y)
         if (!empty($this->_parameters)) {
-            
+
             // call the method and pass the parameters
             call_user_func_array([$this->_object_controller, $this->_action], $this->_parameters);
         } else {
-            
+
             // if not parameters , the call the method
             $this->_object_controller->{$this->_action}();
         }
@@ -104,7 +105,6 @@ class System
         $this->_controller = \helpers\Url::getController();
         $this->_action = \helpers\Url::getAction();
         $this->_parameters = \helpers\Url::getParameters();
-
     }
 
     /**
@@ -141,14 +141,17 @@ class System
      * -------------------------------------------------------------------------
      * Check if the module requested is not a public module, specified in conf file,
      * If false, check user autentification.
-     * If user user is autentificated, then check ACL
+     * If user user is autentificated, then check ACL if this is activated in conf file
      */
     private function _checkAccessPetition()
     {
-        
+
         if (!in_array($this->_module, $this->config->get('_public_modules_'))) {
-           (\kerana\Auth::checkAuthentication()) ? New \kerana\acl\Acl($this->_module,$this->_controller,$this->_action) : '';
-          // \kerana\Auth::checkAuthentication();
+            // run ACL , only if is activated in conf file (_acl_active_)
+            ($this->config->get('_acl_active_')) ?
+                            (\kerana\Auth::checkAuthentication()) ?
+                                    New \kerana\acl\Acl($this->_module, $this->_controller, $this->_action) : '' :
+                            \kerana\Auth::checkAuthentication();
         }
     }
 
