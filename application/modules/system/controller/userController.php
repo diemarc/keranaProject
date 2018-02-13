@@ -84,7 +84,7 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface
     {
 
         $this->_user->_setIdTableValue($id);
-        $params['rsUsuario'] = $this->_user->getRecord();
+        $params['rsUser'] = $this->_user->getRecord();
         \kerana\View::showView($this->_current_module, 'users/detail', $params);
     }
 
