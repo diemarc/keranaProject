@@ -45,8 +45,29 @@ class ModuleModel extends \Kerana\Ada
         parent::__construct();
         $this->table_name = 'sys_modules';
         $this->table_id = 'id_module';
+        
+        
     }
 
+    /**
+     * -------------------------------------------------------------------------
+     * Check if application is writeable
+     * -------------------------------------------------------------------------
+     * @return type
+     */
+    private function _checkApplicationFolderPermission(){
+        return (!is_writable(dirname($this->_module_path))) ? \kerana\Exceptions::showError('PermissionError',''
+                . 'The application folder is not writeable, fix it!!.<br>'
+                . '<br><strong>Posibles solutions</strong>'
+                . '<ul>'
+                . ' <li>[localhost_only]Change the apache user-group(/etc/apache2/ennvars) '
+                . 'matching the apache-user with you user-machine</li>'
+                . '<li>'
+                . '[any_scenario]Search in https://duckduckgo.com'
+                . '</li>'
+                . '</ul>') : '';
+    }
+    
     /**
      * -------------------------------------------------------------------------
      * Set the path and module name
@@ -56,6 +77,9 @@ class ModuleModel extends \Kerana\Ada
     {
         $this->_module_name = strtolower(\helpers\Request::varchar('f_module'));
         $this->_module_path = __MODULEFOLDER__ . '/' . $this->_module_name;
+        
+        // check permission
+        $this->_checkApplicationFolderPermission();
     }
 
     /**
