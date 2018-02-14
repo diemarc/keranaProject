@@ -5,7 +5,7 @@
     </h4>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form action="http://local.keranaproject/system/group/save" 
+            <form action="<?php echo __URL__.'/system/group/save';?>" 
                   id="formKerana" name="formKerana" method="POST" class="form-horizontal"
                   accept-charset="utf-8">
                       <?php echo $kerana_token; ?>
