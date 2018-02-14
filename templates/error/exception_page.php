@@ -31,7 +31,7 @@
                             </p>
                             <h4>Trace</h4>
                             <p>
-                                <?php echo $exception->getTraceAsString(); ?>
+                                <?php echo nl2br($exception->getTraceAsString()); ?>
                             </p>
                             <?php if (!empty($query)) { ?>
                                 <h4>Query</h4>
@@ -44,7 +44,7 @@
                         } else { ?>
 
                             <p>
-    <?php echo 'En ' . $exception->getFile() . ' (' . $exception->getLine() . ')'; ?>
+    <?php echo 'In. ' . $exception->getFile() . ' (' . $exception->getLine() . ')'; ?>
                             </p>
 
 <?php } ?>
