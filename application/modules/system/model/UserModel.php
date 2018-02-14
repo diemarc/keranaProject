@@ -145,5 +145,13 @@ class UserModel extends \kerana\Ada
                         ]
         );
     }
+    
+    public function delete(){
+        if($this->_id_value == $_SESSION['id_user']){
+            \kerana\Exceptions::showError('WTF??','Ur are going to kill urself<br>Cant delete urself');
+        }else{
+            parent::delete();
+        }
+    }
 
 }
