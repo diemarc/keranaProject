@@ -4,7 +4,7 @@
         <span class='text-muted'>system</span>Users
     </h4>
     <header class="breadcrumb">
-        <a href="http://local.keranaproject/system/user/add" 
+        <a href="<?php echo __URL__.'/system/user/add';?>" 
            class="btn btn-default btn-sm">
             <i class='fa fa-plus'></i>
         </a>
@@ -31,15 +31,15 @@
                         <td><?php echo $user->name . ' ' . $user->lastname; ?></td> 
                         <td><?php echo $user->sw_active; ?></td> 
                         <td class='well'> 
-                            <a href='/system/user/detail/<?php echo $user->id_user; ?>' 
+                            <a href='<?php echo __URL__."/system/user/detail/$user->id_user"; ?>' 
                                class='btn btn-default btn-xs' title='Edit'>
                                 <i class='fa fa-tasks'></i>
                             </a> 
-                            <a href='/system/user/edit/<?php echo $user->id_user; ?>' 
+                            <a href='<?php echo __URL__."/system/user/edit/$user->id_user"; ?>' 
                                class='btn btn-default btn-xs' title='Edit'>
                                 <i class='fa fa-edit'></i>
                             </a> 
-                            <a href='/system/user/delete/<?php echo $user->id_user; ?>' 
+                            <a href='<?php echo __URL__."/system/user/delete/$user->id_user"; ?>' 
                                class='btn btn-danger btn-xs' title='Delete'>
                                 <i class='fa fa-trash'></i></a> 
                         </td> 
