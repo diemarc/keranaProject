@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -16,7 +17,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 namespace kerana;
 
@@ -47,14 +47,18 @@ class Epdo extends PDO
          * ---------------------------------------------------------------------
          */
         $options = [
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,// devuelve objetos
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ, // devuelve objetos
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // errores en modo de excepction
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'" // todo en utf8
         ];
 
-        parent::__construct('mysql:host=' . $config->get('_dbhost_') .
-                ';port=' . $config->get('_dbport_') . ';dbname=' .
-                $config->get('_dbname_'), $config->get('_dbuser_'), $config->get('_dbpass_'), $options);
+        try {
+            parent::__construct('mysql:host=' . $config->get('_dbhost_') .
+                    ';port=' . $config->get('_dbport_') . ';dbname=' .
+                    $config->get('_dbname_'), $config->get('_dbuser_'), $config->get('_dbpass_'), $options);
+        } catch (\Exception $ex) {
+             \kerana\Exceptions::ShowException('DataBaseConnectionFail', $ex);
+        }
     }
 
     /**
