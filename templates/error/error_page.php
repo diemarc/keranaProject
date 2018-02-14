@@ -14,7 +14,7 @@
                 <div class="panel panel-danger">
                     <div class="panel-heading">
                         <h2 class="text-danger">
-                            <i class="glyphicon glyphicon-thumbs-down"></i>
+                            <i class="glyphicon glyphicon-remove-sign"></i> 
                             <?php echo $title; ?>
                         </h2>
                     </div>
@@ -24,9 +24,7 @@
                         </p>
                     </div>
                     <div class="panel-footer">
-                        <span align='center'>
-                            <button class="btn btn-default"  onclick='history.back()'>GoBack</button>
-                        </span>
+                        <button class="btn btn-default"  onclick='history.back()'>GoBack</button>
                     </div>
                 </div>
             </div>
