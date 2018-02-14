@@ -110,6 +110,9 @@ class ModuleModel extends \Kerana\Ada
             mkdir($this->_module_path . '/model', 0777, true);
             // view folder
             mkdir($this->_module_path . '/view', 0777, true);
+        }else{
+            \kerana\Exceptions::showError('CreateModuleDirectory', 'Kerana cant '
+                    . 'create the module directory,check folder permissions');
         }
     }
 
