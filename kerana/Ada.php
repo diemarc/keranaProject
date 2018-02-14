@@ -375,7 +375,7 @@ abstract class Ada
             $this->_binds[':id_key'] = $this->_id_value;
             $result = $this->getQuery('one');
             if ($check) {
-                return ($result) ? $result : Exceptions::showError('Empty', 'No hay registro con ese id');
+                return ($result) ? $result : Exceptions::showError('NoRecordFound', 'There is nothing here');
             } else {
                 return $result;
             }
