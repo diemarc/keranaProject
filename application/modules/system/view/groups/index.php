@@ -4,7 +4,7 @@
         <span class='text-muted'>system</span>UserGroups
     </h4>
     <header class="breadcrumb">
-        <a href="http://local.keranaproject/system/group/add" 
+        <a href="<?php echo __URL__.'/system/group/add';?>" 
            class="btn btn-default btn-sm">
             <i class='fa fa-plus'></i>
         </a>
