@@ -14,7 +14,7 @@
                 <div class="panel panel-danger">
                     <div class="panel-heading">
                         <h2 class="text-danger">
-                            <i class="glyphicon glyphicon-thumbs-down"></i>
+                            <i class="glyphicon glyphicon-alert"></i>
                             <?php echo $title; ?>
                         </h2>
                     </div>
