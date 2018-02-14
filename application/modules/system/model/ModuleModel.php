@@ -70,7 +70,7 @@ class ModuleModel extends \Kerana\Ada
 
         // first at all, check if the new module name, is a reserved module
         if (!in_array($this->_module_name, $this->_arr_reserved_modules)) {
-            
+
             // will check if not existe another module with the same name
             $rsFindModulo = $this->find('module', ['module' => $this->_module_name]
                     , 'one');
@@ -88,8 +88,7 @@ class ModuleModel extends \Kerana\Ada
             } else {
                 \kerana\Exceptions::showError('Creator', 'Module already exists');
             }
-        }
-        else{
+        } else {
             \kerana\Exceptions::showError('Creator', 'Module is reserved by kerana.');
         }
     }
@@ -102,17 +101,19 @@ class ModuleModel extends \Kerana\Ada
     protected function _createModuleFolder()
     {
 
-        // first create a module folder in application/module path
-        if (mkdir($this->_module_path, 0777, true)) {
-            // controllers folder
-            mkdir($this->_module_path . '/controller', 0777, true);
-            // models folder
-            mkdir($this->_module_path . '/model', 0777, true);
-            // view folder
-            mkdir($this->_module_path . '/view', 0777, true);
-        }else{
-            \kerana\Exceptions::showError('CreateModuleDirectory', 'Kerana cant '
-                    . 'create the module directory,check folder permissions');
+        try {
+
+            // first create a module folder in application/module path
+            mkdir($this->_module_path, 0777, true); 
+                // controllers folder
+                mkdir($this->_module_path . '/controller', 0777, true);
+                // models folder
+                mkdir($this->_module_path . '/model', 0777, true);
+                // view folder
+                mkdir($this->_module_path . '/view', 0777, true);
+            
+        } catch (\Exception $ex) {
+            \kerana\Exceptions::ShowException('CreateModuleDirectory', $ex);
         }
     }
 
