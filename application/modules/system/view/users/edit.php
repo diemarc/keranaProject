@@ -1,16 +1,24 @@
+<?php
+
+ini_set('display_errors', 1);
+error_reporting(-1);
+error_reporting(E_ALL);
+
+
+?>
 <div id="page-wrapper">
     <h4 class='text-primary'> 
         <i class="fa fa-user fa-2x"></i>
         <span class='text-muted'>system</span>Users->
         <span class="text-success">EditUser</span>-><?php echo $rs->username; ?>
     </h4>
-    <form action="http://local.keranaproject/system/user/update/<?php echo $rs->id_usuario; ?>" 
+    <form action="<?php echo __URL__."/system/user/update/$rs->id_user";?>" 
           id="formKerana" name="formKerana" method="POST" class="form-horizontal"
           accept-charset="utf-8">
               <?php echo $kerana_token; ?>
 
         <header class="breadcrumb">
-            <a href="http://local.keranaproject/system/user/index" 
+            <a href="<?php echo __URL__."/system/user/index";?>" 
                class="btn btn-warning">Cancel</a>
             <button type="submit" class="btn btn-success">Save</button>
         </header>
