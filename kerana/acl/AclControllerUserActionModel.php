@@ -50,10 +50,8 @@ class AclControllerUserActionModel extends \kerana\Ada
                 . ' INNER JOIN sys_modules B ON (A.id_module = B.id_module)'
                 . ' INNER JOIN sys_controllers C ON (A.id_controller = C.id_controller)'
                 . ' INNER JOIN sys_actions D ON (A.id_action = D.id_action)'
-                . ' WHERE A.id_user = :id_user');
-        $this->_binds = [
-            ':id_user' => $this->id_user
-        ];
+                . ' WHERE A.id_module IS NOT NULL ');
+        
     }
 
     /**
@@ -67,11 +65,13 @@ class AclControllerUserActionModel extends \kerana\Ada
 
         $this->_setMqAcl();
         $this->_setQuery($this->_query
+                . ' AND A.id_user = :id_user '
                 . ' AND B.module = :module'
                 . ' AND C.controller = :controller '
                 . ' AND D.action_name = :action'
                 . ' LIMIT 1 ');
 
+        $this->_binds[':id_user'] = $this->id_user;
         $this->_binds[':module'] = $this->module_name;
         $this->_binds[':controller'] = $this->controller_name;
         $this->_binds[':action'] = $this->action_name;
