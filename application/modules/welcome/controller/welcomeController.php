@@ -17,11 +17,10 @@ class WelcomeController extends \kerana\Kerana
         parent::__construct();
     }
 
+    public function index()
+    {
 
-    public function index(){
-      
-       echo 'hello...mdf';
-        
+        \kerana\View::showView('welcome', 'welcome',false,false,false);
     }
 
 }
