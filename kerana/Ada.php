@@ -42,10 +42,7 @@ abstract class Ada
             /** @array , query conditions */
             $_conditions,
             /** @array, binds for prepare statetment */
-            $_binds,
-            
-            /** @mixed, master query, */
-            $_mq;
+            $_binds;
     public
     /** @var mixed, el nombre de la tabla */
             $table_name,
