@@ -1,3 +1,6 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+<script src="<?php echo __URL__.'/src/js/users.js';?> "></script>
+
 <div id="page-wrapper" style="">
     <div class="breadcrumb">
         <h4 class='text-primary'> 
@@ -34,7 +37,8 @@
                         <tr>
                             <td class="well well-sm">Password</td>
                             <td>
-                                <button class="btn btn-default btn-sm" type="button">
+                                <button class="btn btn-default btn-sm" 
+                                        type="button" onclick="testUser()">
                                     Change
                                 </button>
                             </td>
@@ -90,7 +94,22 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tab_groups">
-
+                    <div ng-controller="getGroups">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Group</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="group in groups">
+                                    <td>{{group.id_group}}</td>
+                                    <td>{{group.group_name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="tab_privileges">
                     <div class="panel panel-green">
