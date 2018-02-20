@@ -111,5 +111,15 @@ class GroupController extends \kerana\Kerana implements \kerana\KeranaInterface
         $this->_group->_setIdTableValue($id);
         ($this->_group->delete()) ? \helpers\Redirect::to('/system/group/index') : '';
     }
+    
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Get all groups in Json
+     * -------------------------------------------------------------------------
+     */
+    public function getGroups(){
+        echo json_encode($this->_group->getAll());
+    }
 
 }
