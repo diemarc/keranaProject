@@ -41,7 +41,7 @@ class ActionControllerModel extends \kerana\Ada
     protected function _setMqAction()
     {
 
-        $this->_mq = ' SELECT A.*,B.action_name,B.sw_system_action,C.controller,'
+        $this->_query = ' SELECT A.*,B.action_name,B.sw_system_action,C.controller,'
                 . ' D.module '
                 . ' FROM '.$this->table_name.' A '
                 . ' INNER JOIN sys_actions B ON (A.id_action = B.id_action)'
@@ -50,6 +50,19 @@ class ActionControllerModel extends \kerana\Ada
                 . ' WHERE A.id_action IS NOT NULL';
     }
     
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Get actions for controller-models
+     * -------------------------------------------------------------------------
+     * @return type
+     */
+    public function getMcaAvaibleForUser(){
+        
+        $this->_setMqAction();
+        return $this->getQuery();
+        
+    }
     
 
 }
