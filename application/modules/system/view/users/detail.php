@@ -1,4 +1,3 @@
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
 <script src="<?php echo __URL__.'/src/js/users.js';?> "></script>
 
 <div id="page-wrapper" style="">
@@ -115,7 +114,7 @@
                     <div class="panel panel-green">
                         <div class="panel-body">
                             <div class="breadcrumb">
-                                <a href='/system/user/edit/<?php echo $rsUser->id_user; ?>' 
+                                <a href='javascript:loadResource("<?php echo __URL__;?>/system/user/addMca","div_aux1");' 
                                    class='btn btn-success btn-xs' title='AddMca'>
                                     <i class='fa fa-plus'></i>
                                 </a> 
