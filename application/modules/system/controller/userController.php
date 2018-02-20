@@ -123,5 +123,9 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface
         $this->_user->_setIdTableValue($id);
         ($this->_user->delete()) ? \helpers\Redirect::to('/system/user/index') : '';
     }
+    
+    public function addMca(){
+    \kerana\View::showView($this->_current_module,'users/partials/add_mca_user','',false,false);
+    }
 
 }
