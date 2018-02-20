@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html ng-app>
 <html lang="en">
 
     <head>
@@ -17,16 +18,7 @@
         <link href="/_styles/sb_admin/dist/css/sb-admin-2.css" rel="stylesheet">
         <link href="/_styles/sb_admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <link href="/_styles/sb_admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <!-- jQuery -->
-        <script src="/_styles/sb_admin/vendor/jquery/jquery.min.js"></script>
-        <script src="/src/js/utilidades.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/tab.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/tooltip.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/popover.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/bootstrap-dropdown.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/bootstrap-modal.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/bootstrap-collapse.js" type="text/javascript" language="javascript"></script>
-        <script src="/src/js/url.js" type="text/javascript" language="javascript"></script>
+       
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -34,9 +26,7 @@
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script>
-            $(document).ready(function () {
-                //loadAccesosGrupoUsuario();
-            });
+          
 
 
 
