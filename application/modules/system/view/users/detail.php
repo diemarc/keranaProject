@@ -1,5 +1,3 @@
-<script src="<?php echo __URL__.'/src/js/users.js';?> "></script>
-
 <div id="page-wrapper" style="">
     <div class="breadcrumb">
         <h4 class='text-primary'> 
@@ -8,6 +6,7 @@
             <a href="/system/user/index">Users-></a>
             <span class="text-success">userDetail</span>-><?php echo $rsUser->username; ?>
         </h4>
+        
     </div>
     <div class="col-sm-4" style="padding-left:2px;">
 
@@ -93,28 +92,14 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="tab_groups">
-                    <div ng-controller="getGroups">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Group</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="group in groups">
-                                    <td>{{group.id_group}}</td>
-                                    <td>{{group.group_name}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                   
                 </div>
                 <div role="tabpanel" class="tab-pane" id="tab_privileges">
                     <div class="panel panel-green">
                         <div class="panel-body">
                             <div class="breadcrumb">
-                                <a href='javascript:loadResource("<?php echo __URL__;?>/system/user/addMca","div_aux1");' 
+                                
+                                <a href='javascript:loadResource("<?php echo __URL__.'/system/userAction/add/'.$rsUser->id_user;?>","div_aux2");' 
                                    class='btn btn-success btn-xs' title='AddMca'>
                                     <i class='fa fa-plus'></i>
                                 </a> 
