@@ -14,7 +14,7 @@
             <span class="small">
                 <span class="small"><?php echo __ENVIRONMENT__; ?></span>
             </span>
-            
+
         </a>
     </div>
     <!-- /.navbar-header -->
@@ -22,8 +22,8 @@
     <ul class="nav navbar-top-links navbar-right">
         <!-- /.dropdown -->
         <li class="dropdown">
-            <a class="dropdown-toggle" href="<?php __URL__;?>/welcome/login/closeSession">
-                 <?php echo $_SESSION['username'];?> <i class="glyphicon glyphicon-log-out"></i>
+            <a class="dropdown-toggle" href="<?php echo __URL__; ?>/welcome/login/closeSession">
+                <?php echo $_SESSION['username']; ?> <i class="glyphicon glyphicon-log-out"></i>
             </a>
             <!-- /.dropdown-tasks -->
         </li>

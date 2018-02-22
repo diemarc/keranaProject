@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html ng-app>
 <html lang="en">
 
     <head>
