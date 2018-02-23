@@ -7,3 +7,10 @@ function getGroups($scope,$http){
     
     
 }
+
+
+function addMcaUser(){
+    
+    loadResource('http://local.keranaproject/system/user/addMca','div_aux1');
+    
+}
