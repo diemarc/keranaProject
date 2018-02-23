@@ -50,7 +50,7 @@ class Acl
      */
     public function __construct($module, $controller, $action)
     {
-        $this->_model_acl_user = New \kerana\acl\AclControllerUserActionModel();
+        $this->_model_acl_user = New \kerana\acl\UserPermissionModel();
         $this->_model_acl_user->module_name = \helpers\Validator::varchar($module);
         $this->_model_acl_user->controller_name = \helpers\Validator::varchar($controller);
         $this->_model_acl_user->action_name = \helpers\Validator::varchar($action);
