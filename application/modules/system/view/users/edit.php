@@ -1,11 +1,3 @@
-<?php
-
-ini_set('display_errors', 1);
-error_reporting(-1);
-error_reporting(E_ALL);
-
-
-?>
 <div id="page-wrapper">
     <h4 class='text-primary'> 
         <i class="fa fa-user fa-2x"></i>

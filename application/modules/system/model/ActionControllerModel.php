@@ -60,6 +60,7 @@ class ActionControllerModel extends \kerana\Ada
     public function getMcaAvaibleForUser(){
         
         $this->_setMqAction();
+        $this->_query .= ' ORDER BY A.id_module,A.id_controller,A.id_action ';
         return $this->getQuery();
         
     }
