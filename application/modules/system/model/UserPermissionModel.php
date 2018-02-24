@@ -52,7 +52,7 @@ class UserPermissionModel extends \kerana\Ada
      */
     public function setUserPermission($id_user = '')
     {
-        $this->_id_user = \helpers\Validator::valint('id_user',$id_user);
+        $this->_id_user = \helpers\Validator::valInt('id_user',$id_user);
     }
 
     /**
@@ -61,7 +61,7 @@ class UserPermissionModel extends \kerana\Ada
      */
     public function setModulePermission($id_module = '')
     {
-        $this->_id_module = \helpers\Validator::valint('id_module',$id_module);
+        $this->_id_module = \helpers\Validator::valInt('id_module',$id_module);
     }
 
     /**
@@ -70,7 +70,7 @@ class UserPermissionModel extends \kerana\Ada
      */
     public function setControllerPermission($id_controller = '')
     {
-        $this->_id_controller = \helpers\Validator::valint('id_controller',$id_controller);
+        $this->_id_controller = \helpers\Validator::valInt('id_controller',$id_controller);
     }
 
     /**
@@ -79,7 +79,7 @@ class UserPermissionModel extends \kerana\Ada
      */
     public function setActionPermission($id_action = '')
     {
-        $this->_id_action = \helpers\Validator::valint('id_action',$id_action);
+        $this->_id_action = \helpers\Validator::valInt('id_action',$id_action);
     }
 
     /**
