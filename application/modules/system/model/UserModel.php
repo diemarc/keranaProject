@@ -49,13 +49,16 @@ class UserModel extends \kerana\Ada
             $lastname;
     private
     /** @var password salt */
-            $_salt;
+            $_salt,
+            $_id_usuario;
 
     public function __construct()
     {
         parent::__construct();
         $this->table_name = 'sys_user';
         $this->table_id = 'id_user';
+
+        settype($this->_id_usuario, 'int');
     }
 
     /**
@@ -78,7 +81,7 @@ class UserModel extends \kerana\Ada
      */
     private function _initUser()
     {
-        $this->username = Request::varchar('f_username',true);
+        $this->username = Request::varchar('f_username', true);
         $this->password = Request::varchar('f_password');
         $this->name = Request::varchar('f_name', true);
         $this->email = Request::email();
@@ -97,14 +100,14 @@ class UserModel extends \kerana\Ada
 
         return $this->save(
                         [
-                            'username' => $this->username,
-                            'password' => $this->password,
-                            'salt' => $this->_salt,
-                            'email' => $this->email,
-                            'name' => $this->name,
-                            'lastname' => $this->lastname,
-                            'sw_active' => 1
-                        ],true
+                    'username' => $this->username,
+                    'password' => $this->password,
+                    'salt' => $this->_salt,
+                    'email' => $this->email,
+                    'name' => $this->name,
+                    'lastname' => $this->lastname,
+                    'sw_active' => 1
+                        ], true
         );
     }
 
@@ -145,18 +148,20 @@ class UserModel extends \kerana\Ada
                         ]
         );
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Delete user
      * -------------------------------------------------------------------------
      */
-    public function delete(){
-        if($this->_id_value == $_SESSION['id_user']){
-            \kerana\Exceptions::showError('WTF??','Ur are going to kill urself<br>Cant delete urself');
-        }else{
+    public function delete()
+    {
+        if ($this->_id_value == $_SESSION['id_user']) {
+            \kerana\Exceptions::showError('WTF??', 'Ur are going to kill urself<br>Cant delete urself');
+        } else {
             parent::delete();
         }
     }
+
 
 }
