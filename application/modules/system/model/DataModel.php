@@ -47,7 +47,15 @@ class DataModel extends \kerana\Ada
             /** @var mixed, description model, used to put into a comment */
             $_model_description,
             /** @var array, contains attributes matched with the field of the table */
-            $_model_attributes;
+            $_model_attributes,
+            /** @array, contains setters for each field for a table */
+            $_setters,
+            /** @array, contains getters for fields  */
+            $_getters,
+            /** @array, contains association with fields and hints */
+            $_data_array,
+            /** @array , primary keys of a table */
+            $_table_pks;
 
     public function __construct()
     {
@@ -177,16 +185,25 @@ class DataModel extends \kerana\Ada
         $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
         $file_contents = file_get_contents($path_tpl);
 
-        $this->_parseFieldsTableToAttributes();
+        $this->_getTablaInformationAndSetUp();
+
+        // set pks
+        $this->_parsePksTable();
 
         // replacement parse file
         $code_replace = [
             '[{model_name}]' => $this->_model_name . 'Model',
             '[{module_name}]' => $this->_module_name,
+            '[{name}]' => $this->_model_name,
+            '[{name_min}]' => strtolower($this->_model_name),
             '[{model_description}]' => $this->_model_description,
             '[{model_date}]' => date('d-m-Y H:i:s'),
             '[{model_table}]' => $this->_model_table,
             '[{properties}]' => $this->_model_attributes,
+            '[{setters}]' => $this->_setters,
+            '[{getters}]' => $this->_getters,
+            '[{pk_values}]' => $this->_table_pks,
+            '[{key_values_model}]' => $this->_data_array,
             '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
@@ -202,10 +219,10 @@ class DataModel extends \kerana\Ada
 
     /**
      * -------------------------------------------------------------------------
-     * COnvert each field from the table in object properties
+     * SetUp the class, with table information, setter,getters, insert, etc
      * -------------------------------------------------------------------------
      */
-    private function _parseFieldsTableToAttributes()
+    private function _getTablaInformationAndSetUp()
     {
 
         $rsInfoTable = $this->descTable($this->_model_table);
@@ -218,9 +235,99 @@ class DataModel extends \kerana\Ada
             } else {
                 $this->_model_attributes .= "";
             }
-            $this->_model_attributes .= "/** @var $field_type($field_lenght), $info_table->Field  */ \n" . '$' . $info_table->Field;
+            $this->_model_attributes .= "/** @var $field_type($field_lenght), $$info_table->Field  */ \n" . '$_' . $info_table->Field;
+
+            // parse fields into a data array association
+            $this->_parseDataArrayFieldTable($info_table->Field);
+
+            // parse the setters
+            $this->_parseSetterFieldTable($info_table->Field, $field_type, $info_table->Null);
+
+            //parse the getters
+            $this->_parseGettersFieldTable($info_table->Field, $field_type);
+
 
         endforeach;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Create setter for each table field
+     * -------------------------------------------------------------------------
+     * @param string $field
+     * @param tring $type
+     * @param string $null
+     */
+    private function _parseSetterFieldTable($field, $type, $null)
+    {
+        $required = ($null == 'NO') ? ",TRUE" : ",FALSE";
+        $this->_setters .= "/** \n"
+                . "* ------------------------------------------------------------------------- \n"
+                . "* Setter for " . $field . "\n"
+                . "* ------------------------------------------------------------------------- \n"
+                . "* @param " . $type . ' $value the ' . $field . " value \n"
+                . "*/ \n "
+                . 'public function set_' . $field . '($value = ""){' . " \n"
+                . ' $this->_' . $field . '= \\helpers\\Validator::val' . ucwords($type) . "('" . $field . "'" . ',$value' . $required . ');' . "\n"
+                . "}\n";
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Create getters for each fields
+     * -------------------------------------------------------------------------
+     * @param type $field
+     * @param type $type
+     */
+    private function _parseGettersFieldTable($field, $type)
+    {
+        $this->_getters .= "/** \n"
+                . "* ------------------------------------------------------------------------- \n"
+                . "* Getter for " . $field . "\n"
+                . "* ------------------------------------------------------------------------- \n"
+                . "* @return " . $type . ' $value ' . " \n"
+                . "*/ \n "
+                . 'public function get_' . $field . '(){' . " \n"
+                . ' return (isset($this->_' . $field . ')) ? $this->_' . $field . ': null;' . "\n"
+                . "}\n";
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Set the data array for a model
+     * -------------------------------------------------------------------------
+     * @param type $field
+     */
+    private function _parseDataArrayFieldTable($field)
+    {
+
+        $this->_data_array .= "'$field' =>" . '$this->_' . $field . ',' . "\n";
+    }
+
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Set the table primary keys
+     * -------------------------------------------------------------------------
+     */
+    private function _parsePksTable()
+    {
+        // getl all pks table
+        $rsPks = $this->getAllTableKeys($this->_model_table);
+        foreach ($rsPks AS $pk):
+            $this->_table_pks .= "'".$pk->Column_name ."'". '=> $this->_' . $pk->Column_name . ','. "\n";
+        endforeach;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Setter for nombre_comercial
+     * -------------------------------------------------------------------------
+     * @param varchar , nombre_comercial value
+     */
+    public function setNombre_comercial($value = "")
+    {
+        $this->_nombre_comercial = \helpers\Validator::valVarchar('nombre_comercial', $value, TRUE);
     }
 
     /**
@@ -249,7 +356,7 @@ class DataModel extends \kerana\Ada
 
         //create a new controller for this model
         $model_controller->createController();
-        
+
         // create asociatcion , module,controller->model
         $model_controller_model = new ModuleControllerModel();
         $model_controller_model->id_controller = $model_controller->_id_value;
@@ -257,7 +364,5 @@ class DataModel extends \kerana\Ada
         $model_controller_model->id_model = $this->_id_value;
         $model_controller_model->createModelControllerModule();
     }
-
-    
 
 }
