@@ -41,6 +41,111 @@ class Validator
 
     /**
      * -------------------------------------------------------------------------
+     * Initializite the validator params
+     * -------------------------------------------------------------------------
+     * @param string $param_name , the name of the param to check/validate
+     * @param mixed $param_value , the param_value to check/validate
+     * @param boolean $required , if true, check the param is not empty
+     */
+    public static function initValidator($param_name, $param_value = '', $required = false)
+    {
+        self::$param_name = filter_var($param_name, FILTER_SANITIZE_SPECIAL_CHARS);
+        self::$param_value = filter_var($param_value, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        // if param_value is empty then ask to RequestHelper
+        // to try to catch the param via _post or _get
+        if (empty($param_value)) {
+            \helpers\Request::init();
+            self::$param_to_validate = \helpers\Request::$request[$param_name];
+        } else {
+            self::$param_to_validate = self::$param_value;
+        }
+
+        // if is required, check if not empty
+        if ($required) {
+            try {
+                self::isRequired(self::$param_name, self::$param_to_validate);
+            } catch (\Exception $ex) {
+                \kerana\Exceptions::ShowException('VALIDATOR::' . self::$param_name . ' is a required field but its empty', New \Exception($ex));
+            }
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Validate int
+     * -------------------------------------------------------------------------
+     * @param string $param_name
+     * @param int $param_value
+     * @param boolean $required
+     * @ereturn int
+     */
+    public static function valInt($param_name, $param_value = '', $required = true)
+    {
+        self::initValidator($param_name, $param_value, $required);
+
+        // now validate 
+        if (filter_var(self::$param_to_validate, FILTER_VALIDATE_INT) == FALSE) {
+            \kerana\Exceptions::showError('integerVALIDATOR::', ' param_name=<strong>' .
+                    self::$param_name . '</strong><br> param_value=<strong>'
+                    . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid INTEGER');
+        } else {
+            return trim(self::$param_to_validate);
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Validate a string
+     * -------------------------------------------------------------------------
+     * @param string $param_name
+     * @param string $param_value
+     * @param boolean $required
+     * @return string
+     */
+    public static function valString($param_name, $param_value = '', $required = false)
+    {
+        self:initValidator($param_name, $param_value, $required);
+
+        $is_email = strpos($param_name, 'email');
+        $process = ($is_email) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : filter_var(self::$param_to_validate, FILTER_SANITIZE_STRING);
+
+        if ($process == FALSE) {
+            \kerana\Exceptions::showError('stringVALIDATOR::', ' param_name=<strong>' .
+                    self::$param_name . '</strong><br> param_value=<strong>'
+                    . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid value');
+        } else {
+            return trim(self::$param_name);
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Evaluate a textdata is to same of valString
+     * -------------------------------------------------------------------------
+     * @param type $param_name
+     * @param type $param_value
+     * @param type $required
+     * @return type
+     */
+    public static function valText($param_name, $param_value = '', $required = false){
+       return self::valString($param_name, $param_value, $required);   
+    }
+    
+    
+    
+
+    /*
+      |--------------------------------------------------------------------------
+      | OLD METHODS,
+      |--------------------------------------------------------------------------
+      |
+      | @TODO: refactor this
+      |
+     */
+
+    /**
+     * -------------------------------------------------------------------------
      * 
      * -------------------------------------------------------------------------
      * @param type $field
@@ -96,60 +201,6 @@ class Validator
             \kerana\Exceptions::showError('VALIDATOR::', $var . ' is not a valid INTEGER');
         } else {
             return trim($var);
-        }
-    }
-
-    
-    /**
-     * -------------------------------------------------------------------------
-     * Initializite the validator params
-     * -------------------------------------------------------------------------
-     * @param string $param_name , the name of the param to check/validate
-     * @param mixed $param_value , the param_value to check/validate
-     * @param boolean $required , if true, check the param is not empty
-     */
-    public static function initValidator($param_name, $param_value = '', $required = false)
-    {
-        self::$param_name = filter_var($param_name, FILTER_SANITIZE_SPECIAL_CHARS);
-        self::$param_value = filter_var($param_value, FILTER_SANITIZE_SPECIAL_CHARS);
-
-        // if param_value is empty then ask to RequestHelper
-        // to try to catch the param via _post or _get
-        if (empty($param_value)) {
-            \helpers\Request::init();
-            self::$param_to_validate = \helpers\Request::$request[$param_name];
-        } else {
-            self::$param_to_validate = self::$param_value;
-        }
-        // if is required, check if not empty
-        if ($required) {
-            try {
-                self::isRequired(self::$param_name, self::$param_to_validate);
-            } catch (\Exception $ex) {
-                \kerana\Exceptions::ShowException('VALIDATOR::' . self::$param_name . ' is a required field but its empty', New \Exception($ex));
-            }
-        }
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Validate int
-     * -------------------------------------------------------------------------
-     * @param string $param_name
-     * @param int $param_value
-     * @param type $required
-     */
-    public static function valint($param_name, $param_value = '', $required = true)
-    {
-        self::initValidator($param_name, $param_value,$required);
-
-        // now validate 
-        if (filter_var(self::$param_to_validate, FILTER_VALIDATE_INT) == FALSE) {
-            \kerana\Exceptions::showError('VALIDATOR::',' param_name=<strong>'.
-                    self::$param_name . '</strong><br> param_value=<strong>'
-                    . ''.self::$param_to_validate.'</strong> <br> WTF??... is not a valid INTEGER');
-        } else {
-            return trim(self::$param_to_validate);
         }
     }
 
