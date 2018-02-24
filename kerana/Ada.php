@@ -51,7 +51,9 @@ abstract class Ada
             /**  @mixed, el valor del indice */
             $_id_value,
             /**  @mixed, la query */
-            $_query;
+            $_query,
+            /** @mixed, table pks */
+            $pks;
 
     private
             $_config;
@@ -256,6 +258,20 @@ abstract class Ada
                 . 'AND seq_in_index = 1';
         $rs = $this->getQuery('one');
         return $rs->Column_name;
+    }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Get all primary keys for a table
+     * -------------------------------------------------------------------------
+     * @param type $table_name
+     * @return type
+     */
+    public function getAllTableKeys($table_name = ''){
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name,FILTER_SANITIZE_SPECIAL_CHARS);
+        
+        $this->_query = 'SHOW INDEX FROM '.$table.' WHERE key_name = "Primary" ';
+        return $this->getQuery();
     }
 
     /**
