@@ -105,7 +105,7 @@ class Validator
      */
     public static function valString($param_name, $param_value = '', $required = false)
     {
-        self:initValidator($param_name, $param_value, $required);
+        self::initValidator($param_name, $param_value, $required);
 
         $is_email = strpos($param_name, 'email');
         $process = ($is_email) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : filter_var(self::$param_to_validate, FILTER_SANITIZE_STRING);
