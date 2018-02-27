@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -51,9 +52,6 @@ class [{model_name}] extends \kerana\Ada {
           [{pk_values}]  
         ];
         
-        $this->data_[{name_min}] = [
-            [{key_values_model}]  
-        ];
     }
 
     
@@ -84,10 +82,12 @@ class [{model_name}] extends \kerana\Ada {
      * -------------------------------------------------------------------------
      * @return boolean
      */
-    public function insert[{name}]($data = ''){
+    public function insert[{name}](){
         
-        $data_insert = (empty($data)) ? $this->data_[{name_min}] : $data;
-          return $this->insert($data_insert);
+        $data_insert =  [
+            [{key_values_model}]  
+        ];
+          return parent::insert($data_insert);
         
     }
     /**
@@ -96,10 +96,12 @@ class [{model_name}] extends \kerana\Ada {
      * -------------------------------------------------------------------------
      * @return boolean
      */
-    public function update[{name}]($data = ''){
+    public function update[{name}](){
         
-       $data_update = (empty($data)) ? $this->data_[{name_min}] : $data;
-          return $this->update($data_update);
+       $data_update =  [
+            [{key_values_model}]  
+        ];
+          return parent::update($data_update);
         
     }
     
