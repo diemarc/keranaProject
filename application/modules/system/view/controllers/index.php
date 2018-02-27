@@ -31,20 +31,28 @@
                         <td><?php echo $controller->controller_description; ?></td>
                         <td class="well">
                             <a href='<?php echo __URL__; ?>/system/controller/detail/<?php echo $controller->id_controller; ?>' 
-                               class='btn btn-default btn-xs'>
+                               class='btn btn-default btn-xs' title="Controller detail">
                                 <i class='fa fa-eye'></i>
                             </a>
-                            <a href='' class='btn btn-info btn-xs'>
-                                <i class='fa fa-pencil'></i>
-                            </a>
-                            <a href='<?php echo __URL__ . '/' . $controller->module . '/' . $controller->controller . '/index'; ?>' 
-                               target='_blank' class='btn btn-success btn-xs'>
-                                <i class='fa fa-road'></i>
-                            </a>
-                            <a href='<?php echo __URL__; ?>/system/controller/delete/<?php echo $controller->id_controller; ?>' 
-                               class='btn btn-danger btn-xs'>
-                                <i class='fa fa-trash-o'></i>
-                            </a>
+                            <?php if ($controller->is_system_controller == 0) { ?>
+                                <a href='<?php echo __URL__ . '/' . $controller->module . '/' . $controller->controller . '/index'; ?>' 
+                                   target='_blank' class='btn btn-primary btn-circle btn-xs'
+                                   title="Test controller"
+                                   >
+                                    <i class='fa fa-road'></i>
+                                </a>    
+                                <a href='' class='btn btn-info btn-xs'
+                                   title="Edit controller"
+                                   >
+                                    <i class='fa fa-pencil'></i>
+                                </a>
+
+                                <a href='<?php echo __URL__; ?>/system/controller/delete/<?php echo $controller->id_controller; ?>' 
+                                   class='btn btn-danger btn-xs'
+                                   title="Delete controller">
+                                    <i class='fa fa-trash-o'></i>
+                                </a>
+                            <?php } ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
