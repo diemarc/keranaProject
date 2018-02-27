@@ -38,16 +38,14 @@
                                 <p><?php echo $query; ?></p>
                                 <h4>Query-binds</h4>
                                 <p>
-                                    <?php print_r($binds);?>
+                                    <?php print_r($binds); ?>
                                 </p>
                             <?php }
-                        } else { ?>
+                        }
+                        ?>
 
-                            <p>
-    <?php echo 'In. ' . $exception->getFile() . ' (' . $exception->getLine() . ')'; ?>
-                            </p>
 
-<?php } ?>
+
                     </div>
                     <div class="panel-footer">
                         <span align='center'>
