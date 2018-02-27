@@ -46,7 +46,7 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
      */
     public function index()
     {
-        $params['rsModelos'] = $this->_model->getAllModel();
+        $params['rsModels'] = $this->_model->getAllModel();
         \kerana\View::showView($this->_current_module, 'models/index',$params);
     }
 
