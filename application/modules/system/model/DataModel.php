@@ -73,7 +73,7 @@ class DataModel extends \kerana\Ada
     {
 
         $this->_query = ' SELECT A.id_model,A.model,A.table_reference, '
-                . ' A.model_description'
+                . ' A.model_description,A.is_system_model'
                 . ' FROM ' . $this->table_name . ' A '
                 . ' WHERE A.id_model IS NOT NULL';
     }
@@ -237,9 +237,12 @@ class DataModel extends \kerana\Ada
             }
             $this->_model_attributes .= "/** @var $field_type($field_lenght), $$info_table->Field  */ \n" . '$_' . $info_table->Field;
 
-            // parse fields into a data array association
-            $this->_parseDataArrayFieldTable($info_table->Field);
-
+            // parse fields into a data array association only id field is
+            // not a primary key
+            if($info_table->Key != "PRI"){
+                $this->_parseDataArrayFieldTable($info_table->Field);
+            }
+            
             // parse the setters
             $this->_parseSetterFieldTable($info_table->Field, $field_type, $info_table->Null);
 
@@ -268,7 +271,7 @@ class DataModel extends \kerana\Ada
                 . "* @param " . $type . ' $value the ' . $field . " value \n"
                 . "*/ \n "
                 . 'public function set_' . $field . '($value = ""){' . " \n"
-                . ' $this->_' . $field . '= \\helpers\\Validator::val' . ucwords($type) . "('" . $field . "'" . ',$value' . $required . ');' . "\n"
+                . ' $this->_' . $field . '= \\helpers\\Validator::val' . ucwords($type) . "('f_" . $field . "'" . ',$value' . $required . ');' . "\n"
                 . "}\n";
     }
 
