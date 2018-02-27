@@ -103,19 +103,21 @@ class Validator
      * @param boolean $required
      * @return string
      */
-    public static function valString($param_name, $param_value = '', $required = false)
+    public static function valVarchar($param_name, $param_value = '', $required = false)
     {
         self::initValidator($param_name, $param_value, $required);
 
         $is_email = strpos($param_name, 'email');
-        $process = ($is_email) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : filter_var(self::$param_to_validate, FILTER_SANITIZE_STRING);
+        $value_type = ($is_email) ? 'Email' : 'String';
+        
+        $process = ($is_email) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : TRUE;
 
         if ($process == FALSE) {
-            \kerana\Exceptions::showError('stringVALIDATOR::', ' param_name=<strong>' .
+            \kerana\Exceptions::showError('stringVALIDATOR::'.$value_type, ' param_name=<strong>' .
                     self::$param_name . '</strong><br> param_value=<strong>'
-                    . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid value');
+                    . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid '.$value_type);
         } else {
-            return trim(self::$param_name);
+            return trim(self::$param_to_validate);
         }
     }
 
@@ -129,7 +131,7 @@ class Validator
      * @return type
      */
     public static function valText($param_name, $param_value = '', $required = false){
-       return self::valString($param_name, $param_value, $required);   
+       return self::valVarchar($param_name, $param_value, $required);   
     }
     
     
