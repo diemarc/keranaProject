@@ -66,7 +66,7 @@ class ControllerModel extends \kerana\Ada
     private function _setQueryController()
     {
         $this->_query = ' SELECT A.id_controller,A.controller,B.module,'
-                . ' A.controller_description '
+                . ' A.controller_description,A.is_system_controller '
                 . ' FROM ' . $this->table_name . ' A '
                 . ' INNER JOIN sys_modules B ON (A.id_module = B.id_module)'
                 . ' WHERE A.id_controller IS NOT NULL';
