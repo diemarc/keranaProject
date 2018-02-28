@@ -513,5 +513,29 @@ abstract class Ada
             \kerana\Exceptions::ShowException($error, New \Exception($ex), $this->_query, $this->_binds);
         }
     }
+    
+    /**
+     * -------------------------------------------------------------------------
+     * Remove records with a criteria
+     * -------------------------------------------------------------------------
+     * @param array $conditions to apply to delete steatment
+     * @return boolean
+     */
+    
+    public function remove($conditions){
+        
+        try {
+            $this->_query = ' DELETE FROM ' . $this->table_name
+                    . ' WHERE ' . $this->table_id . ' IS NOT NULL ';
+
+            $this->_setConditions($conditions);
+            return $this->runQuery();
+        } catch (\Exception $ex) {
+            $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
+            \kerana\Exceptions::ShowException($error, New \Exception($ex), $this->_query, $this->_binds);
+        }
+        
+        
+    }
 
 }
