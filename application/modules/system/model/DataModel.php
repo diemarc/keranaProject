@@ -55,7 +55,9 @@ class DataModel extends \kerana\Ada
             /** @array, contains association with fields and hints */
             $_data_array,
             /** @array , primary keys of a table */
-            $_table_pks;
+            $_table_pks,
+            /** @array, properties set */
+            $_data_properties;
 
     public function __construct()
     {
@@ -148,7 +150,18 @@ class DataModel extends \kerana\Ada
         ];
 
         if ($this->insert($data_model)) {
-            return $this->_createModelClass();
+
+            // get table schema information
+            $this->_getTablaInformationAndSetUp();
+
+            // create a table class
+            $this->_createTableClass();
+
+            // create model class
+            $this->_createModelClass();
+
+            // need to create a controller for this model?
+            ($this->_need_controller) ? $this->_createControllerModel() : '';
         }
     }
 
@@ -171,6 +184,23 @@ class DataModel extends \kerana\Ada
 
     /**
      * -------------------------------------------------------------------------
+     * Make the mapper class file
+     * -------------------------------------------------------------------------
+     */
+    protected function _createTableClass()
+    {
+
+        try {
+            fopen($this->_model_path . $this->_model_name . 'Table.php', 'w');
+            return $this->_makeCodeTableClass();
+        } catch (Exception $ex) {
+            $descripcion = 'Mapper file cant be created, resolve this, and go back!! MDF ' . $ex;
+            \kerana\Exceptions::showError('Creator', $descripcion);
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
      * Create the code for a model class, using a template and replace
      * the code inside.
      * -------------------------------------------------------------------------
@@ -185,14 +215,46 @@ class DataModel extends \kerana\Ada
         $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
         $file_contents = file_get_contents($path_tpl);
 
-        $this->_getTablaInformationAndSetUp();
+        // replacement parse file
+        $code_replace = [
+            '[{model_name}]' => $this->_model_name . 'Model',
+            '[{module_name}]' => $this->_module_name,
+            '[{name}]' => $this->_model_name,
+            '[{model_description}]' => $this->_model_description,
+            '[{properties_set}]' => $this->_data_properties,
+            '[{model_date}]' => date('d-m-Y H:i:s'),
+            '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
+        ];
+        $file_new_contents = strtr($file_contents, $code_replace);
+
+        // put the replacement into a model class
+        file_put_contents($path_model_file, $file_new_contents);
+
+        return true;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Create the code for a mapper class, using a template and replace
+     * the code inside.
+     * -------------------------------------------------------------------------
+     */
+    private function _makeCodeTableClass()
+    {
+
+        // load the creator-template to a model class 
+        $path_tpl = realpath(__DOCUMENTROOT__ . '/../templates/creator/tpl_table.ker');
+
+        // path to the new model created
+        $path_model_file = realpath($this->_model_path . $this->_model_name . 'Table.php');
+        $file_contents = file_get_contents($path_tpl);
 
         // set pks
         $this->_parsePksTable();
 
         // replacement parse file
         $code_replace = [
-            '[{model_name}]' => $this->_model_name . 'Model',
+            '[{model_name}]' => $this->_model_name . 'Table',
             '[{module_name}]' => $this->_module_name,
             '[{name}]' => $this->_model_name,
             '[{name_min}]' => strtolower($this->_model_name),
@@ -211,8 +273,6 @@ class DataModel extends \kerana\Ada
         // put the replacement into a model class
         file_put_contents($path_model_file, $file_new_contents);
 
-        // need create a controller for this model?
-        ($this->_need_controller) ? $this->_createControllerModel() : '';
 
         return true;
     }
@@ -239,15 +299,19 @@ class DataModel extends \kerana\Ada
 
             // parse fields into a data array association only id field is
             // not a primary key
-            if($info_table->Key != "PRI"){
+            if ($info_table->Key != "PRI") {
                 $this->_parseDataArrayFieldTable($info_table->Field);
+                // all the properties setted
+                $this->_parsePropertiesSet($info_table->Field);
             }
-            
+
             // parse the setters
             $this->_parseSetterFieldTable($info_table->Field, $field_type, $info_table->Null);
 
             //parse the getters
             $this->_parseGettersFieldTable($info_table->Field, $field_type);
+
+
 
 
         endforeach;
@@ -307,7 +371,17 @@ class DataModel extends \kerana\Ada
         $this->_data_array .= "'$field' =>" . '$this->_' . $field . ',' . "\n";
     }
 
-    
+    /**
+     * -------------------------------------------------------------------------
+     * Set the property setted
+     * -------------------------------------------------------------------------
+     * @param type $field
+     */
+    private function _parsePropertiesSet($field)
+    {
+        $this->_data_properties .= '$this->set_' . $field . '();' . "\n";
+    }
+
     /**
      * -------------------------------------------------------------------------
      * Set the table primary keys
@@ -318,19 +392,8 @@ class DataModel extends \kerana\Ada
         // getl all pks table
         $rsPks = $this->getAllTableKeys($this->_model_table);
         foreach ($rsPks AS $pk):
-            $this->_table_pks .= "'".$pk->Column_name ."'". '=> $this->_' . $pk->Column_name . ','. "\n";
+            $this->_table_pks .= "'" . $pk->Column_name . "'" . '=> $this->_' . $pk->Column_name . ',' . "\n";
         endforeach;
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Setter for nombre_comercial
-     * -------------------------------------------------------------------------
-     * @param varchar , nombre_comercial value
-     */
-    public function setNombre_comercial($value = "")
-    {
-        $this->_nombre_comercial = \helpers\Validator::valVarchar('nombre_comercial', $value, TRUE);
     }
 
     /**
@@ -341,7 +404,6 @@ class DataModel extends \kerana\Ada
      */
     private function _createControllerModel()
     {
-
 
         //echo "creando archivo de controller";
 
