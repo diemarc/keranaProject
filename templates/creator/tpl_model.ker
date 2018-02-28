@@ -24,106 +24,33 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
   |-----------------------------------------------------------------------------
   | Class [{model_name}]
   |-----------------------------------------------------------------------------
-  |
+  | Buisiness logic (rules) for [{name}]Table 
   | [{model_description}]
   | @author kerana,
   | @date [{model_date}],
   |
  */
 
-class [{model_name}] extends \kerana\Ada {
+class [{model_name}] extends [{name}]Table {
 
-    protected
-    [{properties}];
     
-    
-
-    public 
-            /** @array data matching attributes with table field */
-            $data_[{name_min}];
     
      public function __construct()
     {
         parent::__construct();
-        $this->table_name = '[{model_table}]';
-        $this->table_id = '[{model_table_id}]';
-        
-        $this->pks = [
-          [{pk_values}]  
-        ];
         
     }
-
-    
-    /*
-      |-------------------------------------------------------------------------
-      | SELECT-METHODS
-      |-------------------------------------------------------------------------
-      |
-     */
-
-    
-    
-    
-    
-    
-    
-    /*
-     |-------------------------------------------------------------------------
-     | INSERT-UPDATE-METHODS
-     |-------------------------------------------------------------------------
-     |
-    */
-
 
     /**
      * -------------------------------------------------------------------------
-     * Insert new record into [{model_table}]
+     * Save post data
      * -------------------------------------------------------------------------
-     * @return boolean
      */
-    public function insert[{name}](){
-        
-        $data_insert =  [
-            [{key_values_model}]  
-        ];
-          return parent::insert($data_insert);
-        
-    }
-    /**
-     * -------------------------------------------------------------------------
-     * update record into [{model_table}]
-     * -------------------------------------------------------------------------
-     * @return boolean
-     */
-    public function update[{name}](){
-        
-       $data_update =  [
-            [{key_values_model}]  
-        ];
-          return parent::update($data_update);
-        
+    public function savePost(){
+        [{properties_set}]
+        return parent::save[{name}]();
     }
     
     
-    
-    
- /*
-  |-------------------------------------------------------------------------
-  | SETTERS
-  |-------------------------------------------------------------------------
-  | 
- */
 
- [{setters}]
-    
-    
- 
- /*
-  |-------------------------------------------------------------------------
-  | GETTERS
-  |-------------------------------------------------------------------------
-  | 
- */
- [{getters}]
 }

@@ -46,7 +46,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
      */
     
     public function add(){
-        
+         \kerana\View::$model = [{model_name}];
         $params = [];
         \kerana\View::showForm($this->_current_module,'add',$params,[{model_name}]);
     }
@@ -58,7 +58,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
      */
     
     public function save(){
-        ([{model_name}]->save()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
+        ([{model_name}]->savePost()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
     }
     
     /**
@@ -85,8 +85,9 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
     
     public function edit($id){
         [{model_name}]->_setIdTableValue($id);
-        $params['rs[{model_rs}]'] = [{model_name}]->getRecord();
-        \kerana\View::showForm($this->_current_module,'detail',$params);
+         \kerana\View::$model = [{model_name}];
+        $params['rs'] = [{model_name}]->getRecord();
+        \kerana\View::showForm($this->_current_module,'edit',$params);
     }
     
     /**
@@ -98,7 +99,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
     
     public function update($id){
         [{model_name}]->_setIdTableValue($id);
-        ([{model_name}]->save()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
+        ([{model_name}]->savePost()) ? \helpers\Redirect::to('/[{module_name}]/[{controller}]/index') : '';
     }
     
     /**
