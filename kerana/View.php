@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -32,6 +33,9 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 class View
 {
 
+    private static
+    /** @boolean is_ajax request? */
+            $_is_ajax;
     public static
             $model;
 
@@ -43,10 +47,11 @@ class View
      * @param string $template , html template
      * @param array $params , parameters to pass to a view
      * @param boolean $save , if you want to sotre the rendered view in a variable
-     * @param boolean $load_header , load html headers
      */
-    public static function showView($module = '', $template = '', $params = '', $save = false, $load_header = true)
+    public static function showView($module = '', $template = '', $params = '', $save = false)
     {
+
+        self::_checkAjaxPetition();
 
         $template_path = $module . '/view/' . $template . '.php';
         $full_path_template = __MODULEFOLDER__ . '/' . $template_path;
@@ -65,21 +70,31 @@ class View
         // if $save is true, create a buffer and store tne entire template rendered
         // in a variable, & return this variable
         if ($save) {
-            ob_start(); 
+            ob_start();
             include($full_path_template );
             $var_view = ob_get_contents();
-            ob_end_clean(); 
+            ob_end_clean();
             return $var_view;
         }
 
         // if want to load the html header
-        ($load_header) ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlHeader.php') : '';
+        (!self::$_is_ajax AND $module != 'welcome') ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlHeader.php') : '';
 
         // include the template file
         include($full_path_template);
 
         // if want to load the footer
-        ($load_header) ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlFooter.php') : '';
+        (!self::$_is_ajax AND $module != 'welcome') ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlFooter.php') : '';
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Show the loign page
+     * -------------------------------------------------------------------------
+     */
+    public static function showLoginPage()
+    {
+        include(__APPFOLDER__.'/templates/login.php');
     }
 
     /**
@@ -91,7 +106,7 @@ class View
      * @param array $params
      * @param object $model , object of model to create a html form
      */
-    public static function showForm($module, $template, $params = '', $model = false,$load_header = true)
+    public static function showForm($module, $template, $params = '', $model = false, $load_header = true)
     {
 
         //$token_string = \kerana\Security::csrfGetTokenId();
@@ -100,7 +115,19 @@ class View
 
         $params['kerana_token'] = '<input type="hidden" name="_kerana_token_" value="' . $token_value . '">';
 
-        self::showView($module, $template, $params,false,$load_header);
+        self::showView($module, $template, $params, false, $load_header);
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Check if is a jax petition
+     * -------------------------------------------------------------------------
+     */
+    private static function _checkAjaxPetition()
+    {
+
+        $server_request = FILTER_INPUT(INPUT_SERVER, "HTTP_X_REQUESTED_WITH");
+        self::$_is_ajax = (isset($server_request) AND $server_request === 'XMLHttpRequest') ? true : false;
     }
 
 }
