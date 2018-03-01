@@ -29,7 +29,7 @@ class LoginController  // minu\may
      */
     public function introduceMySelf()
     {
-        \kerana\View::showView('welcome', 'login', false, false, false);
+        \kerana\View::showLoginPage();
     }
 
     /*
