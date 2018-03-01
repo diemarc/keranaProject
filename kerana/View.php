@@ -48,7 +48,7 @@ class View
      * @param array $params , parameters to pass to a view
      * @param boolean $save , if you want to sotre the rendered view in a variable
      */
-    public static function showView($module = '', $template = '', $params = '', $save = false)
+    public static function showView($module, $template, $params = '', $save = false)
     {
 
         self::_checkAjaxPetition();
@@ -106,7 +106,7 @@ class View
      * @param array $params
      * @param object $model , object of model to create a html form
      */
-    public static function showForm($module, $template, $params = '', $model = false, $load_header = true)
+    public static function showForm($module, $template, $params = '', $model = false)
     {
 
         //$token_string = \kerana\Security::csrfGetTokenId();
@@ -115,7 +115,7 @@ class View
 
         $params['kerana_token'] = '<input type="hidden" name="_kerana_token_" value="' . $token_value . '">';
 
-        self::showView($module, $template, $params, false, $load_header);
+        self::showView($module, $template, $params, false);
     }
 
     /**
