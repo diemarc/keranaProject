@@ -162,7 +162,7 @@ class ViewMaker
 
             // inject the code
             $code_to_inject = [
-                '[{title}]' => $module . '/index',
+                '[{title}]' => $module.'/'.$controller. '/index',
                 '[{url_add}]' => __URL__ . '/' . $module . '/' . $controller . '/add',
                 '[{lists}]' => ucwords($controller) . 's',
                 '[{controller}]' => $controller,
