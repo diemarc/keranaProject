@@ -36,7 +36,6 @@ class ViewMaker
     public static
             $model_view,
             $controller,
-            
             /** @var mixed $path_view_file, where you want to save the new view-file */
             $path_view_file;
 
@@ -52,7 +51,7 @@ class ViewMaker
     {
         self::setPathView();
         $method_trigger = substr(strrchr($tpl, '/'), 1);
-        
+
         $method_name = 'make' . ucwords(($method_trigger == false) ? $tpl : $method_trigger);
 
         ($model != false) ? self::$model_view = $model : '';
@@ -66,20 +65,19 @@ class ViewMaker
      * Set the path will be stored the new view file
      * -------------------------------------------------------------------------
      */
-    public static function setPathView(){
-        
-        $base_path_view = __MODULEFOLDER__ . '/' . \helpers\Url::getModule() . '/view/';
-        
-        if(is_dir($base_path_view.\helpers\Url::getController().'s')){
-            self::$path_view_file = realpath($base_path_view.\helpers\Url::getController().'s');
+    public static function setPathView()
+    {
+
+        $base_path_view = __MODULEFOLDER__ . '/' . \helpers\Url::getModule() . '/view/' . \helpers\Url::getController();
+
+        if (!is_dir($base_path_view)) {
+            mkdir($base_path_view, 0777, true);
+            //self::$path_view_file = realpath($base_path_view);
         }
-        else{
-            self::$path_view_file = realpath($base_path_view);
-        }
-        
+
+        return self::$path_view_file = realpath($base_path_view);
     }
-    
-    
+
     /**
      * -------------------------------------------------------------------------
      * Create a form for add a new record
@@ -90,7 +88,7 @@ class ViewMaker
     public static function makeAdd()
     {
         if (isset(self::$model_view) AND ! empty(self::$model_view)) {
-            $kerana_form = New \helpers\KeranaForm(self::$model_view,1,self::$path_view_file);
+            $kerana_form = New \helpers\KeranaForm(self::$model_view, 1, self::$path_view_file);
             $kerana_form = null;
         } else {
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a form without a model object');
@@ -105,7 +103,7 @@ class ViewMaker
     public static function makeEdit()
     {
         if (isset(self::$model_view) AND ! empty(self::$model_view)) {
-            $kerana_form = New \helpers\KeranaForm(self::$model_view,2,self::$path_view_file);
+            $kerana_form = New \helpers\KeranaForm(self::$model_view, 2, self::$path_view_file);
             $kerana_form = null;
         } else {
             \kerana\Exceptions::showError('ViewMaker', 'Model not found,can`t create a edit/form without a model object');
@@ -122,14 +120,14 @@ class ViewMaker
     {
         if (isset(self::$model_view) AND ! empty(self::$model_view)) {
 
-             // current controller
+            // current controller
             $controller = \helpers\Url::getController();
             $module = \helpers\Url::getModule();
-            
-            // load the index template
-           $path_tpl_index = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_index.ker');
 
-            
+            // load the index template
+            $path_tpl_index = realpath(__DOCUMENTROOT__ . '/../templates/creator/view/tpl_index.ker');
+
+
             // load index tpl
             $index_tpl_content = file_get_contents($path_tpl_index);
 
@@ -151,8 +149,8 @@ class ViewMaker
             foreach ($keys AS $k_table) {
                 $table_content .= "<td><?php echo $$controller->$k_table; ?></td> \n";
             }
-            $url_edit = '/' . $module . '/' . $controller . '/edit/<?php echo $' . $controller . '->'.self::$model_view->table_id.'; ?>';
-            $url_delete = '/' . $module . '/' . $controller . '/delete/<?php echo $' . $controller . '->'.self::$model_view->table_id.'; ?>';
+            $url_edit = '/' . $module . '/' . $controller . '/edit/<?php echo $' . $controller . '->' . self::$model_view->table_id . '; ?>';
+            $url_delete = '/' . $module . '/' . $controller . '/delete/<?php echo $' . $controller . '->' . self::$model_view->table_id . '; ?>';
             $table_content .= "<td> \n "
                     . "<a href='$url_edit' \n class='btn btn-default btn-xs' title='Edit'>\n<i class='fa fa-edit'></i>\n</a> \n"
                     . "<a href='$url_delete' \n class='btn btn-danger btn-xs' title='Delete'>\n<i class='fa fa-trash'></i></a> \n "
@@ -162,7 +160,7 @@ class ViewMaker
 
             // inject the code
             $code_to_inject = [
-                '[{title}]' => $module.'/'.$controller. '/index',
+                '[{title}]' => $module . '/' . $controller . '/index',
                 '[{url_add}]' => __URL__ . '/' . $module . '/' . $controller . '/add',
                 '[{lists}]' => ucwords($controller) . 's',
                 '[{controller}]' => $controller,
