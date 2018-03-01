@@ -20,7 +20,7 @@ class WelcomeController extends \kerana\Kerana
     public function index()
     {
 
-        \kerana\View::showView('welcome', 'welcome',false,false,false);
+        \kerana\View::showView('welcome', 'welcome',false);
     }
 
 }
