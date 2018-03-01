@@ -81,9 +81,6 @@ class UserController extends \kerana\Kerana implements \kerana\KeranaInterface
      */
     public function detail($id)
     {
-        $this->_user->_id_usuario = '2323';
-        echo 'el usuario es '.$this->_user->_id_usuario;
-        exit();
         $this->_user->_setIdTableValue($id);
         $params['rsUser'] = $this->_user->getRecord();
         \kerana\View::showView($this->_current_module, 'users/detail', $params);
