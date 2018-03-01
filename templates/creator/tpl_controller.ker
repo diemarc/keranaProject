@@ -35,7 +35,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
         // only necesary for a view creator, remove it  after index files is
         // created
         \kerana\View::$model = [{model_name}];
-        \kerana\View::showView($this->_current_module, 'index', 
+        \kerana\View::showView($this->_current_module, '[{controller}]/index', 
                 ['rs[{model_rs}]s' => [{model_name}]->getAll()]);
     }
     
@@ -48,7 +48,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
     public function add(){
          \kerana\View::$model = [{model_name}];
         $params = [];
-        \kerana\View::showForm($this->_current_module,'add',$params,[{model_name}]);
+        \kerana\View::showForm($this->_current_module,'[{controller}]/add',$params,[{model_name}]);
     }
     
      /**
@@ -72,7 +72,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
         
         [{model_name}]->_setIdTableValue($id);
         $params['rs[{model_rs}]'] = [{model_name}]->getRecord();
-        \kerana\View::showView($this->_current_module,'detail',$params);
+        \kerana\View::showView($this->_current_module,'[{controller}]/detail',$params);
         
     }
     
@@ -87,7 +87,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
         [{model_name}]->_setIdTableValue($id);
          \kerana\View::$model = [{model_name}];
         $params['rs'] = [{model_name}]->getRecord();
-        \kerana\View::showForm($this->_current_module,'edit',$params);
+        \kerana\View::showForm($this->_current_module,'[{controller}]/edit',$params);
     }
     
     /**
