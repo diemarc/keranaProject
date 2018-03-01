@@ -216,7 +216,7 @@ class KeranaForm
 
         // inject the code
         $code_to_inject = [
-            '[{title}]' => $this->_form_module . '/' . $this->_form_title,
+            '[{title}]' => $this->_form_module . '/' . $this->_form_controller.'/'.$this->_form_title,
             '[{url_save}]' => __URL__ . '/' . $this->_form_module . '/' . $this->_form_controller . '/' . $this->_form_action,
             '[{url_goback}]' => __URL__ . '/' . $this->_form_module . '/' . $this->_form_controller . '/index',
             '[{form}]' => $form_elements
