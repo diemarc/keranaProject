@@ -11,13 +11,13 @@
     </header>
     <section id='section_modelos' class='table-responsive'>
         <table class='table table-condensed table-bordered table-hover'>
-            <thead class='bg-info'>
+            <thead class='bg-primary'>
                 <tr>
                     <th>ID</th>
                     <th>Model</th>
                     <th>Table</th>
                     <th>Description</th>
-                    <th class="bg-primary">Tools</th>
+                    <th class="bg-default">Tools</th>
                 </tr>
             </thead>
             <tbody>
