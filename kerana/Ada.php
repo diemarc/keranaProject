@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -33,7 +34,7 @@ abstract class Ada
 {
 
     protected
-            /** @object singleton instance of conection to db */
+    /** @object singleton instance of conection to db */
             $_db,
             /** @var mixed , table fields */
             $_fields,
@@ -54,10 +55,9 @@ abstract class Ada
             $_query,
             /** @mixed, table pks */
             $pks;
-
     private
             $_config;
-    
+
     public function __construct()
     {
         $this->_db = \kerana\Epdo::singleton();
@@ -72,7 +72,6 @@ abstract class Ada
       |
      */
 
-    
     /**
      * -------------------------------------------------------------------------
      * Set the PK value of the table
@@ -101,12 +100,11 @@ abstract class Ada
      */
     public function _setQuery($query)
     {
-        if(!empty($query)){
+        if (!empty($query)) {
             $this->_query = $query;
-        }else{
+        } else {
             throw New Exception('Query is empty!');
         }
-        
     }
 
     /**
@@ -221,80 +219,6 @@ abstract class Ada
       |
       |
      */
-
-    /**
-     * -------------------------------------------------------------------------
-     * Obtiene todas las tablas de la base de datos
-     * -------------------------------------------------------------------------
-     * @return type
-     */
-    public function getTablesDB()
-    {
-
-        $this->_query = ' SELECT table_name FROM information_schema.tables'
-                . ' WHERE table_schema = :schema ';
-
-        try {
-            $rs = $this->_db->prepare($this->_query);
-            $rs->execute(['schema' => $this->_config->get('_dbname_')]);
-            return $rs->fetchAll();
-        } catch (\PDOException $e) {
-            $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
-            \kerana\Exceptions::ShowException($error, New \Exception($e), $this->_query, $this->_binds);
-        }
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Get the table primary key index 1
-     * -------------------------------------------------------------------------
-     * @return type
-     */
-    public function getPrimaryKeyTable($table_name = '')
-    {
-        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name,FILTER_SANITIZE_SPECIAL_CHARS);
-        
-        $this->_query = 'SHOW KEYS FROM '.$table.' WHERE key_name = "Primary" '
-                . 'AND seq_in_index = 1';
-        $rs = $this->getQuery('one');
-        return $rs->Column_name;
-    }
-    
-    /**
-     * -------------------------------------------------------------------------
-     * Get all primary keys for a table
-     * -------------------------------------------------------------------------
-     * @param type $table_name
-     * @return type
-     */
-    public function getAllTableKeys($table_name = ''){
-        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name,FILTER_SANITIZE_SPECIAL_CHARS);
-        
-        $this->_query = 'SHOW INDEX FROM '.$table.' WHERE key_name = "Primary" ';
-        return $this->getQuery();
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Describe una tabla
-     * -------------------------------------------------------------------------
-     * @return boolean
-     */
-    public function descTable($table_name = '')
-    {
-
-        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name,FILTER_SANITIZE_SPECIAL_CHARS);
-        $this->_query = ' DESC ' . $table;
-
-        try {
-            $rs = $this->_db->prepare($this->_query);
-            $rs->execute();
-            return $rs->fetchAll();
-        } catch (\PDOException $e) {
-            $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
-            \kerana\Exceptions::ShowException($error, New \Exception($e), $this->_query, $this->_binds);
-        }
-    }
 
     /**
      * -------------------------------------------------------------------------
@@ -513,7 +437,7 @@ abstract class Ada
             \kerana\Exceptions::ShowException($error, New \Exception($ex), $this->_query, $this->_binds);
         }
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Remove records with a criteria
@@ -521,9 +445,9 @@ abstract class Ada
      * @param array $conditions to apply to delete steatment
      * @return boolean
      */
-    
-    public function remove($conditions){
-        
+    public function remove($conditions)
+    {
+
         try {
             $this->_query = ' DELETE FROM ' . $this->table_name
                     . ' WHERE ' . $this->table_id . ' IS NOT NULL ';
@@ -534,8 +458,157 @@ abstract class Ada
             $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
             \kerana\Exceptions::ShowException($error, New \Exception($ex), $this->_query, $this->_binds);
         }
-        
-        
     }
 
+    /*
+      |--------------------------------------------------------------------------
+      | SCHEMA METHODS
+      |--------------------------------------------------------------------------
+      |
+     */
+
+    /**
+     * -------------------------------------------------------------------------
+     * Get all tables from a database
+     * -------------------------------------------------------------------------
+     * @return type
+     */
+    public function getTablesDB()
+    {
+
+        $this->_query = ' SELECT table_name FROM information_schema.tables'
+                . ' WHERE table_schema = :schema ';
+
+        try {
+            $rs = $this->_db->prepare($this->_query);
+            $rs->execute(['schema' => $this->_config->get('_dbname_')]);
+            return $rs->fetchAll();
+        } catch (\PDOException $e) {
+            $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
+            \kerana\Exceptions::ShowException($error, New \Exception($e), $this->_query, $this->_binds);
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Get the table primary key index 1
+     * -------------------------------------------------------------------------
+     * @return type
+     */
+    public function getPrimaryKeyTable($table_name = '')
+    {
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $this->_query = 'SHOW KEYS FROM ' . $table . ' WHERE key_name = "Primary" '
+                . 'AND seq_in_index = 1';
+        $rs = $this->getQuery('one');
+        return $rs->Column_name;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Get all primary keys for a table
+     * -------------------------------------------------------------------------
+     * @param type $table_name
+     * @return type
+     */
+    public function getAllTableKeys($table_name = '', $where = 'Primary')
+    {
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $this->_query = 'SHOW INDEX FROM ' . $table;
+
+        $this->_query .= (!empty($where) AND $where == 'Primary') ? ' WHERE key_name = "Primary" ' : '';
+        return $this->getQuery();
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Get all tables referenced for a table
+     * -------------------------------------------------------------------------
+     * @param type $table_name
+     * @return type
+     */
+    public function getTablesReferences($table_name = '')
+    {
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $this->_query = 'SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, '
+                . ' REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME '
+                . ' FROM '
+                . ' INFORMATION_SCHEMA.KEY_COLUMN_USAGE '
+                . ' WHERE REFERENCED_TABLE_NAME = :table ';
+
+        $this->_binds = null;
+        $this->_binds[':table'] = $table;
+
+        return $this->getQuery();
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Describe a table
+     * -------------------------------------------------------------------------
+     * @return boolean
+     */
+    public function descTable($table_name = '')
+    {
+
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
+        $this->_query = ' DESC ' . $table;
+
+        try {
+            $rs = $this->_db->prepare($this->_query);
+            $rs->execute();
+            return $rs->fetchAll();
+        } catch (\PDOException $e) {
+            $error = 'Error en ' . __CLASS__ . '->' . __FUNCTION__;
+            \kerana\Exceptions::ShowException($error, New \Exception($e), $this->_query, $this->_binds);
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Get table information
+     * -------------------------------------------------------------------------
+     * @param type $table_name
+     * @return type
+     */
+    public function getTableStatus($table_name = '')
+    {
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $this->_query = ' SHOW TABLE STATUS FROM '.$this->_config->get('_dbname_')
+                . ' WHERE NAME = :table ';
+
+        $this->_binds = null;
+        $this->_binds[':table'] = $table;
+
+        return $this->getQuery('one');
+    }
+    /**
+     * -------------------------------------------------------------------------
+     * Get table information
+     * -------------------------------------------------------------------------
+     * @param type $table_name
+     * @return type
+     */
+    public function getTableDependencys($table_name = '')
+    {
+        $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
+
+        $this->_query = ' SELECT table_name,column_name,referenced_table_name,'
+                . ' referenced_column_name'
+                . ' FROM information_schema.key_column_usage '
+                . ' WHERE TABLE_NAME = :table '
+                . ' AND referenced_table_name IS NOT NULL ';
+
+        $this->_binds = null;
+        $this->_binds[':table'] = $table;
+
+        return $this->getQuery();
+    }
+
+    
+    
 }
