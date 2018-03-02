@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -16,6 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace application\modules\system\controller;
 
 defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
@@ -47,7 +49,7 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     public function index()
     {
         $params['rsModels'] = $this->_model->getAllModel();
-        \kerana\View::showView($this->_current_module, 'models/index',$params);
+        \kerana\View::showView($this->_current_module, 'models/index', $params);
     }
 
     /**
@@ -61,7 +63,7 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
             'rsTables' => $this->_model->getTablesDB(),
             'rsModules' => $this->_module->getAll()
         ];
-        
+
         \kerana\View::showForm($this->_current_module, 'models/add', $params);
     }
 
@@ -86,7 +88,16 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     {
 
         $this->_model->_setIdTableValue($id);
-        $params['rsModel'] = $this->_model->getRecord();
+        $rsModel = $this->_model->getRecord();
+        
+        $params = [
+            'rsModel' => $rsModel,
+            'rsTableDesc' => $this->_model->descTable($rsModel->table_reference),
+            'rsKeys' => $this->_model->getAllTableKeys($rsModel->table_reference,''),
+            'rsReferences' => $this->_model->getTablesReferences($rsModel->table_reference),
+            'rsDependencys' => $this->_model->getTableDependencys($rsModel->table_reference),
+            'Status' => $this->_model->getTableStatus($rsModel->table_reference)
+        ];
         \kerana\View::showView($this->_current_module, 'models/detail', $params);
     }
 
@@ -96,13 +107,14 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
      * -------------------------------------------------------------------------
      * @param type $id
      */
-    public function edit($id){
-        
+    public function edit($id)
+    {
+
         $this->_model->_setIdTableValue($id);
         $params['rsModel'] = $this->_model->getRecord();
         \kerana\View::showView($this->_current_module, 'models/edit', $params);
-        
     }
+
     /**
      * -------------------------------------------------------------------------
      * Update a model
@@ -113,8 +125,8 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     {
         $this->_model->_setIdTableValue($id);
         ($this->_model->save()) ? \helpers\Redirect::to('/system/model/index') : '';
-        
     }
+
     /**
      * -------------------------------------------------------------------------
      * Delete a model
@@ -125,8 +137,6 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     {
         $this->_model->_setIdTableValue($id);
         ($this->_model->delete()) ? \helpers\Redirect::to('/system/model/index') : '';
-        
     }
-    
 
 }
