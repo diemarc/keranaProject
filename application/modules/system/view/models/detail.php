@@ -70,8 +70,10 @@
                         </tr>
                         <tr>
                             <td class="well well-sm">AutoIncrement</td>
-                            <td><?php echo (empty($Status->Auto_increment)) ? 
-                            '<span class="bg-danger text-danger"><strong>hummm..no AI detected!!!</strong></span>' : $Status->Auto_increment; ?></td>
+                            <td><?php
+                                echo (empty($Status->Auto_increment)) ?
+                                        '<span class="bg-danger text-danger"><strong>hummm..no AI detected!!!</strong></span>' : $Status->Auto_increment;
+                                ?></td>
                         </tr>
                         <tr>
                             <td class="well well-sm">Created_at</td>
@@ -228,11 +230,12 @@
                 <div role="tabpanel" class="tab-pane" id="tab_dependencys">
                     <div class="panel panel-green">
                         <div class="panel-body">
-                            <?php if ($rsDependencys){ ?>
+                            <?php if ($rsDependencys) { ?>
                                 <div class="table-responsive">
                                     <table class="table table-condensed table-bordered">
                                         <thead class="bg-success">
                                             <tr>
+                                                <th>Model</th>
                                                 <th>Dependency_table</th>
                                                 <th>Dependency_table_field</th>
                                                 <th class="bg-primary">Local_field_name</th>
@@ -241,6 +244,11 @@
                                         <tbody>
                                             <?php foreach ($rsDependencys AS $dep): ?>
                                                 <tr>
+                                                    <td>
+                                                        <a href="<?php echo __URL__ . '/system/model/detail/' . $dep->id_model; ?>">
+                                                            <?php echo $dep->module . '/' . $dep->model; ?>
+                                                        </a>
+                                                    </td>
                                                     <td><?php echo $dep->referenced_table_name; ?></td>
                                                     <td><?php echo $dep->referenced_column_name; ?></td>
                                                     <td><?php echo $dep->column_name; ?></td>
@@ -251,10 +259,10 @@
                                     </table>
                                 </div>
                             <?php } else { ?>
-                            <div class="alert alert-link">
-                                Not dependencys found!
-                            </div>
-                            
+                                <div class="alert alert-link">
+                                    Not dependencys found!
+                                </div>
+
                             <?php } ?>
                         </div>
                     </div>
