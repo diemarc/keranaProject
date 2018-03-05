@@ -57,15 +57,13 @@ class KeranaForm
             /** @array, contains the html form tags  */
             $_form_tags = [];
 
-    
-    
     /**
      * 
      * @param \kerana\Ada $objectTable
      * @param type $type
      * @param type $path
      */
-    public function __construct(\kerana\Ada $objectTable,$type,$path)
+    public function __construct(\kerana\Ada $objectTable, $type, $path)
     {
         $this->_object_table = $objectTable;
         $this->setFormType($type);
@@ -95,7 +93,7 @@ class KeranaForm
      */
     public function setFormType($type)
     {
-        $this->_form_type = \helpers\Validator::int($type);
+        $this->_form_type = \helpers\Validator::valInt('type_form', $type);
 
         switch ($this->_form_type) {
 
@@ -110,7 +108,7 @@ class KeranaForm
             // edit record form
             case 2;
                 $this->_form_title = 'Edit record';
-                $this->_form_action = 'update/<?php echo $rs->' . $this->_object_table->table_id.'; ?>';
+                $this->_form_action = 'update/<?php echo $rs->' . $this->_object_table->table_id . '; ?>';
                 $this->_form_file = 'edit';
                 $this->_form_rs = '$rs';
                 break;
@@ -132,6 +130,7 @@ class KeranaForm
             $field_lenght = $ex[1];
             ($desc->Key != 'PRI') ? $this->_parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
         endforeach;
+        //exit();
     }
 
     /**
@@ -146,24 +145,28 @@ class KeranaForm
     private function _parseField($field_name, $field_type, $length = '', $null = 'NO')
     {
 
-        $label = "<label for='f_$field_name' class='col-sm-2 control-label'>".ucwords($field_name)."</label> \n";
+        $label = "<label for='f_$field_name' class='col-sm-2 control-label'>" . ucwords($field_name) . "</label> \n";
         $divput = "<div class='col-sm-6'> \n <div class='input-group col-sm-8'> \n";
         $required = ($null == 'NO') ? 'required' : '';
         $value = ($this->_form_rs != false) ? ' value="<?php echo $rs->' . $field_name . ';?>"' : '';
+
+        // letst chec field type
+        $is_email = strpos($field_name, 'email');
+        $is_pass = strpos($field_name, 'password');
+        $is_phone = strpos($field_name, 'telefono');
 
         switch ($field_type) {
 
             // inputs type text
             case 'varchar';
 
-                // lets check if is email
-                $is_email = strpos($field_name, 'email');
-                $is_pass = strpos($field_name, 'password');
 
                 if ($is_email !== false) {
                     $type = 'email';
                 } else if ($is_pass !== false) {
                     $type = 'password';
+                } else if ($is_phone !== false) {
+                    $type = 'tel';
                 } else {
                     $type = 'text';
                 }
@@ -173,8 +176,31 @@ class KeranaForm
 
             // inputs type number
             case 'int';
-                $element = '<input type="number" id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . $value . ' />';
+
+                // get table-field dependency
+                $rsDependency = $this->_object_table->getTableDependencys('', $field_name);
+
+                // if field has a dependency, then create select code
+                if ($rsDependency) {
+                    foreach ($rsDependency AS $dependency):
+
+                        $rs_name = strtolower(substr($dependency->model, 0, -5));
+
+                        $element = '<select class="form-control" name="f_' . $field_name . '" id="f_' . $field_name . '" required>' . " \n"
+                                . ' <option value="">--Select a option --</option>'
+                                . '<?php foreach($rs' . ucwords($rs_name) . 's AS $' . $rs_name . '): ?> ' . " \n "
+                                . ' <option value="<?php echo $' . $rs_name . '->' . $dependency->referenced_column_name . ';?>">'
+                                . ' <?php echo $' . $rs_name . '->' . $rs_name . '; ?>'
+                                . '</option>' . " \n"
+                                . '<?php endforeach;?> ' . " \n"
+                                . '</select>' . " \n";
+
+                    endforeach;
+                }else {
+
+                    $element = '<input type="number" id="f_' . $field_name . '" name="f_'
+                            . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . $value . ' />';
+                }
                 break;
 
             // textareas
@@ -216,7 +242,7 @@ class KeranaForm
 
         // inject the code
         $code_to_inject = [
-            '[{title}]' => $this->_form_module . '/' . $this->_form_controller.'/'.$this->_form_title,
+            '[{title}]' => $this->_form_module . '/' . $this->_form_controller . '/' . $this->_form_title,
             '[{url_save}]' => __URL__ . '/' . $this->_form_module . '/' . $this->_form_controller . '/' . $this->_form_action,
             '[{url_goback}]' => __URL__ . '/' . $this->_form_module . '/' . $this->_form_controller . '/index',
             '[{form}]' => $form_elements
