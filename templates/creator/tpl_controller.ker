@@ -47,7 +47,7 @@ class [{controller_name}] extends \kerana\Kerana [{controller_implements}] {
     
     public function add(){
          \kerana\View::$model = [{model_name}];
-        $params = [];
+        $params = [[{view_dependency}]];
         \kerana\View::showForm($this->_current_module,'[{controller}]/add',$params,[{model_name}]);
     }
     
