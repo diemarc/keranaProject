@@ -61,7 +61,9 @@ class DataModel extends \kerana\Ada
             /** @var mixed, contain the model dependencys tables */
             $_model_dependencys,
             /** @var mixed, init the model dependency, (New) */
-            $_init_model_dependencys;
+            $_init_model_dependencys,
+            /** @var mixed, view dependencys for controller, based in table dependencys */
+            $_controller_dependencys;
 
     public function __construct()
     {
@@ -340,6 +342,8 @@ class DataModel extends \kerana\Ada
         if ($rsDependencys) {
             foreach ($rsDependencys AS $dep):
                 
+                $rs_name = strtolower(substr($dep->model, 0,-5));
+                
                 if(!is_array($dep)){
                     if($this->_model_dependencys != ""){
                         $this->_model_dependencys .= ",\n";
@@ -350,6 +354,8 @@ class DataModel extends \kerana\Ada
                 
                 $this->_init_model_dependencys .= ' $this->obj'.$dep->model.'= '
                         . 'new \\application\\modules\\'.$dep->module.'\\model\\'.$dep->model."(); \n";
+                
+                $this->_controller_dependencys .= "\n ".'"rs'.  ucwords($rs_name).'s"=> $this->_'.strtolower($this->_model_name).'->obj'.$dep->model.'->getAll(),'." \n";
 
 
             endforeach;
@@ -357,6 +363,7 @@ class DataModel extends \kerana\Ada
         else {
             $this->_model_dependencys = '';
             $this->_init_model_dependencys = '';
+            $this->_controller_dependencys = '';
         }
         
         
@@ -462,6 +469,7 @@ class DataModel extends \kerana\Ada
         $model_controller->controller_name = strtolower($this->_model_name);
         $model_controller->controller_module = $model_module->find('module', ['id_module' => $this->_module_id], 'one')->module;
         $model_controller->controller_module_id = $this->_module_id;
+        $model_controller->view_dependency = $this->_controller_dependencys;
         $model_controller->controller_path = __MODULEFOLDER__ . '/' . $model_controller->controller_module . '/controller/';
 
         //create a new controller for this model
