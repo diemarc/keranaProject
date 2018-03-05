@@ -101,6 +101,8 @@ class ControllerModel extends \kerana\Ada
         return $this->getQuery('one');
     }
 
+    
+    
     /**
      * -------------------------------------------------------------------------
      * Setup the attr for a new controller
