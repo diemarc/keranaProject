@@ -37,9 +37,9 @@
                             <?php if ($controller->is_system_controller == 0) { ?>
                                 <a href='<?php echo __URL__ . '/' . $controller->module . '/' . $controller->controller . '/index'; ?>' 
                                    target='_blank' class='btn btn-primary btn-circle btn-xs'
-                                   title="Test controller"
+                                   title="run controller"
                                    >
-                                    <i class='fa fa-road'></i>
+                                    run!
                                 </a>    
                                 <a href='' class='btn btn-info btn-xs'
                                    title="Edit controller"

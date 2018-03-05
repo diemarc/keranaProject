@@ -90,223 +90,237 @@
 
     </div>
     <div class="col-sm-8">
-        <div class="">
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active">
-                    <a href="#tab_groups" aria-controls="Groups" role="tab" data-toggle="tab">
-                        <span class="text-muted">Fields</span>
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#tab_privileges" aria-controls="Privileges" role="tab" data-toggle="tab">
-                        <span class="text-success">INDEX</span>
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#tab_dependencys" aria-controls="BadLogin" role="tab" data-toggle="tab">
-                        <span class="text-primary">Dependencys</span>
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#tab_badlogins" aria-controls="BadLogin" role="tab" data-toggle="tab">
-                        <span class="text-danger">References</span>
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a href="#tab_settings" aria-controls="settings" role="tab" data-toggle="tab">
-                        @Maintance
-                    </a>
-                </li>
-            </ul>
 
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="tab_groups">
-                    <div class="panel panel-green">
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-condensed table-bordered">
-                                    <thead class="bg-primary">
-                                        <tr>
-                                            <th>Field</th>
-                                            <th>Type</th>
-                                            <th>Null</th>
-                                            <th>Key</th>
-                                            <th>Default</th>
-                                            <th>Extra</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        foreach ($rsTableDesc AS $desc):
-                                            $icon_pk = ($desc->Key == 'PRI') ? 'fa fa-key' : '';
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <strong>
-                                                        <i class="text-success <?php echo $icon_pk; ?>"></i>
-                                                    </strong>
-                                                    <?php echo $desc->Field; ?></td>
-                                                <td><?php echo $desc->Type; ?></td>
-                                                <td><?php echo $desc->Null; ?></td>
-                                                <td><?php echo $desc->Key; ?></td>
-                                                <td><?php echo $desc->Default; ?></td>
-                                                <td><?php echo $desc->Extra; ?></td>
-                                            </tr>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <strong>TableInformation</strong>
+            </div>
+            <div class="panel-body">
+                <div class="">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#tab_groups" aria-controls="Groups" role="tab" data-toggle="tab">
+                                <span class="text-muted">Fields</span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tab_privileges" aria-controls="Privileges" role="tab" data-toggle="tab">
+                                <span class="text-success">INDEX</span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tab_dependencys" aria-controls="BadLogin" role="tab" data-toggle="tab">
+                                <span class="text-primary">Dependencys</span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tab_badlogins" aria-controls="BadLogin" role="tab" data-toggle="tab">
+                                <span class="text-danger">References</span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tab_settings" aria-controls="settings" role="tab" data-toggle="tab">
+                                @Maintance
+                            </a>
+                        </li>
+                    </ul>
 
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="tab_groups">
+                            <div class="panel panel-green">
+                                <div class="panel-body">
+                                    <h5>
+                                        <strong>Fields</strong>
+                                    </h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead class="bg-primary">
+                                                <tr>
+                                                    <th>Field</th>
+                                                    <th>Type</th>
+                                                    <th>Null</th>
+                                                    <th>Key</th>
+                                                    <th>Default</th>
+                                                    <th>Extra</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                foreach ($rsTableDesc AS $desc):
+                                                    $icon_pk = ($desc->Key == 'PRI') ? 'fa fa-key' : '';
+                                                    ?>
+                                                    <tr>
+                                                        <td>
+                                                            <strong>
+                                                                <i class="text-success <?php echo $icon_pk; ?>"></i>
+                                                            </strong>
+                                                            <?php echo $desc->Field; ?></td>
+                                                        <td><?php echo $desc->Type; ?></td>
+                                                        <td><?php echo $desc->Null; ?></td>
+                                                        <td><?php echo $desc->Key; ?></td>
+                                                        <td><?php echo $desc->Default; ?></td>
+                                                        <td><?php echo $desc->Extra; ?></td>
+                                                    </tr>
+
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="tab_privileges">
-                    <div class="panel panel-green">
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-condensed table-bordered">
-                                    <thead class="bg-primary">
-                                        <tr>
-                                            <th>NU</th>
-                                            <th>Key_name</th>
-                                            <th>SII</th>
-                                            <th>Field</th>
-                                            <th>Coll.</th>
-                                            <th>Cardinality</th>
-                                            <th>Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($rsKeys AS $key): ?>
-                                            <tr>
-                                                <td><?php echo $key->Non_unique; ?></td>
-                                                <td><?php echo $key->Key_name; ?></td>
-                                                <td><?php echo $key->Seq_in_index; ?></td>
-                                                <td><?php echo $key->Column_name; ?></td>
-                                                <td><?php echo $key->Collation; ?></td>
-                                                <td><?php echo $key->Cardinality; ?></td>
-                                                <td><?php echo $key->Index_type; ?></td>
-                                            </tr>
+                        <div role="tabpanel" class="tab-pane" id="tab_privileges">
+                            <div class="panel panel-green">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead class="bg-primary">
+                                                <tr>
+                                                    <th>NU</th>
+                                                    <th>Key_name</th>
+                                                    <th>SII</th>
+                                                    <th>Field</th>
+                                                    <th>Coll.</th>
+                                                    <th>Cardinality</th>
+                                                    <th>Type</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($rsKeys AS $key): ?>
+                                                    <tr>
+                                                        <td><?php echo $key->Non_unique; ?></td>
+                                                        <td><?php echo $key->Key_name; ?></td>
+                                                        <td><?php echo $key->Seq_in_index; ?></td>
+                                                        <td><?php echo $key->Column_name; ?></td>
+                                                        <td><?php echo $key->Collation; ?></td>
+                                                        <td><?php echo $key->Cardinality; ?></td>
+                                                        <td><?php echo $key->Index_type; ?></td>
+                                                    </tr>
 
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="tab_badlogins">
-                    <div class="panel panel-green">
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-condensed table-bordered">
-                                    <thead class="bg-success">
-                                        <tr>
-                                            <th class="bg-primary">Local_field</th>
-                                            <th>Parent_table</th>
-                                            <th>Parent_Field</th>
-                                            <th>Constraint</th>
+                        <div role="tabpanel" class="tab-pane" id="tab_badlogins">
+                            <div class="panel panel-green">
+                                <div class="panel-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead class="bg-success">
+                                                <tr>
+                                                    <th class="bg-primary">Local_field</th>
+                                                    <th>Parent_table</th>
+                                                    <th>Parent_Field</th>
+                                                    <th>Constraint</th>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($rsReferences AS $ref): ?>
-                                            <tr>
-                                                <td><?php echo $ref->REFERENCED_COLUMN_NAME; ?></td>
-                                                <td><?php echo $ref->TABLE_NAME; ?></td>
-                                                <td><?php echo $ref->COLUMN_NAME; ?></td>
-                                                <td><?php echo $ref->CONSTRAINT_NAME; ?></td>
-                                            </tr>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($rsReferences AS $ref): ?>
+                                                    <tr>
+                                                        <td><?php echo $ref->REFERENCED_COLUMN_NAME; ?></td>
+                                                        <td><?php echo $ref->TABLE_NAME; ?></td>
+                                                        <td><?php echo $ref->COLUMN_NAME; ?></td>
+                                                        <td><?php echo $ref->CONSTRAINT_NAME; ?></td>
+                                                    </tr>
 
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="tab_dependencys">
-                    <div class="panel panel-green">
-                        <div class="panel-body">
-                            <?php if ($rsDependencys) { ?>
-                                <div class="table-responsive">
+                        <div role="tabpanel" class="tab-pane" id="tab_dependencys">
+                            <div class="panel panel-green">
+                                <div class="panel-body">
+                                    <?php if ($rsDependencys) { ?>
+                                        <div class="table-responsive">
+                                            <table class="table table-condensed table-bordered">
+                                                <thead class="bg-success">
+                                                    <tr>
+                                                        <th>Model</th>
+                                                        <th>Dependency_table</th>
+                                                        <th>Dependency_table_field</th>
+                                                        <th class="bg-primary">Local_field_name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($rsDependencys AS $dep): ?>
+                                                        <tr>
+                                                            <td>
+                                                                <a href="<?php echo __URL__ . '/system/model/detail/' . $dep->id_model; ?>">
+                                                                    <?php echo $dep->module . '/' . $dep->model; ?>
+                                                                </a>
+                                                            </td>
+                                                            <td><?php echo $dep->referenced_table_name; ?></td>
+                                                            <td><?php echo $dep->referenced_column_name; ?></td>
+                                                            <td><?php echo $dep->column_name; ?></td>
+                                                        </tr>
+
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="alert alert-link">
+                                            Not dependencys found!
+                                        </div>
+
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="tab_settings">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    TableMaintance
+                                </div>
+                                <div class="panel-body">
                                     <table class="table table-condensed table-bordered">
-                                        <thead class="bg-success">
+                                        <thead class="small">
                                             <tr>
-                                                <th>Model</th>
-                                                <th>Dependency_table</th>
-                                                <th>Dependency_table_field</th>
-                                                <th class="bg-primary">Local_field_name</th>
+                                                <td class="well well-sm">Row_format</td>
+                                                <td>
+                                                    <?php echo $Status->Row_format; ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="well well-sm">AVG_row</td>
+                                                <td><?php echo $Status->Avg_row_length; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="well well-sm">Data_lenght</td>
+                                                <td><?php echo $Status->Data_length; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="well well-sm">Max_data_lenght</td>
+                                                <td><?php echo $Status->Max_data_length; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="well well-sm">Index_lenght</td>
+                                                <td><?php echo $Status->Index_length; ?></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="well well-sm">Datea_free
+                                                <td><?php echo $Status->Data_free; ?></td>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <?php foreach ($rsDependencys AS $dep): ?>
-                                                <tr>
-                                                    <td>
-                                                        <a href="<?php echo __URL__ . '/system/model/detail/' . $dep->id_model; ?>">
-                                                            <?php echo $dep->module . '/' . $dep->model; ?>
-                                                        </a>
-                                                    </td>
-                                                    <td><?php echo $dep->referenced_table_name; ?></td>
-                                                    <td><?php echo $dep->referenced_column_name; ?></td>
-                                                    <td><?php echo $dep->column_name; ?></td>
-                                                </tr>
-
-                                            <?php endforeach; ?>
-                                        </tbody>
                                     </table>
                                 </div>
-                            <?php } else { ?>
-                                <div class="alert alert-link">
-                                    Not dependencys found!
-                                </div>
-
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="tab_settings">
-                    <div class="panel panel-warning">
-                        <div class="panel-heading">
-                            TableMaintance
-                        </div>
-                        <div class="panel-body">
-                            <table class="table table-condensed table-bordered">
-                                <thead class="small">
-                                    <tr>
-                                        <td class="well well-sm">Row_format</td>
-                                        <td>
-                                            <?php echo $Status->Row_format; ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="well well-sm">AVG_row</td>
-                                        <td><?php echo $Status->Avg_row_length; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="well well-sm">Data_lenght</td>
-                                        <td><?php echo $Status->Data_length; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="well well-sm">Max_data_lenght</td>
-                                        <td><?php echo $Status->Max_data_length; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="well well-sm">Index_lenght</td>
-                                        <td><?php echo $Status->Index_length; ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="well well-sm">Datea_free
-                                        <td><?php echo $Status->Data_free; ?></td>
-                                    </tr>
-                                </thead>
-                            </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+
     </div>
 </div>

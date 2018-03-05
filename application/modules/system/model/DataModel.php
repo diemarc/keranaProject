@@ -57,7 +57,11 @@ class DataModel extends \kerana\Ada
             /** @array , primary keys of a table */
             $_table_pks,
             /** @array, properties set */
-            $_data_properties;
+            $_data_properties,
+            /** @var mixed, contain the model dependencys tables */
+            $_model_dependencys,
+            /** @var mixed, init the model dependency, (New) */
+            $_init_model_dependencys;
 
     public function __construct()
     {
@@ -140,7 +144,7 @@ class DataModel extends \kerana\Ada
     {
         // first set the model attributes
         $this->_setupNewModel();
-
+        
         //create a model record
         $data_model = [
             'model' => $this->_model_name . 'Model',
@@ -214,6 +218,9 @@ class DataModel extends \kerana\Ada
         // path to the new model created
         $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
         $file_contents = file_get_contents($path_tpl);
+        
+        // get and setup model dependencys
+        $this->_setupModelDependencys();
 
         // replacement parse file
         $code_replace = [
@@ -224,6 +231,8 @@ class DataModel extends \kerana\Ada
             '[{properties_set}]' => $this->_data_properties,
             '[{model_date}]' => date('d-m-Y H:i:s'),
             '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
+            '[{dependencys}]' => (!empty($this->_model_dependencys)) ? "public \n ".$this->_model_dependencys.';':'',
+            '[{init_dependencys}]' => $this->_init_model_dependencys
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
 
@@ -315,6 +324,42 @@ class DataModel extends \kerana\Ada
 
 
         endforeach;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Check and setup model dependencys
+     * 
+     * -------------------------------------------------------------------------
+     */
+    private function _setupModelDependencys()
+    {
+
+        $rsDependencys = $this->getTableDependencys($this->_model_table);
+
+        if ($rsDependencys) {
+            foreach ($rsDependencys AS $dep):
+                
+                if(!is_array($dep)){
+                    if($this->_model_dependencys != ""){
+                        $this->_model_dependencys .= ",\n";
+                    }
+                }
+                $this->_model_dependencys .= "/** @object ".$dep->model."  */ \n "
+                        . '$obj'.$dep->model."";
+                
+                $this->_init_model_dependencys .= ' $this->obj'.$dep->model.'= '
+                        . 'new \\application\\modules\\'.$dep->module.'\\model\\'.$dep->model."(); \n";
+
+
+            endforeach;
+        }
+        else {
+            $this->_model_dependencys = '';
+            $this->_init_model_dependencys = '';
+        }
+        
+        
     }
 
     /**
