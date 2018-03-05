@@ -75,7 +75,7 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     public function save()
     {
         $this->_model->createModel();
-        \helpers\Redirect::to('/system/model/index');
+        \helpers\Redirect::to('/system/model/detail/'.$this->_model->_id_value);
     }
 
     /**
