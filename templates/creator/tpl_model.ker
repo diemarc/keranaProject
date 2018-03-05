@@ -33,11 +33,12 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 
 class [{model_name}] extends [{name}]Table {
 
-    
+    [{dependencys}]
     
      public function __construct()
     {
         parent::__construct();
+        [{init_dependencys}]
         
     }
 
