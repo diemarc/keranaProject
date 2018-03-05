@@ -462,7 +462,7 @@ abstract class Ada
 
     /*
       |--------------------------------------------------------------------------
-      | SCHEMA METHODS
+      | SCHEMA.INFORMATION METHODS
       |--------------------------------------------------------------------------
       |
      */
@@ -578,7 +578,7 @@ abstract class Ada
     {
         $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $this->_query = ' SHOW TABLE STATUS FROM '.$this->_config->get('_dbname_')
+        $this->_query = ' SHOW TABLE STATUS FROM ' . $this->_config->get('_dbname_')
                 . ' WHERE NAME = :table ';
 
         $this->_binds = null;
@@ -586,29 +586,40 @@ abstract class Ada
 
         return $this->getQuery('one');
     }
+
     /**
      * -------------------------------------------------------------------------
-     * Get table information
+     * Get table dependencys, 
      * -------------------------------------------------------------------------
-     * @param type $table_name
-     * @return type
+     * @param string $table_name the table
+     * @param string $field_name table_name column to scan in with table have
+     * dependency
+     * @return rs
      */
-    public function getTableDependencys($table_name = '')
+    public function getTableDependencys($table_name = '',$field_name = '')
     {
+        $this->_binds = null;
+        
         $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $this->_query = ' SELECT table_name,column_name,referenced_table_name,'
-                . ' referenced_column_name'
-                . ' FROM information_schema.key_column_usage '
-                . ' WHERE TABLE_NAME = :table '
-                . ' AND referenced_table_name IS NOT NULL ';
+        $this->_query = ' SELECT A.table_name,A.column_name,A.referenced_table_name,'
+                . ' A.referenced_column_name,'
+                . ' B.model,D.module,B.id_model'
+                . ' FROM information_schema.key_column_usage A '
+                . ' LEFT JOIN '.$this->_config->get('_dbname_').'.sys_models B ON (A.referenced_table_name = B.table_reference)'
+                . ' LEFT JOIN '.$this->_config->get('_dbname_').'.sys_models_controllers C ON (B.id_model = C.id_model)'
+                . ' LEFT JOIN '.$this->_config->get('_dbname_').'.sys_modules D ON (C.id_module = D.id_module)'
+                . ' WHERE A.table_name = :table '
+                . ' AND A.referenced_table_name IS NOT NULL ';
 
-        $this->_binds = null;
+        if(!empty($field_name)){
+            $this->_query .= ' AND A.column_name = :field_name ';
+            $this->_binds[':field_name'] = filter_var($field_name,FILTER_SANITIZE_STRING);
+        }
+        
         $this->_binds[':table'] = $table;
 
         return $this->getQuery();
     }
 
-    
-    
 }
