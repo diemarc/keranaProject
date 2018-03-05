@@ -47,7 +47,10 @@ class ControllerModel extends \kerana\Ada
             /** @var mixed, controller description */
             $controller_description,
             /** @var mixed, controller path */
-            $controller_path;
+            $controller_path,
+            /** @var mixed, the view dependencys */
+            $view_dependency;
+            
     protected
             $values_c = [];
 
@@ -214,6 +217,7 @@ class ControllerModel extends \kerana\Ada
             '[{controller_model}]' => ($this->controller_model_id > 0) ? 'protected $_' . $model_attribute_name . ';' : '',
             '[{model_object}]' => ($this->controller_model_id > 0) ? $model_object_to_create : '',
             '[{model_name}]' => '$this->_' . $model_attribute_name,
+            '[{view_dependency}]' => $this->view_dependency,
             '[{model_rs}]' => ($this->controller_model_id > 0) ? $model_resultset : '',
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
