@@ -20,7 +20,7 @@
 
 namespace helpers;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este archivo') : '';
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /**
  * -----------------------------------------------------------------------------
