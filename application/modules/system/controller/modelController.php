@@ -90,13 +90,18 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
         $this->_model->_setIdTableValue($id);
         $rsModel = $this->_model->getRecord();
         
+        // object controller-model-module model
+        $objModelControllerModule = new \application\modules\system\model\ModuleControllerModel();
+        $objModelControllerModule->set_id_model($id);
+        
         $params = [
             'rsModel' => $rsModel,
             'rsTableDesc' => $this->_model->descTable($rsModel->table_reference),
             'rsKeys' => $this->_model->getAllTableKeys($rsModel->table_reference,''),
             'rsReferences' => $this->_model->getTablesReferences($rsModel->table_reference),
             'rsDependencys' => $this->_model->getTableDependencys($rsModel->table_reference),
-            'Status' => $this->_model->getTableStatus($rsModel->table_reference)
+            'Status' => $this->_model->getTableStatus($rsModel->table_reference),
+            'rsControllers' => $objModelControllerModule->getControllerForModel()
         ];
         \kerana\View::showView($this->_current_module, 'models/detail', $params);
     }
