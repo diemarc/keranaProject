@@ -34,7 +34,10 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 abstract class [{model_name}] extends \kerana\Ada {
 
     protected
-    [{properties}];
+    [{properties}],
+            
+            /** Master query for [{name_min}] */
+            $_query_[{name_min}];
     
     
 
@@ -52,6 +55,7 @@ abstract class [{model_name}] extends \kerana\Ada {
           [{pk_values}]  
         ];
         
+        $this->_query_[{name_min}] = [{master_query}];  
     }
 
     
@@ -62,6 +66,7 @@ abstract class [{model_name}] extends \kerana\Ada {
       |
      */
 
+    
     
     
     
