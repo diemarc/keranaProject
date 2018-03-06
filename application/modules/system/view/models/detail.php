@@ -35,12 +35,30 @@
                             <td class="well well-sm">SystemModel</td>
                             <td><?php echo $rsModel->is_system_model; ?></td>
                         </tr>
+                        <tr>
+                            <td class="well well-sm">Controllers</td>
+                            <td>
+                                <ul class="list list-group">
+                                    <?php foreach ($rsControllers AS $controller_mod): ?>
+                                        <li clasS="list-group list-group-item">
+                                            <a href="<?php echo __URL__.'/'.
+                                                    $controller_mod->module.'/'.$controller_mod->controller.'/index';?>" target="_blank">
+                                                <strong><?php echo $controller_mod->controller; ?></strong>
+                                                <span class="btn btn-circle btn-primary">Run!</span>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+
+
+                            </td>
+                        </tr>
                     </thead>
                 </table>
             </div>
             <div class="panel-body">
                 <h5>
-                    <strong>TableInformation</strong>
+                    <strong>TableStadistics</strong>
                 </h5>
                 <table class="table table-condensed table-bordered">
                     <thead class="small">
