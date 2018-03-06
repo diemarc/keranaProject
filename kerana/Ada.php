@@ -288,9 +288,18 @@ abstract class Ada
     {
 
         $this->_fields = $fields;
-        $this->_query = 'SELECT ' . $this->_fields
-                . ' FROM ' . $this->table_name
-                . ' WHERE ' . $this->table_id . ' IS NOT NULL ';
+
+        // if not _query is not setted, then use the base table
+        if (!isset($this->_query) AND empty($this->_query)) {
+            $this->_query = 'SELECT ' . $this->_fields
+                    . ' FROM ' . $this->table_name
+                    . ' WHERE ' . $this->table_id . ' IS NOT NULL ';
+        }
+        else{
+            $this->_query = ' SELECT A.* FROM ('.$this->_query.') A '
+                    . ' WHERE 1=1 ';
+        }
+
 
         //  se forma las condiciones
         $this->_setConditions($conditions);
@@ -596,27 +605,27 @@ abstract class Ada
      * dependency
      * @return rs
      */
-    public function getTableDependencys($table_name = '',$field_name = '')
+    public function getTableDependencys($table_name = '', $field_name = '')
     {
         $this->_binds = null;
-        
+
         $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $this->_query = ' SELECT A.table_name,A.column_name,A.referenced_table_name,'
                 . ' A.referenced_column_name,'
                 . ' B.model,D.module,B.id_model'
                 . ' FROM information_schema.key_column_usage A '
-                . ' LEFT JOIN '.$this->_config->get('_dbname_').'.sys_models B ON (A.referenced_table_name = B.table_reference)'
-                . ' LEFT JOIN '.$this->_config->get('_dbname_').'.sys_models_controllers C ON (B.id_model = C.id_model)'
-                . ' LEFT JOIN '.$this->_config->get('_dbname_').'.sys_modules D ON (C.id_module = D.id_module)'
+                . ' LEFT JOIN ' . $this->_config->get('_dbname_') . '.sys_models B ON (A.referenced_table_name = B.table_reference)'
+                . ' LEFT JOIN ' . $this->_config->get('_dbname_') . '.sys_models_controllers C ON (B.id_model = C.id_model)'
+                . ' LEFT JOIN ' . $this->_config->get('_dbname_') . '.sys_modules D ON (C.id_module = D.id_module)'
                 . ' WHERE A.table_name = :table '
                 . ' AND A.referenced_table_name IS NOT NULL ';
 
-        if(!empty($field_name)){
+        if (!empty($field_name)) {
             $this->_query .= ' AND A.column_name = :field_name ';
-            $this->_binds[':field_name'] = filter_var($field_name,FILTER_SANITIZE_STRING);
+            $this->_binds[':field_name'] = filter_var($field_name, FILTER_SANITIZE_STRING);
         }
-        
+
         $this->_binds[':table'] = $table;
 
         return $this->getQuery();
