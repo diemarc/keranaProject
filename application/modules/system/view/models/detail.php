@@ -223,10 +223,10 @@
                                             <tbody>
                                                 <?php foreach ($rsReferences AS $ref): ?>
                                                     <tr>
-                                                        <td><?php echo $ref->REFERENCED_COLUMN_NAME; ?></td>
-                                                        <td><?php echo $ref->TABLE_NAME; ?></td>
-                                                        <td><?php echo $ref->COLUMN_NAME; ?></td>
-                                                        <td><?php echo $ref->CONSTRAINT_NAME; ?></td>
+                                                        <td><?php echo $ref->referenced_column_name; ?></td>
+                                                        <td><?php echo $ref->table_name; ?></td>
+                                                        <td><?php echo $ref->column_name; ?></td>
+                                                        <td><?php echo $ref->constraint_name; ?></td>
                                                     </tr>
 
                                                 <?php endforeach; ?>
