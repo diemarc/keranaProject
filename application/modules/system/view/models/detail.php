@@ -53,9 +53,11 @@
 
                             </td>
                         </tr>
+                       
                     </thead>
                 </table>
             </div>
+           
             <div class="panel-body">
                 <h5>
                     <strong>TableStadistics</strong>
