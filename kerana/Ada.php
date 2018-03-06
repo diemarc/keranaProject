@@ -533,11 +533,11 @@ abstract class Ada
     {
         $table = (empty($table_name)) ? $this->table_name : filter_var($table_name, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $this->_query = 'SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, '
-                . ' REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME '
+        $this->_query = 'SELECT table_name,column_name,constraint_name, '
+                . ' referenced_table_name,referenced_column_name '
                 . ' FROM '
                 . ' INFORMATION_SCHEMA.KEY_COLUMN_USAGE '
-                . ' WHERE REFERENCED_TABLE_NAME = :table ';
+                . ' WHERE referenced_table_name = :table ';
 
         $this->_binds = null;
         $this->_binds[':table'] = $table;
