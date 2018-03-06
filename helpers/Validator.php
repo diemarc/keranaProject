@@ -85,7 +85,7 @@ class Validator
         self::initValidator($param_name, $param_value, $required);
 
         // now validate 
-        if (filter_var(self::$param_to_validate, FILTER_VALIDATE_INT) == FALSE) {
+        if ($required AND filter_var(self::$param_to_validate, FILTER_VALIDATE_INT) == FALSE) {
             \kerana\Exceptions::showError('integerVALIDATOR::', ' param_name=<strong>' .
                     self::$param_name . '</strong><br> param_value=<strong>'
                     . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid INTEGER');
@@ -110,7 +110,7 @@ class Validator
         $is_email = strpos($param_name, 'email');
         $value_type = ($is_email) ? 'Email' : 'String';
         
-        $process = ($is_email) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : TRUE;
+        $process = ($is_email AND $required) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : TRUE;
 
         if ($process == FALSE) {
             \kerana\Exceptions::showError('stringVALIDATOR::'.$value_type, ' param_name=<strong>' .
@@ -134,6 +134,19 @@ class Validator
        return self::valVarchar($param_name, $param_value, $required);   
     }
     
+    /**
+     * -------------------------------------------------------------------------
+     * 
+     * -------------------------------------------------------------------------
+     * @param type $param_name
+     * @param type $param_value
+     * @param type $required
+     * @return type
+     */
+    public static function valTime($param_name, $param_value = '', $required = false){
+        self::initValidator($param_name,$param_value,$required);
+        return trim($param_value);
+    }
     
     
 
