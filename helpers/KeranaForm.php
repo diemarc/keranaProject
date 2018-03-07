@@ -128,7 +128,7 @@ class KeranaForm
             $ex = preg_split("/[\()s]+/", $desc->Type);
             $field_type = $ex[0];
             $field_lenght = $ex[1];
-            ($desc->Key != 'PRI') ? $this->_parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
+            ($desc->Extra != 'auto_increment') ? $this->_parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
         endforeach;
         //exit();
     }
@@ -182,6 +182,7 @@ class KeranaForm
 
                 // if field has a dependency, then create select code
                 if ($rsDependency) {
+                    
                     foreach ($rsDependency AS $dependency):
 
                         $rs_name = strtolower(substr($dependency->model, 0, -5));
@@ -196,8 +197,9 @@ class KeranaForm
                                 . '</select>' . " \n";
 
                     endforeach;
+                    
+                    
                 }else {
-
                     $element = '<input type="number" id="f_' . $field_name . '" name="f_'
                             . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . $value . ' />';
                 }
