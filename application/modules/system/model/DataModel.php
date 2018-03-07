@@ -332,7 +332,7 @@ class DataModel extends \kerana\Ada
 
             // parse fields into a data array association only id field is
             // not a primary key
-            if ($info_table->Key != "PRI") {
+            if ($info_table->Extra != "auto_increment") {
                 $this->_parseDataArrayFieldTable($info_table->Field);
                 // all the properties setted
                 $this->_parsePropertiesSet($info_table->Field);
