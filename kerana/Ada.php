@@ -294,9 +294,8 @@ abstract class Ada
             $this->_query = 'SELECT ' . $this->_fields
                     . ' FROM ' . $this->table_name
                     . ' WHERE ' . $this->table_id . ' IS NOT NULL ';
-        }
-        else{
-            $this->_query = ' SELECT A.* FROM ('.$this->_query.') A '
+        } else {
+            $this->_query = ' SELECT A.* FROM (' . $this->_query . ') A '
                     . ' WHERE 1=1 ';
         }
 
@@ -531,6 +530,7 @@ abstract class Ada
         return $this->getQuery();
     }
 
+
     /**
      * -------------------------------------------------------------------------
      * Get all tables referenced for a table
@@ -601,11 +601,11 @@ abstract class Ada
      * Get table dependencys, 
      * -------------------------------------------------------------------------
      * @param string $table_name the table
-     * @param string $field_name table_name column to scan in with table have
+     * @param string $field_name table_name column to scan in with table has
      * dependency
      * @return rs
      */
-    public function getTableDependencys($table_name = '', $field_name = '')
+    public function getTableDependencys($table_name = '', $field_name = '', $table_uniques = false)
     {
         $this->_binds = null;
 
@@ -625,7 +625,9 @@ abstract class Ada
             $this->_query .= ' AND A.column_name = :field_name ';
             $this->_binds[':field_name'] = filter_var($field_name, FILTER_SANITIZE_STRING);
         }
-
+        if ($table_uniques) {
+            $this->_query .= ' GROUP BY A.referenced_table_name';
+        }
         $this->_binds[':table'] = $table;
 
         return $this->getQuery();
