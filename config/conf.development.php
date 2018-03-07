@@ -36,16 +36,6 @@ $config = Configuration::singleton();
 
 /*
   |--------------------------------------------------------------------------
-  | URL del proyecto
-  |--------------------------------------------------------------------------
-  |
- */
-
-//$config->set('_URL_', filter_input(INPUT_SERVER, 'DOCUMENT_ROOT') . '');
-
-
-/*
-  |--------------------------------------------------------------------------
   | BASICS
   |--------------------------------------------------------------------------
   |
@@ -57,7 +47,7 @@ $config = Configuration::singleton();
  * DOCUMENT_ROOT 
  * ---------------------------------------------------------------
   /**
- * Configurar el sitio, hay que atender las 3 constantes
+ * Setting the site, possibles CONS
  * 1 __DOCUMENTROOT__ ; si existe un virtual host que apunte directamente a 
  * la carpeta application, dejar vacio, en el caso de que es un subdirectorio
  * dentro del virtualhost, hay que especificarlo.
@@ -71,20 +61,17 @@ define('_MODEL_SUFIX_', 'Model');
 
 /*
  * ---------------------------------------------------------------
- * CONTROLADOR , MODULO Y ACCION POR DEFECTO
+ * DEFAULT CONTROLLER , MODULE ACTION
  * ---------------------------------------------------------------
  * 
  */
-// controlador por defecto
 
 define('_DEFAULT_MODULE_', 'welcome');
 define('_DEFAULT_CONTROLLER_', 'welcome');
 define('_DEFAULT_ACTION_', 'index');
 
 
-// segmentos de url, configuramos en que posicion de la url se encuentra
-// informacion sobre el modulo/controller/action
-
+//url position for each url-component
 $config->set('position_module', 0);
 $config->set('position_controller', 1);
 $config->set('position_action', 2);
@@ -92,45 +79,45 @@ $config->set('position_action', 2);
 
 /*
   |--------------------------------------------------------------------------
-  | SEGURIDAD
+  | SECURITY
   |--------------------------------------------------------------------------
   |
  */
 
 /**
  * -----------------------------------------------------------------------------
- * Modulos publicos que no necesitan autentificacion
+ * Public modules, this list dont need autentification
  * -----------------------------------------------------------------------------
  */
 $config->set('_public_modules_', [
-
     'web',
     'welcome'
 ]);
 
+/** determine if ACL module will be run in each http-petition */
+$config->set('_acl_active_',false);
+
 
 /*
  * ---------------------------------------------------------------
- * Llave AES
+ * AES Key
  * ---------------------------------------------------------------
- * Se utiliza para encryptar las constraseñas en mysql o en php
  */
 
 $config->set('_aeskey_', 'vnaT497*_N');
 
 /**
  * -----------------------------------------------------------------------------
- * Sesiones
+ * Sessions
  * -----------------------------------------------------------------------------
  */
-/** @var mixed , nombre de la session a utilizar */
+/** @var mixed , session name */
 $config->set('_session_name_', '_keRsess_');
 
-/** @var boolean, si la app esta sobre https, activarlo true */
+/** @var boolean, if overt https set to true */
 $config->set('_session_https_', false);
 
-/** @var boolean, para que las cookies no sea accedido desde js, 
- *  nunca poner a false, a no ser que se sepa que se hace */
+/** @var boolean, only url no js mode, */
 $config->set('_session_http_only_', true);
 
 /** @var mixed, algoritmo hash para encriptar las sesiones
@@ -156,6 +143,7 @@ define('_NUMBER_FORMAT_', '2|,|.');
  * ---------------------------------------------------------------
  * PROFILER 
  * ---------------------------------------------------------------
+ * Muestra uso de memorias y CPU que usa el script php
  */
 
 define('_ENABLE_PROFILER_', true);
@@ -164,13 +152,13 @@ define('_ENABLE_PROFILER_', true);
 
 /*
  * ---------------------------------------------------------------
- * DataBases
+ * DB
  * ---------------------------------------------------------------
  * 
  */
 
 $config->set('_dbhost_', 'localhost');
-$config->set('_dbname_', 'kerana');
+$config->set('_dbname_', '');
 $config->set('_dbuser_', '');
 $config->set('_dbpass_', '');
 $config->set('_dbport_', '3306');
