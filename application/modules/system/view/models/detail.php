@@ -5,7 +5,6 @@
                                                >Models</a> -><?php echo $rsModel->model; ?>
     </h4>
 
-
     <div class="col-sm-4" style="padding-left:2px;">
 
         <div class="panel panel-info">
@@ -53,11 +52,25 @@
 
                             </td>
                         </tr>
-                       
+                        <tr>
+                            <td class="well well-sm">MasterQuery</td>
+                            <td>
+                               <a href='javascript:loadResource("<?php echo __URL__.'/system/model/viewQuery/'.$rsModel->id_model;?>","div_aux2");' 
+                                   class='btn btn-success btn-xs' title='viewQuery'>
+                                    <i class='fa fa-code'></i>View master query
+                                </a> 
+
+                            </td>
+                        </tr>
                     </thead>
                 </table>
             </div>
-           
+            <div calss="panel-body">
+                <h5>Master-query</h5>
+                <pre>
+                    
+                </pre>
+            </div>
             <div class="panel-body">
                 <h5>
                     <strong>TableStadistics</strong>
