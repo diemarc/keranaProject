@@ -75,7 +75,7 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     public function save()
     {
         $this->_model->createModel();
-        \helpers\Redirect::to('/system/model/detail/'.$this->_model->_id_value);
+        \helpers\Redirect::to('/system/model/detail/' . $this->_model->_id_value);
     }
 
     /**
@@ -89,21 +89,49 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
 
         $this->_model->_setIdTableValue($id);
         $rsModel = $this->_model->getRecord();
-        
+
         // object controller-model-module model
         $objModelControllerModule = new \application\modules\system\model\ModuleControllerModel();
         $objModelControllerModule->set_id_model($id);
         
+        
+       // exit();
+
         $params = [
             'rsModel' => $rsModel,
             'rsTableDesc' => $this->_model->descTable($rsModel->table_reference),
-            'rsKeys' => $this->_model->getAllTableKeys($rsModel->table_reference,''),
+            'rsKeys' => $this->_model->getAllTableKeys($rsModel->table_reference, ''),
             'rsReferences' => $this->_model->getTablesReferences($rsModel->table_reference),
             'rsDependencys' => $this->_model->getTableDependencys($rsModel->table_reference),
             'Status' => $this->_model->getTableStatus($rsModel->table_reference),
-            'rsControllers' => $objModelControllerModule->getControllerForModel()
+            'rsControllers' => $objModelControllerModule->getControllerForModel(),
         ];
         \kerana\View::showView($this->_current_module, 'models/detail', $params);
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Show a master query for a model table
+     * -------------------------------------------------------------------------
+     * @param type $id
+     */
+    public function viewQuery($id)
+    {
+
+        $this->_model->_setIdTableValue($id);
+        $rsModel = $this->_model->getRecord();
+        // test master query creation
+        $query_builder = new \helpers\QueryBuilder($this->_model);
+        $query_builder->setTable($rsModel->table_reference);
+        $query_builder->buildMasterQuery();
+        $master_query = str_replace(["'",". "], "", $query_builder->getQuery());
+        
+        
+        $params = [
+            'rsModel' => $rsModel,
+            'master_query' => $master_query
+        ];
+        \kerana\View::showView($this->_current_module, 'models/partials/master_query', $params);
     }
 
     /**
