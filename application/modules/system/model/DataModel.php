@@ -129,10 +129,10 @@ class DataModel extends \kerana\Ada
      */
     private function _checkTableReferencedExists(){
         
-        $rs = $this->find('table_reference',['table_reference' => $this->_model_table]);
+        $rs = $this->find('model',['table_reference' => $this->_model_table]);
         if($rs){
             \kerana\Exceptions::showError('ModelCreator', 'This table <strong>'.$this->_model_table.'</strong> '
-                    . 'is already referenced in this model => <strong>'.$rs->table_reference.'<strong>');
+                    . 'is already referenced in this model => <strong>'.$rs->model.'<br> adeu!<strong>');
         }
         
     }
