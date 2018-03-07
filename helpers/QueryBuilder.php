@@ -34,15 +34,15 @@ class QueryBuilder
 
     protected
 
-    /** @var mixed, object DI */
+    /** @object mixed, object DI */
             $_object_table,
-            /** table primary for build a query */
+            /** @var string table primary for build a query */
             $_table_to_build,
             /** @var mixed, joins involved in a master query */
             $_joins,
             /** @var mixed, fields for a master query */
             $_query_fields,
-            /** @var the master query formed */
+            /** @var mixed the master query formed */
             $_master_query;
 
     public function __construct(\kerana\Ada $object_table)
