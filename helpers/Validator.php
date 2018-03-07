@@ -136,7 +136,7 @@ class Validator
     
     /**
      * -------------------------------------------------------------------------
-     * 
+     * @TODO
      * -------------------------------------------------------------------------
      * @param type $param_name
      * @param type $param_value
@@ -144,10 +144,24 @@ class Validator
      * @return type
      */
     public static function valTime($param_name, $param_value = '', $required = false){
-        self::initValidator($param_name,$param_value,$required);
+        //self::initValidator($param_name,$param_value,$required);
         return trim($param_value);
     }
     
+    /**
+     * -------------------------------------------------------------------------
+     * @TODO
+     * -------------------------------------------------------------------------
+     * @param type $param_name
+     * @param type $param_value
+     * @param type $required
+     * @return type
+     */
+    
+    public static function valDecimal($param_name, $param_value = '', $required = false){
+        self::initValidator($param_name,$param_value,$required);
+        return trim($param_value);
+    }
     
 
     /*
