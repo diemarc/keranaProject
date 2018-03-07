@@ -63,11 +63,7 @@ class DataModel extends \kerana\Ada
             /** @var mixed, init the model dependency, (New) */
             $_init_model_dependencys,
             /** @var mixed, view dependencys for controller, based in table dependencys */
-            $_controller_dependencys,
-            /** @var mixed, joins involved in a master query */
-            $_joins = '',
-            /** @var mixed, fields involved in a master query */
-            $_query_fields = '';
+            $_controller_dependencys;
 
     public function __construct()
     {
@@ -127,6 +123,21 @@ class DataModel extends \kerana\Ada
     }
 
     /**
+     * -------------------------------------------------------------------------
+     * Check if table reference already exists in other model
+     * -------------------------------------------------------------------------
+     */
+    private function _checkTableReferencedExists(){
+        
+        $rs = $this->find('table_reference',['table_reference' => $this->_model_table]);
+        if($rs){
+            \kerana\Exceptions::showError('ModelCreator', 'This table <strong>'.$this->_model_table.'</strong> '
+                    . 'is already referenced in this model => <strong>'.$rs->table_reference.'<strong>');
+        }
+        
+    }
+    
+    /**
      * --------------------------------------------------------------------------
      * Set the model path
      * ------------------------------------------------------------------------- 
@@ -150,6 +161,7 @@ class DataModel extends \kerana\Ada
     {
         // first set the model attributes
         $this->_setupNewModel();
+        $this->_checkTableReferencedExists();
 
         //create a model record
         $data_model = [
@@ -286,7 +298,7 @@ class DataModel extends \kerana\Ada
             '[{getters}]' => $this->_getters,
             '[{pk_values}]' => $this->_table_pks,
             '[{key_values_model}]' => $this->_data_array,
-            '[{master_query}]' => $this->getQuery(),
+            '[{master_query}]' => $query_builder->getQuery(),
             '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
