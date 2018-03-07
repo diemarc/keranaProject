@@ -219,6 +219,13 @@ class KeranaForm
                             . '' . $field_name . '" class="radio_inline" value="0">No';
                     break;
                 }
+
+            // inputs type text
+            case 'decimal';
+
+                $element = '<input type="number" step="0.01" id="f_' . $field_name . '" name="f_'
+                        . '' . $field_name . '" class="form-control"  maxlength="' . $length . '" ' . $required . $value . '  />';
+                break;
         }
         array_push($this->_form_tags, $label . $divput . $element . "\n </div> \n </div>");
     }
