@@ -489,87 +489,104 @@ class DataModel extends \kerana\Ada
         $model_controller_model->id_model = $this->_id_value;
         $model_controller_model->createModelControllerModule();
     }
-
+    
     /**
      * -------------------------------------------------------------------------
-     * Build a master query for a principal table
+     * Remove all model and related tables
      * -------------------------------------------------------------------------
-     * @param type $table
+     * @return type
      */
-    public function buildMasterQuery($table = 'f_facturas')
-    {
-
-        $i = 0;
-        $alphas = range('A', 'Z');
-        $alpha_table = $alphas[$i];
-
-        // parse principal fields all the fields
-        $this->_parseFieldsTable($table, $alpha_table);
-
-        // firsts level dependencys
-        $rsDependencys = $this->getTableDependencys($table, '', true);
-
-        foreach ($rsDependencys AS $depe) {
-            $i++;
-            $this->_parseFieldsTable($depe->referenced_table_name, $alphas[$i],true);
-            $this->_joins .="\n .'".' INNER JOIN ' . $depe->referenced_table_name . ' ' . $alphas[$i] . ' ON (' . $alphas[$i] . '.' . $depe->referenced_column_name . ' = A.' . $depe->column_name . ')'."' \n";
-            $this->_parseInnerJoinsTablesDependencys($depe->referenced_table_name, $alphas[$i], $i);
-        }
-
-        $sql = "'".' SELECT ' . $this->_query_fields."' \n";
-        return $sql . ".' FROM " . $table . " " . $alpha_table ."' \n".$this->_joins;
+    public function removeModel(){
+        
+        $this->_binds = [':id_model' => $this->_id_value];
+        $this->_query = 'CALL spDeleteModel(:id_model,1)';
+        return $this->runQuery();
+        
+        
     }
+    
+    
 
-    /**
-     * -------------------------------------------------------------------------
-     * parse fields for master query of a table aplying alphas alias for each field
-     * -------------------------------------------------------------------------
-     * @param type $table
-     * @param type $alpha
-     */
-    private function _parseFieldsTable($table, $alpha, $restricted = false)
-    {
-        // get table fields
-        $rsTableFields = $this->descTable($table);
-
-        foreach ($rsTableFields AS $field):
-
-            if ($restricted) {
-                if ($field->Key == "PRI") {
-                    continue;
-                }
-            }
-            if ($this->_query_fields != '') {
-                $this->_query_fields .= ',';
-            }
-
-            $this->_query_fields .= "".$alpha . '.' . $field->Field."";
-
-        endforeach;
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Form the inner joins
-     * -------------------------------------------------------------------------
-     * @param type $table
-     * @param type $alias
-     * @param type $i
-     */
-    private function _parseInnerJoinsTablesDependencys($table, $alias, $i)
-    {
-        $rsDependencys = $this->getTableDependencys($table, '');
-        if ($rsDependencys) {
-            foreach ($rsDependencys AS $dep):
-                $i++;
-                $this->_parseFieldsTable($dep->referenced_table_name, $alias . $i, true);
-                $this->_joins .=".'".'INNER JOIN ' . $dep->referenced_table_name . ' ' . $alias . $i . ''
-                        . ' ON (' . $alias . $i . '.' . $dep->referenced_column_name . ' = ' . $alias . 
-                        '.' . $dep->column_name . ')'."' \n";
-                $this->_parseInnerJoinsTablesDependencys($dep->referenced_table_name, $alias . $i, $i);
-
-
-            endforeach;
-        }
-    }
+//    /**
+//     * -------------------------------------------------------------------------
+//     * Build a master query for a principal table
+//     * -------------------------------------------------------------------------
+//     * @param type $table
+//     */
+//    public function buildMasterQuery($table = 'f_facturas')
+//    {
+//
+//        $i = 0;
+//        $alphas = range('A', 'Z');
+//        $alpha_table = $alphas[$i];
+//
+//        // parse principal fields all the fields
+//        $this->_parseFieldsTable($table, $alpha_table);
+//
+//        // firsts level dependencys
+//        $rsDependencys = $this->getTableDependencys($table, '', true);
+//
+//        foreach ($rsDependencys AS $depe) {
+//            $i++;
+//            $this->_parseFieldsTable($depe->referenced_table_name, $alphas[$i],true);
+//            $this->_joins .="\n .'".' INNER JOIN ' . $depe->referenced_table_name . ' ' . $alphas[$i] . ' ON (' . $alphas[$i] . '.' . $depe->referenced_column_name . ' = A.' . $depe->column_name . ')'."' \n";
+//            $this->_parseInnerJoinsTablesDependencys($depe->referenced_table_name, $alphas[$i], $i);
+//        }
+//
+//        $sql = "'".' SELECT ' . $this->_query_fields."' \n";
+//        return $sql . ".' FROM " . $table . " " . $alpha_table ."' \n".$this->_joins;
+//    }
+//
+//    /**
+//     * -------------------------------------------------------------------------
+//     * parse fields for master query of a table aplying alphas alias for each field
+//     * -------------------------------------------------------------------------
+//     * @param type $table
+//     * @param type $alpha
+//     */
+//    private function _parseFieldsTable($table, $alpha, $restricted = false)
+//    {
+//        // get table fields
+//        $rsTableFields = $this->descTable($table);
+//
+//        foreach ($rsTableFields AS $field):
+//
+//            if ($restricted) {
+//                if ($field->Key == "PRI") {
+//                    continue;
+//                }
+//            }
+//            if ($this->_query_fields != '') {
+//                $this->_query_fields .= ',';
+//            }
+//
+//            $this->_query_fields .= "".$alpha . '.' . $field->Field."";
+//
+//        endforeach;
+//    }
+//
+//    /**
+//     * -------------------------------------------------------------------------
+//     * Form the inner joins
+//     * -------------------------------------------------------------------------
+//     * @param type $table
+//     * @param type $alias
+//     * @param type $i
+//     */
+//    private function _parseInnerJoinsTablesDependencys($table, $alias, $i)
+//    {
+//        $rsDependencys = $this->getTableDependencys($table, '');
+//        if ($rsDependencys) {
+//            foreach ($rsDependencys AS $dep):
+//                $i++;
+//                $this->_parseFieldsTable($dep->referenced_table_name, $alias . $i, true);
+//                $this->_joins .=".'".'INNER JOIN ' . $dep->referenced_table_name . ' ' . $alias . $i . ''
+//                        . ' ON (' . $alias . $i . '.' . $dep->referenced_column_name . ' = ' . $alias . 
+//                        '.' . $dep->column_name . ')'."' \n";
+//                $this->_parseInnerJoinsTablesDependencys($dep->referenced_table_name, $alias . $i, $i);
+//
+//
+//            endforeach;
+//        }
+//    }
 }
