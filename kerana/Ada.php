@@ -277,12 +277,12 @@ abstract class Ada
 
     /**
      * -------------------------------------------------------------------------
-     * Selecciona registros mediante condiciones wheres
+     * Find a row from a $_query, or from  base table
      * -------------------------------------------------------------------------
-     * @param string $fields , los campos a seleccionar, default: todos
-     * @param string $conditions , 
-     * @param string $mode
-     * @return type
+     * @param string $fields , fields to select, default: *
+     * @param string $conditions , where conditions 
+     * @param string $mode , 
+     * @return rs
      */
     public function find($fields = '*', $conditions = false, $mode = 'one')
     {
