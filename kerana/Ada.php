@@ -298,9 +298,7 @@ abstract class Ada
             $this->_query = ' SELECT A.* FROM (' . $this->_query . ') A '
                     . ' WHERE 1=1 ';
         }
-
-
-        //  se forma las condiciones
+        //  parse each conditions
         $this->_setConditions($conditions);
         return $this->getQuery($mode);
     }
@@ -317,8 +315,14 @@ abstract class Ada
     {
         if (isset($this->_id_value) AND ( !empty($this->_id_value))) {
 
-            $this->_query = ' SELECT * FROM  ' . $this->table_name
-                    . ' WHERE ' . $this->table_id . ' = :id_key LIMIT 1';
+            // if not _query is not setted, then use the base table
+            if (!isset($this->_query) AND empty($this->_query)) {
+                $this->_query = ' SELECT * FROM  ' . $this->table_name
+                        . ' WHERE ' . $this->table_id . ' = :id_key LIMIT 1';
+            } else {
+                $this->_query = ' SELECT A.* FROM (' . $this->_query . ') A '
+                        . ' WHERE A.' . $this->table_id . ' = :id_key LIMIT 1 ';
+            }
 
             $this->_binds[':id_key'] = $this->_id_value;
             $result = $this->getQuery('one');
@@ -342,9 +346,15 @@ abstract class Ada
     public function getAll($order_by = '')
     {
         $order = (empty($order_by)) ? $this->table_id . ' DESC ' : $order_by;
-        $this->_query = ' SELECT * FROM ' . $this->table_name
-                . ' WHERE ' . $this->table_id . ' IS NOT NULL '
-                . ' ORDER BY :order DESC ';
+        if (!isset($this->_query) AND empty($this->_query)) {
+            $this->_query = ' SELECT * FROM ' . $this->table_name
+                    . ' WHERE ' . $this->table_id . ' IS NOT NULL '
+                    . ' ORDER BY :order DESC ';
+        }else{
+             $this->_query = ' SELECT A.* FROM (' . $this->_query . ') A '
+                        . ' WHERE A.' . $this->table_id . ' IS NOT NULL'
+                     . ' ORDER BY :order DESC ';
+        }
 
         $this->_binds[':order'] = $order;
         return $this->getQuery();
@@ -529,7 +539,6 @@ abstract class Ada
         $this->_query .= (!empty($where) AND $where == 'Primary') ? ' WHERE key_name = "Primary" ' : '';
         return $this->getQuery();
     }
-
 
     /**
      * -------------------------------------------------------------------------
