@@ -169,7 +169,7 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
     public function delete($id)
     {
         $this->_model->_setIdTableValue($id);
-        ($this->_model->delete()) ? \helpers\Redirect::to('/system/model/index') : '';
+        ($this->_model->removeModel()) ? \helpers\Redirect::to('/system/model/index') : '';
     }
 
 }
