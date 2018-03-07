@@ -5,13 +5,13 @@
     </h4>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form action="http://local.keranaproject/system/user/save" 
+            <form action="<?php echo __URL__;?>/system/user/save" 
                   id="formKerana" name="formKerana" method="POST" class="form-horizontal"
                   accept-charset="utf-8">
                       <?php echo $kerana_token; ?>
 
                 <header class="breadcrumb">
-                    <a href="http://local.keranaproject/system/user/index" 
+                    <a href="<?php echo __URL__;?>/system/user/index" 
                        class="btn btn-warning">Cancel</a>
                     <button type="submit" class="btn btn-success">Save</button>
                 </header>
