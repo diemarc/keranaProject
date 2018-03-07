@@ -11,7 +11,7 @@
                       <?php echo $kerana_token; ?>
 
                 <header class="breadcrumb">
-                    <a href="http://local.keranaproject/system/group/index" 
+                    <a href="<?php echo __URL__;?>/system/group/index" 
                        class="btn btn-warning">Cancel</a>
                     <button type="submit" class="btn btn-success">Save</button>
                 </header>
