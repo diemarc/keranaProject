@@ -118,7 +118,7 @@ class QueryBuilder
 
         $sql_fields = "'" . ' SELECT ' . $this->_query_fields . "' \n";
         $this->_master_query = $sql_fields . ".' FROM " . $this->_table_to_build . " " . $alpha_primary . " '"
-                . $this->_joins . ".'". ' WHERE ' . $alpha_primary . '.'
+                . $this->_joins . ".' \n". ' WHERE ' . $alpha_primary . '.'
                 . $this->_object_table->getPrimaryKeyTable($this->_table_to_build) . ' IS NOT NULL ' . "'";
     }
 
