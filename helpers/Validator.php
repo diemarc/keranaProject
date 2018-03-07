@@ -159,7 +159,7 @@ class Validator
      */
     
     public static function valDecimal($param_name, $param_value = '', $required = false){
-        self::initValidator($param_name,$param_value,$required);
+       // self::initValidator($param_name,$param_value,$required);
         return trim($param_value);
     }
     
