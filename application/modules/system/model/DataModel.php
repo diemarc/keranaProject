@@ -20,7 +20,7 @@
 
 namespace application\modules\system\model;
 
-(!defined('__APPFOLDER__')) ? exit('No esta permitido el acceso directo a este arhivo') : '';
+defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya');
 
 /**
  * -----------------------------------------------------------------------------
@@ -63,7 +63,11 @@ class DataModel extends \kerana\Ada
             /** @var mixed, init the model dependency, (New) */
             $_init_model_dependencys,
             /** @var mixed, view dependencys for controller, based in table dependencys */
-            $_controller_dependencys;
+            $_controller_dependencys,
+            /** @var mixed, joins involved in a master query */
+            $_joins = '',
+            /** @var mixed, fields involved in a master query */
+            $_query_fields = '';
 
     public function __construct()
     {
@@ -146,7 +150,7 @@ class DataModel extends \kerana\Ada
     {
         // first set the model attributes
         $this->_setupNewModel();
-        
+
         //create a model record
         $data_model = [
             'model' => $this->_model_name . 'Model',
@@ -220,7 +224,7 @@ class DataModel extends \kerana\Ada
         // path to the new model created
         $path_model_file = realpath($this->_model_path . $this->_model_name . 'Model.php');
         $file_contents = file_get_contents($path_tpl);
-        
+
         // get and setup model dependencys
         $this->_setupModelDependencys();
 
@@ -233,7 +237,7 @@ class DataModel extends \kerana\Ada
             '[{properties_set}]' => $this->_data_properties,
             '[{model_date}]' => date('d-m-Y H:i:s'),
             '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
-            '[{dependencys}]' => (!empty($this->_model_dependencys)) ? "public \n ".$this->_model_dependencys.';':'',
+            '[{dependencys}]' => (!empty($this->_model_dependencys)) ? "public \n " . $this->_model_dependencys . ';' : '',
             '[{init_dependencys}]' => $this->_init_model_dependencys
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
@@ -263,6 +267,11 @@ class DataModel extends \kerana\Ada
         // set pks
         $this->_parsePksTable();
 
+        // build a master query
+        $query_builder = new \helpers\QueryBuilder($this);
+        $query_builder->setTable($this->_model_table);
+        $query_builder->buildMasterQuery();
+
         // replacement parse file
         $code_replace = [
             '[{model_name}]' => $this->_model_name . 'Table',
@@ -277,6 +286,7 @@ class DataModel extends \kerana\Ada
             '[{getters}]' => $this->_getters,
             '[{pk_values}]' => $this->_table_pks,
             '[{key_values_model}]' => $this->_data_array,
+            '[{master_query}]' => $this->getQuery(),
             '[{model_table_id}]' => $this->getPrimaryKeyTable($this->_model_table),
         ];
         $file_new_contents = strtr($file_contents, $code_replace);
@@ -341,32 +351,29 @@ class DataModel extends \kerana\Ada
 
         if ($rsDependencys) {
             foreach ($rsDependencys AS $dep):
-                
-                $rs_name = strtolower(substr($dep->model, 0,-5));
-                
-                if(!is_array($dep)){
-                    if($this->_model_dependencys != ""){
+
+                $rs_name = strtolower(substr($dep->model, 0, -5));
+
+                if (!is_array($dep)) {
+                    if ($this->_model_dependencys != "") {
                         $this->_model_dependencys .= ",\n";
                     }
                 }
-                $this->_model_dependencys .= "/** @object ".$dep->model."  */ \n "
-                        . '$obj'.$dep->model."";
-                
-                $this->_init_model_dependencys .= ' $this->obj'.$dep->model.'= '
-                        . 'new \\application\\modules\\'.$dep->module.'\\model\\'.$dep->model."(); \n";
-                
-                $this->_controller_dependencys .= "\n ".'"rs'.  ucwords($rs_name).'s"=> $this->_'.strtolower($this->_model_name).'->obj'.$dep->model.'->getAll(),'." \n";
+                $this->_model_dependencys .= "/** @object " . $dep->model . "  */ \n "
+                        . '$obj' . $dep->model . "";
+
+                $this->_init_model_dependencys .= ' $this->obj' . $dep->model . '= '
+                        . 'new \\application\\modules\\' . $dep->module . '\\model\\' . $dep->model . "(); \n";
+
+                $this->_controller_dependencys .= "\n " . '"rs' . ucwords($rs_name) . 's"=> $this->_' . strtolower($this->_model_name) . '->obj' . $dep->model . '->getAll(),' . " \n";
 
 
             endforeach;
-        }
-        else {
+        } else {
             $this->_model_dependencys = '';
             $this->_init_model_dependencys = '';
             $this->_controller_dependencys = '';
         }
-        
-        
     }
 
     /**
@@ -483,4 +490,86 @@ class DataModel extends \kerana\Ada
         $model_controller_model->createModelControllerModule();
     }
 
+    /**
+     * -------------------------------------------------------------------------
+     * Build a master query for a principal table
+     * -------------------------------------------------------------------------
+     * @param type $table
+     */
+    public function buildMasterQuery($table = 'f_facturas')
+    {
+
+        $i = 0;
+        $alphas = range('A', 'Z');
+        $alpha_table = $alphas[$i];
+
+        // parse principal fields all the fields
+        $this->_parseFieldsTable($table, $alpha_table);
+
+        // firsts level dependencys
+        $rsDependencys = $this->getTableDependencys($table, '', true);
+
+        foreach ($rsDependencys AS $depe) {
+            $i++;
+            $this->_parseFieldsTable($depe->referenced_table_name, $alphas[$i],true);
+            $this->_joins .="\n .'".' INNER JOIN ' . $depe->referenced_table_name . ' ' . $alphas[$i] . ' ON (' . $alphas[$i] . '.' . $depe->referenced_column_name . ' = A.' . $depe->column_name . ')'."' \n";
+            $this->_parseInnerJoinsTablesDependencys($depe->referenced_table_name, $alphas[$i], $i);
+        }
+
+        $sql = "'".' SELECT ' . $this->_query_fields."' \n";
+        return $sql . ".' FROM " . $table . " " . $alpha_table ."' \n".$this->_joins;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * parse fields for master query of a table aplying alphas alias for each field
+     * -------------------------------------------------------------------------
+     * @param type $table
+     * @param type $alpha
+     */
+    private function _parseFieldsTable($table, $alpha, $restricted = false)
+    {
+        // get table fields
+        $rsTableFields = $this->descTable($table);
+
+        foreach ($rsTableFields AS $field):
+
+            if ($restricted) {
+                if ($field->Key == "PRI") {
+                    continue;
+                }
+            }
+            if ($this->_query_fields != '') {
+                $this->_query_fields .= ',';
+            }
+
+            $this->_query_fields .= "".$alpha . '.' . $field->Field."";
+
+        endforeach;
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Form the inner joins
+     * -------------------------------------------------------------------------
+     * @param type $table
+     * @param type $alias
+     * @param type $i
+     */
+    private function _parseInnerJoinsTablesDependencys($table, $alias, $i)
+    {
+        $rsDependencys = $this->getTableDependencys($table, '');
+        if ($rsDependencys) {
+            foreach ($rsDependencys AS $dep):
+                $i++;
+                $this->_parseFieldsTable($dep->referenced_table_name, $alias . $i, true);
+                $this->_joins .=".'".'INNER JOIN ' . $dep->referenced_table_name . ' ' . $alias . $i . ''
+                        . ' ON (' . $alias . $i . '.' . $dep->referenced_column_name . ' = ' . $alias . 
+                        '.' . $dep->column_name . ')'."' \n";
+                $this->_parseInnerJoinsTablesDependencys($dep->referenced_table_name, $alias . $i, $i);
+
+
+            endforeach;
+        }
+    }
 }
