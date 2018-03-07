@@ -55,7 +55,7 @@ abstract class [{model_name}] extends \kerana\Ada {
           [{pk_values}]  
         ];
         
-        $this->_query_[{name_min}] = [{master_query}];  
+        $this->_query = [{master_query}];  
     }
 
     
@@ -66,11 +66,6 @@ abstract class [{model_name}] extends \kerana\Ada {
       |
      */
 
-    
-    
-    
-    
-    
     
     
     /*
