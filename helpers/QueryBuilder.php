@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of keranaProject
  * Copyright (C) 2017-2018  diemarc  diemarc@protonmail.com
@@ -41,14 +42,13 @@ class QueryBuilder
             $_joins,
             /** @var mixed, fields for a master query */
             $_query_fields,
-            /** @var the master query formed*/
+            /** @var the master query formed */
             $_master_query;
 
     public function __construct(\kerana\Ada $object_table)
     {
         $this->_object_table = $object_table;
-       // $this->buildMasterQuery();
-        
+        // $this->buildMasterQuery();
     }
 
     /**
@@ -57,20 +57,22 @@ class QueryBuilder
      * -------------------------------------------------------------------------
      * @param type $table
      */
-    public function setTable($table){
-        $this->_table_to_build = filter_var($table,FILTER_SANITIZE_STRING);
+    public function setTable($table)
+    {
+        $this->_table_to_build = filter_var($table, FILTER_SANITIZE_STRING);
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * Get the masterquery
      * -------------------------------------------------------------------------
      * @return type
      */
-    public function getQuery(){
+    public function getQuery()
+    {
         return $this->_master_query;
     }
-    
+
     /**
      * -------------------------------------------------------------------------
      * build a master query
@@ -106,15 +108,43 @@ class QueryBuilder
             $this->_joins .="\n .'" . ' INNER JOIN ' .
                     $dependency->referenced_table_name . ' ' . $alphas[$i] .
                     ' ON (' . $alphas[$i] . '.' . $dependency->referenced_column_name . ' = A.'
-                    . $dependency->column_name . ')' . "' \n";
-            
+                    . $dependency->column_name . ')' . " ' \n";
+
             // parse the down levels joins 
+            
             $this->_parseInnerJoinsTablesDependencys($dependency->referenced_table_name, $alphas[$i], $i);
 
         endforeach;
+
+        $sql_fields = "'" . ' SELECT ' . $this->_query_fields . "' \n";
+        $this->_master_query = $sql_fields . ".' FROM " . $this->_table_to_build . " " . $alpha_primary . " '"
+                . $this->_joins . ".'". ' WHERE ' . $alpha_primary . '.'
+                . $this->_object_table->getPrimaryKeyTable($this->_table_to_build) . ' IS NOT NULL ' . "'";
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Parse the inner joins
+     * -------------------------------------------------------------------------
+     * @param type $table
+     * @param type $alias
+     * @param type $i
+     */
+    private function _parseInnerJoinsTablesDependencys($table, $alias, $i)
+    {
         
-        $sql_fields = "'".' SELECT '.$this->_query_fields."' \n";
-        $this->_master_query = $sql_fields.".' FROM ".$this->_table_to_build." ".$alpha_primary." \n".$this->_joins;
+        $rsDependencys = $this->_object_table->getTableDependencys($table, '',true);
+        if ($rsDependencys) {
+            foreach ($rsDependencys AS $dep):
+                $i++;
+                $this->_parseFieldsTable($dep->referenced_table_name, $alias . $i, true);
+                $this->_joins .=".'" . ' INNER JOIN ' . $dep->referenced_table_name . ' ' . $alias . $i . ''
+                        . ' ON (' . $alias . $i . '.' . $dep->referenced_column_name . ' = ' . $alias .
+                        '.' . $dep->column_name . ')' . " ' \n";
+                $this->_parseInnerJoinsTablesDependencys($dep->referenced_table_name, $alias.$i, $i);
+
+            endforeach;
+        }
     }
 
     /**
@@ -128,7 +158,6 @@ class QueryBuilder
     private function _parseFieldsTable($table, $alpha, $restricted = false)
     {
         // get table fields
-    
         $rsTableFields = $this->_object_table->descTable($table);
 
         foreach ($rsTableFields AS $field):
@@ -145,30 +174,6 @@ class QueryBuilder
             $this->_query_fields .= $alpha . '.' . $field->Field;
 
         endforeach;
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Parse the inner joins
-     * -------------------------------------------------------------------------
-     * @param type $table
-     * @param type $alias
-     * @param type $i
-     */
-    private function _parseInnerJoinsTablesDependencys($table, $alias, $i)
-    {
-        $rsDependencys = $this->_object_table->getTableDependencys($table, '');
-        if ($rsDependencys) {
-            foreach ($rsDependencys AS $dep):
-                $i++;
-                $this->_parseFieldsTable($dep->referenced_table_name, $alias . $i, true);
-                $this->_joins .=".'" . 'INNER JOIN ' . $dep->referenced_table_name . ' ' . $alias . $i . ''
-                        . ' ON (' . $alias . $i . '.' . $dep->referenced_column_name . ' = ' . $alias .
-                        '.' . $dep->column_name . ')' . "' \n";
-                $this->_parseInnerJoinsTablesDependencys($dep->referenced_table_name, $alias . $i, $i);
-
-            endforeach;
-        }
     }
 
 }
