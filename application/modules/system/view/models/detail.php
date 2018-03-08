@@ -12,6 +12,16 @@
                 <h4>
                     <strong>ModelDetail</strong>
                 </h4>
+                <div class="breadcrumb">
+                    <a href='<?php echo __URL__; ?>/system/model/delete/<?php echo $rsModel->id_model; ?>' class="btn btn-danger btn-sm">
+                        DeleteModel
+                    </a>
+                </div>
+                <?php
+                echo (empty($Status->Auto_increment)) ?
+                        '<div class="alert alert-danger text-danger">'
+                . '<strong>hummm..no AI detected, FIX IT!!!</strong></div>' : $Status->Auto_increment;
+                ?>
                 <table class="table table-condensed table-bordered">
                     <thead class="small">
                         <tr>
@@ -40,13 +50,14 @@
                                 <ul class="list list-group">
                                     <?php foreach ($rsControllers AS $controller_mod): ?>
                                         <li clasS="list-group list-group-item">
-                                            <a href="<?php echo __URL__.'/'.
-                                                    $controller_mod->module.'/'.$controller_mod->controller.'/index';?>" target="_blank">
+                                            <a href="<?php echo __URL__ . '/' .
+                                    $controller_mod->module . '/' . $controller_mod->controller . '/index';
+                                        ?>" target="_blank">
                                                 <strong><?php echo $controller_mod->controller; ?></strong>
                                                 <span class="btn btn-circle btn-primary">Run!</span>
                                             </a>
                                         </li>
-                                    <?php endforeach; ?>
+<?php endforeach; ?>
                                 </ul>
 
 
@@ -55,7 +66,7 @@
                         <tr>
                             <td class="well well-sm">MasterQuery</td>
                             <td>
-                               <a href='javascript:loadResource("<?php echo __URL__.'/system/model/viewQuery/'.$rsModel->id_model;?>","div_aux2");' 
+                                <a href='javascript:loadResource("<?php echo __URL__ . '/system/model/viewQuery/' . $rsModel->id_model; ?>","div_aux2");' 
                                    class='btn btn-success btn-xs' title='viewQuery'>
                                     <i class='fa fa-code'></i>View master query
                                 </a> 
@@ -65,12 +76,7 @@
                     </thead>
                 </table>
             </div>
-            <div calss="panel-body">
-                <h5>Master-query</h5>
-                <pre>
-                    
-                </pre>
-            </div>
+
             <div class="panel-body">
                 <h5>
                     <strong>TableStadistics</strong>
@@ -81,7 +87,7 @@
                             <td class="well well-sm">Rows</td>
                             <td>
                                 <span class="badge">
-                                    <?php echo $Status->Rows; ?>
+<?php echo $Status->Rows; ?>
                                 </span>
                             </td>
                         </tr>
@@ -189,7 +195,7 @@
                                                             <strong>
                                                                 <i class="text-success <?php echo $icon_pk; ?>"></i>
                                                             </strong>
-                                                            <?php echo $desc->Field; ?></td>
+    <?php echo $desc->Field; ?></td>
                                                         <td><?php echo $desc->Type; ?></td>
                                                         <td><?php echo $desc->Null; ?></td>
                                                         <td><?php echo $desc->Key; ?></td>
@@ -197,7 +203,7 @@
                                                         <td><?php echo $desc->Extra; ?></td>
                                                     </tr>
 
-                                                <?php endforeach; ?>
+<?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -221,7 +227,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($rsKeys AS $key): ?>
+<?php foreach ($rsKeys AS $key): ?>
                                                     <tr>
                                                         <td><?php echo $key->Non_unique; ?></td>
                                                         <td><?php echo $key->Key_name; ?></td>
@@ -232,7 +238,7 @@
                                                         <td><?php echo $key->Index_type; ?></td>
                                                     </tr>
 
-                                                <?php endforeach; ?>
+<?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -254,7 +260,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($rsReferences AS $ref): ?>
+<?php foreach ($rsReferences AS $ref): ?>
                                                     <tr>
                                                         <td><?php echo $ref->referenced_column_name; ?></td>
                                                         <td><?php echo $ref->table_name; ?></td>
@@ -262,7 +268,7 @@
                                                         <td><?php echo $ref->constraint_name; ?></td>
                                                     </tr>
 
-                                                <?php endforeach; ?>
+<?php endforeach; ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -272,7 +278,7 @@
                         <div role="tabpanel" class="tab-pane" id="tab_dependencys">
                             <div class="panel panel-green">
                                 <div class="panel-body">
-                                    <?php if ($rsDependencys) { ?>
+<?php if ($rsDependencys) { ?>
                                         <div class="table-responsive">
                                             <table class="table table-condensed table-bordered">
                                                 <thead class="bg-success">
@@ -284,11 +290,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php foreach ($rsDependencys AS $dep): ?>
+    <?php foreach ($rsDependencys AS $dep): ?>
                                                         <tr>
                                                             <td>
                                                                 <a href="<?php echo __URL__ . '/system/model/detail/' . $dep->id_model; ?>">
-                                                                    <?php echo $dep->module . '/' . $dep->model; ?>
+        <?php echo $dep->module . '/' . $dep->model; ?>
                                                                 </a>
                                                             </td>
                                                             <td><?php echo $dep->referenced_table_name; ?></td>
@@ -296,16 +302,16 @@
                                                             <td><?php echo $dep->column_name; ?></td>
                                                         </tr>
 
-                                                    <?php endforeach; ?>
+    <?php endforeach; ?>
                                                 </tbody>
                                             </table>
                                         </div>
-                                    <?php } else { ?>
+<?php } else { ?>
                                         <div class="alert alert-link">
                                             Not dependencys found!
                                         </div>
 
-                                    <?php } ?>
+<?php } ?>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +326,7 @@
                                             <tr>
                                                 <td class="well well-sm">Row_format</td>
                                                 <td>
-                                                    <?php echo $Status->Row_format; ?>
+<?php echo $Status->Row_format; ?>
                                                 </td>
                                             </tr>
                                             <tr>
