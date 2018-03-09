@@ -153,17 +153,17 @@ class Validator
 
     /**
      * -------------------------------------------------------------------------
-     * @TODO
+     * Validate timestamp
      * -------------------------------------------------------------------------
-     * @param type $param_name
-     * @param type $param_value
-     * @param type $required
-     * @return type
+     * @param string $param_name
+     * @param value $param_value if is empty returns current timestamp
+     * @param boolean $required
+     * @return datetime
      */
     public static function valTime($param_name, $param_value = '', $required = false)
     {
-        //self::initValidator($param_name,$param_value,$required);
-        return trim($param_value);
+        self::initValidator($param_name,$param_value,$required);
+        return (empty(self::$param_to_validate)) ? date('Y-m-d h:i:s') :trim($param_value);
     }
 
     /**
