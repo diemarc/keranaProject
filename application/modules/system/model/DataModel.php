@@ -213,7 +213,7 @@ class DataModel extends \kerana\Ada
     {
 
         try {
-            fopen($this->_model_path . $this->_model_name . 'Table.php', 'w');
+            fopen($this->_model_path .'tables/'. $this->_model_name . 'Table.php', 'w');
             return $this->_makeCodeTableClass();
         } catch (Exception $ex) {
             $descripcion = 'Mapper file cant be created, resolve this, and go back!! MDF ' . $ex;
@@ -273,7 +273,7 @@ class DataModel extends \kerana\Ada
         $path_tpl = realpath(__DOCUMENTROOT__ . '/../templates/creator/tpl_table.ker');
 
         // path to the new model created
-        $path_model_file = realpath($this->_model_path . $this->_model_name . 'Table.php');
+        $path_model_file = realpath($this->_model_path .'tables/'. $this->_model_name . 'Table.php');
         $file_contents = file_get_contents($path_tpl);
 
         // set pks
