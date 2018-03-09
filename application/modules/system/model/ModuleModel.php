@@ -133,6 +133,8 @@ class ModuleModel extends \Kerana\Ada
                 mkdir($this->_module_path . '/controller', 0777, true);
                 // models folder
                 mkdir($this->_module_path . '/model', 0777, true);
+                // table-models folder
+                mkdir($this->_module_path . '/model/tables', 0777, true);
                 // view folder
                 mkdir($this->_module_path . '/view', 0777, true);
             

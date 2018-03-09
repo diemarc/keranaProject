@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+//use \NumberFormatter;
 
 namespace helpers;
 
@@ -37,7 +38,9 @@ class Validator
             /** @var mixed, the param value to validate */
             $param_value,
             /** @var mixed, value to check, can be (param_value,_post,_get) */
-            $param_to_validate;
+            $param_to_validate,
+            /** @var boolean, if the param to check is a required param */
+            $is_required;
 
     /**
      * -------------------------------------------------------------------------
@@ -49,8 +52,9 @@ class Validator
      */
     public static function initValidator($param_name, $param_value = '', $required = false)
     {
-        self::$param_name = filter_var($param_name, FILTER_SANITIZE_SPECIAL_CHARS);
-        self::$param_value = filter_var($param_value, FILTER_SANITIZE_SPECIAL_CHARS);
+        self::$param_name = trim(filter_var($param_name, FILTER_SANITIZE_SPECIAL_CHARS));
+        self::$param_value = trim(filter_var($param_value, FILTER_SANITIZE_SPECIAL_CHARS));
+        self::$is_required = trim(filter_var($required), FILTER_VALIDATE_BOOLEAN);
 
         // if param_value is empty then ask to RequestHelper
         // to try to catch the param via _post or _get
@@ -68,6 +72,21 @@ class Validator
             } catch (\Exception $ex) {
                 \kerana\Exceptions::ShowException('VALIDATOR::' . self::$param_name . ' is a required field but its empty', New \Exception($ex));
             }
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * check if a param is not empty
+     * -------------------------------------------------------------------------
+     * @param type $name
+     * @param type $value
+     * @throws \Exception
+     */
+    public static function isRequired($name, $value)
+    {
+        if (empty($value)) {
+            throw new \Exception("$name is empty!!");
         }
     }
 
@@ -106,16 +125,26 @@ class Validator
     public static function valVarchar($param_name, $param_value = '', $required = false)
     {
         self::initValidator($param_name, $param_value, $required);
-
-        $is_email = strpos($param_name, 'email');
-        $value_type = ($is_email) ? 'Email' : 'String';
-        
-        $process = ($is_email AND $required) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : TRUE;
-
-        if ($process == FALSE) {
-            \kerana\Exceptions::showError('stringVALIDATOR::'.$value_type, ' param_name=<strong>' .
-                    self::$param_name . '</strong><br> param_value=<strong>'
-                    . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid '.$value_type);
+         
+        /** -------------------------------------------------------------------------
+         * Check varchar param tittle 
+         * if the title contains some string like "email" then validate as a email
+         * -------------------------------------------------------------------------
+         */
+        if (strpos(self::$param_name, 'email')) {
+            $email_value = filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL);
+            if ($email_value != false) {
+                return self::$param_to_validate = $email_value;
+            } else {
+                \kerana\Exceptions::showError('stringVALIDATOR::Email', ' param_name=<strong>' .
+                        self::$param_name . '</strong><br> param_value=<strong>'
+                        . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid email');
+            }
+        }
+        // check is user type
+        if (strpos(self::$param_name, 'created_by')) {
+            return $user_id = $_SESSION['id_user'];
+            //self::$param_to_validate = $user_id;
         } else {
             return trim(self::$param_to_validate);
         }
@@ -130,124 +159,57 @@ class Validator
      * @param type $required
      * @return type
      */
-    public static function valText($param_name, $param_value = '', $required = false){
-       return self::valVarchar($param_name, $param_value, $required);   
-    }
-    
-    /**
-     * -------------------------------------------------------------------------
-     * @TODO
-     * -------------------------------------------------------------------------
-     * @param type $param_name
-     * @param type $param_value
-     * @param type $required
-     * @return type
-     */
-    public static function valTime($param_name, $param_value = '', $required = false){
-        //self::initValidator($param_name,$param_value,$required);
-        return trim($param_value);
-    }
-    
-    /**
-     * -------------------------------------------------------------------------
-     * @TODO
-     * -------------------------------------------------------------------------
-     * @param type $param_name
-     * @param type $param_value
-     * @param type $required
-     * @return type
-     */
-    
-    public static function valDecimal($param_name, $param_value = '', $required = false){
-       // self::initValidator($param_name,$param_value,$required);
-        return trim($param_value);
-    }
-    
-
-    /*
-      |--------------------------------------------------------------------------
-      | OLD METHODS,
-      |--------------------------------------------------------------------------
-      |
-      | @TODO: refactor this
-      |
-     */
-
-    /**
-     * -------------------------------------------------------------------------
-     * 
-     * -------------------------------------------------------------------------
-     * @param type $field
-     */
-    public static function required($field)
+    public static function valText($param_name, $param_value = '', $required = false)
     {
-        (empty($field)) ? \kerana\Exceptions::showError('VALIDATOR::', $field . ' is a required field but its empty') : '';
+        return self::valVarchar($param_name, $param_value, $required);
     }
 
     /**
      * -------------------------------------------------------------------------
-     * check if a param is not empty
+     * Validate timestamp
      * -------------------------------------------------------------------------
-     * @param type $name
-     * @param type $value
-     * @throws \Exception
+     * @param string $param_name
+     * @param value $param_value if is empty returns current timestamp
+     * @param boolean $required
+     * @return datetime
      */
-    public static function isRequired($name, $value)
+    public static function valTime($param_name, $param_value = '', $required = false)
     {
-        if (empty($value)) {
-            throw new \Exception("$name is empty!!");
-        }
+        self::initValidator($param_name, $param_value, $required);
+        return (empty(self::$param_to_validate)) ? date('Y-m-d h:i:s') : trim($param_value);
     }
 
     /**
      * -------------------------------------------------------------------------
-     * Validate email
+     * Validate if  param_values is a valid number
      * -------------------------------------------------------------------------
-     * @param mixed $email
-     * @return type
+     * @param string $param_name
+     * @param mixed $param_value
+     * @param boolean $required
+     * @return number
      */
-    public static function email($email, $required = false)
+    public static function valDecimal($param_name, $param_value = '', $required = false)
     {
-        ($required) ? self::required($email) : '';
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) == FALSE) {
-            \kerana\Exceptions::showError('VALIDATOR::', $email . ' is not a valid email');
+        self::initValidator($param_name, $param_value, $required);
+
+        // if is not a float and is not numerico, try to formated 
+        if (!filter_var(self::$param_to_validate, FILTER_VALIDATE_FLOAT) AND ( is_numeric(self::$param_to_validate + 1))) {
+
+            $fmt = new \NumberFormatter('de_DE', \NumberFormatter::DECIMAL);
+            $num_formatted = $fmt->parse(self::$param_to_validate);
+
+            // if parsing return empty value, show error
+            return ($num_formatted) ? $num_formatted :
+                    \kerana\Exceptions::showError('floatVALIDATOR::' . $param_name, ' (' . self::$param_to_validate . ') '
+                            . 'IS NOT A NUMBER');
+            // sif not a number
+        } else if (!is_numeric(self::$param_to_validate)) {
+            \kerana\Exceptions::showError('floatVALIDATOR::' . $param_name, ' (' . self::$param_to_validate . ') '
+                    . 'IS NOT A NUMBER');
         } else {
-            return trim($email);
-        }
-    }
 
-    /**
-     * -------------------------------------------------------------------------
-     * Validate email
-     * -------------------------------------------------------------------------
-     * @param mixed $email
-     * @return type
-     */
-    public static function int($var, $required = false)
-    {
-        ($required) ? self::required($var) : '';
-        if (filter_var($var, FILTER_SANITIZE_NUMBER_INT) == FALSE) {
-            \kerana\Exceptions::showError('VALIDATOR::', $var . ' is not a valid INTEGER');
-        } else {
-            return trim($var);
-        }
-    }
-
-    /**
-     * -------------------------------------------------------------------------
-     * Validate string
-     * -------------------------------------------------------------------------
-     * @param type $var
-     * @param type $required
-     * @return type
-     */
-    public static function varchar($var, $required = false)
-    {
-        ($required) ? self::required($var) : '';
-        if (filter_var($var, FILTER_SANITIZE_STRING) == FALSE) {
-            \kerana\Exceptions::showError('VALIDATOR::', $var . ' is not a valid string');
-        } else {
-            return trim($var);
+            // if the value format is like to 9.8 return this value 
+            return self::$param_to_validate;
         }
     }
 

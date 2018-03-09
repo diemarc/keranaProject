@@ -20,7 +20,7 @@
                 <?php
                 echo (empty($Status->Auto_increment)) ?
                         '<div class="alert alert-danger text-danger">'
-                . '<strong>hummm..no AI detected, FIX IT!!!</strong></div>' : $Status->Auto_increment;
+                . '<strong>hummm..no AI detected, FIX IT!!!</strong></div>' : '';
                 ?>
                 <table class="table table-condensed table-bordered">
                     <thead class="small">

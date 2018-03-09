@@ -94,8 +94,6 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
         $objModelControllerModule = new \application\modules\system\model\ModuleControllerModel();
         $objModelControllerModule->set_id_model($id);
         
-        
-       // exit();
 
         $params = [
             'rsModel' => $rsModel,
@@ -125,7 +123,6 @@ class ModelController extends moduleController implements \kerana\KeranaInterfac
         $query_builder->setTable($rsModel->table_reference);
         $query_builder->buildMasterQuery();
         $master_query = str_replace(["'",". "], "", $query_builder->getQuery());
-        
         
         $params = [
             'rsModel' => $rsModel,

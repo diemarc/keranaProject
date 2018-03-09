@@ -31,7 +31,7 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
   |
  */
 
-class [{model_name}] extends [{name}]Table {
+class [{model_name}] extends tables\[{name}]Table {
 
     [{dependencys}]
     
