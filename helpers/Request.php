@@ -59,7 +59,7 @@ class Request
     public static function email($field = 'f_email')
     {
         self::init();
-        return Validator::email(self::$request[$field],true);
+        return Validator::valVarchar($field,self::$request[$field],true);
     }
 
     /**
@@ -73,7 +73,7 @@ class Request
     public static function int($field,$require = true)
     {
         self::init();
-        return Validator::int(self::$request[$field],$require);
+        return Validator::valInt($field,self::$request[$field],$require);
     }
     /**
      * -------------------------------------------------------------------------
@@ -86,7 +86,7 @@ class Request
     public static function varchar($field,$require = false)
     {
         self::init();
-        return Validator::varchar(self::$request[$field],$require);
+        return Validator::valVarchar($field,self::$request[$field],$require);
     }
 
 }
