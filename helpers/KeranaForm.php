@@ -55,7 +55,9 @@ class KeranaForm
             /** @var mixed, form template content */
             $_form_template_content,
             /** @array, contains the html form tags  */
-            $_form_tags = [];
+            $_form_tags = [],
+            /** @array, keywords to avoid creation of element form tags */
+            $_field_names_avoid = ['created_by', 'created_at'];
 
     /**
      * 
@@ -128,7 +130,8 @@ class KeranaForm
             $ex = preg_split("/[\()s]+/", $desc->Type);
             $field_type = $ex[0];
             $field_lenght = $ex[1];
-            ($desc->Extra != 'auto_increment') ? $this->_parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
+            (($desc->Extra != 'auto_increment') AND ( !in_array($desc->Field, $this->_field_names_avoid))) ?
+                            $this->_parseField($desc->Field, $field_type, $field_lenght, $desc->Null) : '';
         endforeach;
         //exit();
     }
@@ -170,8 +173,11 @@ class KeranaForm
                 } else {
                     $type = 'text';
                 }
-                $element = '<input type="' . $type . '" id="f_' . $field_name . '" name="f_'
-                        . '' . $field_name . '" class="form-control"  maxlength="' . $length . '" ' . $required . $value . '  />';
+                //no create elements with some pattenr in field title
+                if (!in_array($field_name, $this->_field_names_avoid)) {
+                    $element = '<input type="' . $type . '" id="f_' . $field_name . '" name="f_'
+                            . '' . $field_name . '" class="form-control"  maxlength="' . $length . '" ' . $required . $value . '  />';
+                }
                 break;
 
             // inputs type number
@@ -182,7 +188,7 @@ class KeranaForm
 
                 // if field has a dependency, then create select code
                 if ($rsDependency) {
-                    
+
                     foreach ($rsDependency AS $dependency):
 
                         $rs_name = strtolower(substr($dependency->model, 0, -5));
@@ -197,8 +203,6 @@ class KeranaForm
                                 . '</select>' . " \n";
 
                     endforeach;
-                    
-                    
                 }else {
                     $element = '<input type="number" id="f_' . $field_name . '" name="f_'
                             . '' . $field_name . '" class="form-control" maxlength="' . $length . '" ' . $required . $value . ' />';
