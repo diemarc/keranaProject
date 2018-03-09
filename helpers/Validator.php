@@ -38,7 +38,9 @@ class Validator
             /** @var mixed, the param value to validate */
             $param_value,
             /** @var mixed, value to check, can be (param_value,_post,_get) */
-            $param_to_validate;
+            $param_to_validate,
+            /** @var boolean, if the param to check is a required param */
+            $is_required;
 
     /**
      * -------------------------------------------------------------------------
@@ -52,6 +54,7 @@ class Validator
     {
         self::$param_name = trim(filter_var($param_name, FILTER_SANITIZE_SPECIAL_CHARS));
         self::$param_value = trim(filter_var($param_value, FILTER_SANITIZE_SPECIAL_CHARS));
+        self::$is_required = trim(filter_var($required), FILTER_VALIDATE_BOOLEAN);
 
         // if param_value is empty then ask to RequestHelper
         // to try to catch the param via _post or _get
@@ -122,16 +125,26 @@ class Validator
     public static function valVarchar($param_name, $param_value = '', $required = false)
     {
         self::initValidator($param_name, $param_value, $required);
-
-        $is_email = strpos($param_name, 'email');
-        $value_type = ($is_email) ? 'Email' : 'String';
-
-        $process = ($is_email AND $required) ? filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL) : TRUE;
-
-        if ($process == FALSE) {
-            \kerana\Exceptions::showError('stringVALIDATOR::' . $value_type, ' param_name=<strong>' .
-                    self::$param_name . '</strong><br> param_value=<strong>'
-                    . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid ' . $value_type);
+         
+        /** -------------------------------------------------------------------------
+         * Check varchar param tittle 
+         * if the title contains some string like "email" then validate as a email
+         * -------------------------------------------------------------------------
+         */
+        if (strpos(self::$param_name, 'email')) {
+            $email_value = filter_var(self::$param_to_validate, FILTER_VALIDATE_EMAIL);
+            if ($email_value != false) {
+                return self::$param_to_validate = $email_value;
+            } else {
+                \kerana\Exceptions::showError('stringVALIDATOR::Email', ' param_name=<strong>' .
+                        self::$param_name . '</strong><br> param_value=<strong>'
+                        . '' . self::$param_to_validate . '</strong> <br> WTF??... is not a valid email');
+            }
+        }
+        // check is user type
+        if (strpos(self::$param_name, 'created_by')) {
+            return $user_id = $_SESSION['id_user'];
+            //self::$param_to_validate = $user_id;
         } else {
             return trim(self::$param_to_validate);
         }
@@ -162,8 +175,8 @@ class Validator
      */
     public static function valTime($param_name, $param_value = '', $required = false)
     {
-        self::initValidator($param_name,$param_value,$required);
-        return (empty(self::$param_to_validate)) ? date('Y-m-d h:i:s') :trim($param_value);
+        self::initValidator($param_name, $param_value, $required);
+        return (empty(self::$param_to_validate)) ? date('Y-m-d h:i:s') : trim($param_value);
     }
 
     /**
@@ -184,7 +197,7 @@ class Validator
 
             $fmt = new \NumberFormatter('de_DE', \NumberFormatter::DECIMAL);
             $num_formatted = $fmt->parse(self::$param_to_validate);
-            
+
             // if parsing return empty value, show error
             return ($num_formatted) ? $num_formatted :
                     \kerana\Exceptions::showError('floatVALIDATOR::' . $param_name, ' (' . self::$param_to_validate . ') '
@@ -194,7 +207,7 @@ class Validator
             \kerana\Exceptions::showError('floatVALIDATOR::' . $param_name, ' (' . self::$param_to_validate . ') '
                     . 'IS NOT A NUMBER');
         } else {
-            
+
             // if the value format is like to 9.8 return this value 
             return self::$param_to_validate;
         }
