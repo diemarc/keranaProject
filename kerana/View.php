@@ -78,13 +78,13 @@ class View
         }
 
         // if want to load the html header
-        (!self::$_is_ajax AND $module != 'welcome') ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlHeader.php') : '';
+        (!self::$_is_ajax AND $module != 'welcome') ? require_once(__DOCUMENTROOT__ . '/_layouts/'.$_SESSION['layout'].'/_htmlHeader.php') : '';
 
         // include the template file
         include($full_path_template);
 
         // if want to load the footer
-        (!self::$_is_ajax AND $module != 'welcome') ? require_once(__DOCUMENTROOT__ . '/_layouts/default/_htmlFooter.php') : '';
+        (!self::$_is_ajax AND $module != 'welcome') ? require_once(__DOCUMENTROOT__ . '/_layouts/'.$_SESSION['layout'].'/_htmlFooter.php') : '';
     }
 
     /**
