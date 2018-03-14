@@ -33,7 +33,7 @@ class LoginModel extends \application\modules\system\model\UserModel
 {
 
     public
-        /** @object , user */
+    /** @object , user */
             $user,
             /** @object, bad login, handler for login errors */
             $bl;
@@ -81,7 +81,7 @@ class LoginModel extends \application\modules\system\model\UserModel
         $this->_init();
         // if user object not exists
         if ($this->user == false) {
-            
+
             // register a badLogin 
             $this->bl->registerBadLogin('User not exists ' . $this->username);
             \kerana\Exceptions::showError('LoginError', 'Username & password is empty');
@@ -97,7 +97,7 @@ class LoginModel extends \application\modules\system\model\UserModel
                 // if passwords matchs, create a session secure
                 $this->_createSessionSucces();
             } else {
-                $string = 'Wrong Password for ' . $this->username . ' ['.$this->password.']';
+                $string = 'Wrong Password for ' . $this->username . ' [' . $this->password . ']';
                 $this->bl->registerBadLogin($string, $this->user->id_user);
                 \kerana\Exceptions::showError('LoginError', 'Username & password not match');
             }
@@ -126,7 +126,7 @@ class LoginModel extends \application\modules\system\model\UserModel
             // create a session data
             $_SESSION['id_user'] = $user_id;
             $_SESSION['username'] = $user_name;
-            
+
             // to prevent session-hijack, create a hash from concat(user_agent, user_password_salt)
             // and store in session_data "login_string"
             // this will check in a restore session method
@@ -135,11 +135,30 @@ class LoginModel extends \application\modules\system\model\UserModel
             // register the access
             $access = new \application\modules\system\model\AccessLogin();
             $access->registerAccessUser($user_id);
-
-            // redirect
-            \helpers\Redirect::to('/system/module/index');
+            
+            $this->_landUserLogin();
         } catch (Exception $ex) {
             \kerana\Exceptions::showError('SessionLoginError', $ex);
+        }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Redirect user logged, to his group landing page
+     * -------------------------------------------------------------------------
+     */
+    private function _landUserLogin()
+    {
+
+        // user-group model
+        $objUserGroup = new \application\modules\system\model\UserGrupModel();
+        $objUserGroup->set_id_user($_SESSION['id_user']);
+        $infoLanding = $objUserGroup->getPrincipalGroupForUser();
+
+        if (!$infoLanding) {
+            \kerana\Exceptions::showError('LoginIncomplete::', 'You dont have a valid landing page');
+        } else {
+            \helpers\Redirect::to($infoLanding->landing_mca);
         }
     }
 
@@ -156,7 +175,7 @@ class LoginModel extends \application\modules\system\model\UserModel
             // first check if session user is setted
             if (isset($_SESSION['id_user'], $_SESSION['username'], $_SESSION['login_string'])) {
                 $user_id = $_SESSION['id_user'];
-                
+
                 // contains the concat(user_agent + user_password_salt)
                 $login_string = $_SESSION['login_string'];
 
@@ -166,7 +185,7 @@ class LoginModel extends \application\modules\system\model\UserModel
                 // check if the id_user stored in the session_data, match with
                 // the user stored in table
                 $this->_setIdTableValue($user_id);
-                
+
                 // if user exists
                 if ($this->user = $this->getRecord(false)) {
 

@@ -5,7 +5,7 @@
         <meta name="author" content="diemarc" />
         <meta name="organization" content="diemarc" />
         <meta name="locality" content="Madrid" />
-        <title>Kerana-Hello</title>
+        <title><?php echo __APPNAME__;?>-Login</title>
         <!-- Bootstrap Core CSS -->
         <link href="/_styles/sb_admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
@@ -17,7 +17,7 @@
                     <div class="panel-body">
                         <form class="form-signin form-group-sm" 
                               action="go" method="post">
-                            <h2 class="form-signin-heading">Hello World!</h2>
+                            <h2 class="form-signin-heading text-primary"><?php echo __APPNAME__;?></h2>
                             <label for="f_username" class="sr-only">Username? </label>
                             <input type="text" id="f_username" name="f_username" class="form-control form-group-sm" 
                                    placeholder="username? " required autofocus>
