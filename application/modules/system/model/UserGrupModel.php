@@ -51,7 +51,7 @@ class UserGrupModel extends \kerana\Ada
      */
     public function getPrincipalGroupForUser(){
         
-        $this->_query = ' SELECT B.landing_mca,B.group_name '
+        $this->_query = ' SELECT B.landing_mca,B.group_name,B.layout '
                 . ' FROM '.$this->table_name.' A '
                 . ' INNER JOIN sys_group B ON (A.id_group = B.id_group)'
                 . ' WHERE A.id_user = :id_user '

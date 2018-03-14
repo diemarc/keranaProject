@@ -136,7 +136,9 @@ class LoginModel extends \application\modules\system\model\UserModel
             $access = new \application\modules\system\model\AccessLogin();
             $access->registerAccessUser($user_id);
             
+            // redirect user to a landing page
             $this->_landUserLogin();
+            
         } catch (Exception $ex) {
             \kerana\Exceptions::showError('SessionLoginError', $ex);
         }
@@ -158,6 +160,10 @@ class LoginModel extends \application\modules\system\model\UserModel
         if (!$infoLanding) {
             \kerana\Exceptions::showError('LoginIncomplete::', 'You dont have a valid landing page');
         } else {
+            // start a secure session
+            $ka_session = New \kerana\SessionHandler();
+            $ka_session->startSession();
+            $_SESSION['layout'] = $infoLanding->layout;
             \helpers\Redirect::to($infoLanding->landing_mca);
         }
     }
