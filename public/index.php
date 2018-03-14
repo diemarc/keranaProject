@@ -47,7 +47,7 @@ define('__URL__', 'http://' . filter_input(INPUT_SERVER, 'HTTP_HOST') . '');
  * kERANA pROJECT NAME
  * -----------------------------------------------------------------------------
  */
-define('__APPNAME__', 'keranaProject');
+define('__APPNAME__', 'fac2Fast');
 /*
  * ---------------------------------------------------------------
  * CORE SYSTEM DIRECTORY
