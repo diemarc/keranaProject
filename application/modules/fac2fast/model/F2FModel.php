@@ -59,7 +59,7 @@ class F2FModel extends \application\modules\configuracion\model\UserContratanteM
         $num_contra = count($rsContratantesUser);
 
         // if logged user dosnt have any contratantes, then redirect to new contratante
-        // form, for testing purpose for now, the scripts show kerana exception
+        // form, for testing purpose , the scripts show kerana exception
         if ($num_contra == 0) {
             \kerana\Exceptions::showError('ContratanteUserError', 'no hay aso');
             die();
@@ -86,20 +86,20 @@ class F2FModel extends \application\modules\configuracion\model\UserContratanteM
 
     /**
      * -------------------------------------------------------------------------
-     * Change the current contratante (company)
+     * Change the current company(contratante)
      * -------------------------------------------------------------------------
      *  Destroy the current session assigned to f2f_contratante and f2f_name_contratante
      * @param type $id_contratante
      */
-    public function changeContratante($id_contratante)
+    public function changeCurrentCompany($id_contratante)
     {
 
         $this->set_id_contratante($id_contratante);
-        // destroy session
+        // destroy session of contratantes
         unset($_SESSION['f2f_id_contratante']);
         unset($_SESSION['f2f_contratante']);
 
-        // create a new value
+        // create a new session value for contratante
         $_SESSION['f2f_id_contratante'] = $this->get_id_contratante();
         $_SESSION['f2f_contratante'] = $this->find('contratante', ['id_contratante' =>$this->get_id_contratante()]
         )->contratante;
