@@ -24,9 +24,9 @@
 
     </head>
 
-    <body class="fixed-nav sticky-footer bg-dark" id="page-top">
+    <body class="fixed-nav" id="page-top">
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="mainNav">
             <a class="navbar-brand" href="index.html">
                 <?php echo __APPNAME__; ?>
             </a>
