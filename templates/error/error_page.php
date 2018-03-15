@@ -6,7 +6,7 @@
         <meta name="organization" content="diemarc" />
         <meta name="locality" content="Madrid" />
         <title>:-( Kerana-Ooops, shit happens!!!!</title>
-        <link href="/_styles/sb_admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/_styles/sb_admin2/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
         <div class="container">
