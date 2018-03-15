@@ -1,13 +1,13 @@
 <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="<?php echo __URL__.'/fac2fast/f2f/index';?>">
             <i class="fa fa-fw fa-dashboard"></i>
             <span class="nav-link-text">Home</span>
         </a>
     </li>
 
     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
-        <a class="nav-link" href="tables.html">
+        <a class="nav-link" href="#">
             <i class="fa fa-fw fa-table"></i>
             <span class="nav-link-text">Filtros</span>
         </a>
@@ -19,10 +19,10 @@
         </a>
         <ul class="sidenav-second-level collapse" id="collapseComponents">
             <li>
-                <a href="navbar.html">Correo</a>
+                <a href="">Correo</a>
             </li>
             <li>
-                <a href="cards.html">Usuarios</a>
+                <a href="">Usuarios</a>
             </li>
         </ul>
     </li>
