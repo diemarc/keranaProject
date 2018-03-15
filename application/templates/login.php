@@ -7,7 +7,7 @@
         <meta name="locality" content="Madrid" />
         <title><?php echo __APPNAME__;?>-Login</title>
         <!-- Bootstrap Core CSS -->
-        <link href="/_styles/sb_admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/_styles/sb_admin2/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
 
