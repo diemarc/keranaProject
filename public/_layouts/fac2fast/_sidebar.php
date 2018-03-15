@@ -1,40 +1,42 @@
-<div class="navbar-default sidebar" style="" role="navigation">
-    <div class="sidebar-search">
-        <div class="form-group form-group-sm has-success has-feedback">
-            <div class="input-group">
-                <input type="text" id="param_find" class="form-control input-sm" 
-                       placeholder="Encuentra algo"
-                       onchange="findString(this.value)"/>
-                <span class="input-group-addon">
-                    <i class="fa fa-search"></i>
-                </span>
-            </div>
+<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+        <a class="nav-link" href="index.html">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Home</span>
+        </a>
+    </li>
 
-            <div id="div_resultado" class="hidden">
-                <ul class="list-group" id="div_find"></ul>
-            </div> 
-            <!-- /input-group -->
-        </div>
-    </div>
-    <div class="sidebar-nav navbar-collapse">
-        <ul class="nav" id="side-menu">
-
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Tables">
+        <a class="nav-link" href="tables.html">
+            <i class="fa fa-fw fa-table"></i>
+            <span class="nav-link-text">Filtros</span>
+        </a>
+    </li>
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components">
+        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
+            <i class="fa fa-fw fa-wrench"></i>
+            <span class="nav-link-text">Configuraciones</span>
+        </a>
+        <ul class="sidenav-second-level collapse" id="collapseComponents">
             <li>
-                <a href=""><i class="fa fa-dashboard fa-fw"></i>Dashboard</a>
+                <a href="navbar.html">Correo</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-user-md fa-fw"></i>System<span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a href="<?php echo __URL__; ?>/system/user/index">Users</a>
-                    </li>
-                    <li>
-                        <a href="<?php echo __URL__; ?>/system/group/index">Groups</a>
-                    </li>
-                </ul>
-                <!-- /.nav-second-level -->
+                <a href="cards.html">Usuarios</a>
             </li>
         </ul>
-    </div>
-    <!-- /.sidebar-collapse -->
-</div>
+    </li>
+    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Link">
+        <a class="nav-link" href="#">
+            <i class="fa fa-fw fa-link"></i>
+            <span class="nav-link-text">Soporte</span>
+        </a>
+    </li>
+</ul>
+<ul class="navbar-nav sidenav-toggler">
+    <li class="nav-item">
+        <a class="nav-link text-center" id="sidenavToggler">
+            <i class="fa fa-fw fa-angle-left"></i>
+        </a>
+    </li>
+</ul>

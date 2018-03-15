@@ -12,11 +12,11 @@
         <title><?php echo __APPNAME__ ?></title>
 
         <!-- Bootstrap Core CSS -->
-        <link href="/_styles/sb_admin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/_styles/sb_admin/vendor/metisMenu/metisMenu.css" rel="stylesheet">
-        <link href="/_styles/sb_admin/dist/css/sb-admin-2.css" rel="stylesheet">
-        <link href="/_styles/sb_admin/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-        <link href="/_styles/sb_admin/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="/_styles/sb_admin2/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/_styles/sb_admin2/vendor/metisMenu/metisMenu.css" rel="stylesheet">
+        <link href="/_styles/sb_admin2/dist/css/sb-admin-2.css" rel="stylesheet">
+        <link href="/_styles/sb_admin2/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href="/_styles/sb_admin2/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
