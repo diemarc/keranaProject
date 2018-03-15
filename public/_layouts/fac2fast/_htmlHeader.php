@@ -27,10 +27,15 @@
     <body class="fixed-nav" id="page-top">
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="mainNav">
-            <a class="navbar-brand" href="index.html">
-                <?php echo __APPNAME__; ?>
+            <a class="navbar-brand" href="<?php echo __URL__.'/fac2fast/f2f/index';?>">
+                <?php
+                if (isset($_SESSION['f2f_id_contratante'])) {
+                    echo '<strong>' . $_SESSION['f2f_contratante'] . '</strong>';
+                }
+                ?>
+                <span class="text-info small"><span class="small"><strong>by f2F</strong></span></span>
             </a>
-            
+
             <button class="navbar-toggler navbar-toggler-right" 
                     type="button" data-toggle="collapse" 
                     data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,11 +49,11 @@
                 include(__DOCUMENTROOT__ . '/_layouts/fac2fast/_sidebar.php');
                 include(__DOCUMENTROOT__ . '/_layouts/fac2fast/_top.php');
                 ?>
-     
+
             </div>
         </nav>
         <div class="content-wrapper">
-         
+
             <!-- Scroll to Top Button-->
             <a class="scroll-to-top rounded" href="#page-top">
                 <i class="fa fa-angle-up"></i>
@@ -71,4 +76,4 @@
                     </div>
                 </div>
             </div>
-          
+
