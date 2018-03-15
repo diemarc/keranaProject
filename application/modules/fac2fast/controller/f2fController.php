@@ -55,7 +55,7 @@ class F2fController extends \kerana\Kerana
      */
     public function changeCompany($id_contratante){
         
-        $this->f2fModel->changeContratante($id_contratante);
+        $this->f2fModel->changeCurrentCompany($id_contratante);
         \helpers\Redirect::to('/fac2fast/f2f/index');
         
     }
