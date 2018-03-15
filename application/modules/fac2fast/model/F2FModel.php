@@ -67,16 +67,42 @@ class F2FModel extends \application\modules\configuracion\model\UserContratanteM
         // if user have only one contratante, then create a session with this
         // contratante_id
         else if ($num_contra == 1) {
-            $_SESSION['f2f_contratante'] = $rsContratantesUser[0]->id_contratante;
+            $_SESSION['f2f_id_contratante'] = $rsContratantesUser[0]->id_contratante;
+            $_SESSION['f2f_contratante'] = $rsContratantesUser[0]->contratante;
         }
         // if have grater tan 1, then create a array wit all the contratantes
         else {
             foreach ($rsContratantesUser AS $contra):
-                array_push($this->f2f_contratantes_array, $contra->id_contratante);
+                $this->f2f_contratantes_array[] = [
+                    'id_contratante' => $contra->id_contratante,
+                    'contratante' => $contra->contratante,
+                    'nombre_contra' => $contra->razon_social,
+                    'cif' => $contra->cif
+                ];
             endforeach;
-           $_SESSION['f2f_contratantes_array'] = $this->f2f_contratantes_array; 
-           
+            $_SESSION['f2f_contratantes_array'] = $this->f2f_contratantes_array;
         }
+    }
+
+    /**
+     * -------------------------------------------------------------------------
+     * Change the current contratante (company)
+     * -------------------------------------------------------------------------
+     *  Destroy the current session assigned to f2f_contratante and f2f_name_contratante
+     * @param type $id_contratante
+     */
+    public function changeContratante($id_contratante)
+    {
+
+        $this->set_id_contratante($id_contratante);
+        // destroy session
+        unset($_SESSION['f2f_id_contratante']);
+        unset($_SESSION['f2f_contratante']);
+
+        // create a new value
+        $_SESSION['f2f_id_contratante'] = $this->get_id_contratante();
+        $_SESSION['f2f_contratante'] = $this->find('contratante', ['id_contratante' =>$this->get_id_contratante()]
+        )->contratante;
     }
 
 }
