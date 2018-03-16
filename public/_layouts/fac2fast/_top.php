@@ -10,7 +10,7 @@
         </a>
         <?php if(isset($_SESSION['f2f_contratantes_array']) AND !empty($_SESSION['f2f_contratantes_array'])){ ?>
         <div class="dropdown-menu" aria-labelledby="messagesDropdown">
-            <h6 class="dropdown-header">Cambiar de empresa:</h6>
+            <h6 class="dropdown-header">Selecciona una empresa:</h6>
             
             <?php foreach($_SESSION['f2f_contratantes_array'] AS $contra):?>
             <div class="dropdown-divider"></div>
