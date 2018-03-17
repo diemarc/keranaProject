@@ -1,28 +1,33 @@
 <ul class="navbar-nav ml-auto">
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle mr-lg-2" id="messagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-           <?php 
-            if(isset($_SESSION['f2f_id_contratante'])) {
-                echo '<strong>'.$_SESSION['f2f_contratante'].'</strong>';
-            }
-           
-           ?>
+            <?php
+            if (isset($_SESSION['f2f_id_contratante'])) {
+                echo '<strong>' . $_SESSION['f2f_contratante'] . '</strong>';
+            } else {
+                ?>
+
+                <span class="alert alert-danger">
+                    <i class="fa fa-exclamation"></i>Seleccione una empresa
+                </span>
+
+            <?php } ?>
         </a>
-        <?php if(isset($_SESSION['f2f_contratantes_array']) AND !empty($_SESSION['f2f_contratantes_array'])){ ?>
-        <div class="dropdown-menu" aria-labelledby="messagesDropdown">
-            <h6 class="dropdown-header">Selecciona una empresa:</h6>
-            
-            <?php foreach($_SESSION['f2f_contratantes_array'] AS $contra):?>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="<?php echo __URL__.'/fac2fast/f2f/changeCompany/'.$contra['id_contratante'];?>">
-                <strong><?php echo $contra['contratante'];?></strong>
-                <span class="small float-right text-muted"><?php echo $contra['cif'];?></span>
-                <div class="dropdown-message small">
-                    <?php echo $contra['nombre_contra'];?>
-                </div>
-            </a>
-            <?php endforeach;?>
-        </div>
+        <?php if (isset($_SESSION['f2f_contratantes_array']) AND ! empty($_SESSION['f2f_contratantes_array'])) { ?>
+            <div class="dropdown-menu" aria-labelledby="messagesDropdown">
+                <h6 class="dropdown-header">Selecciona una empresa:</h6>
+
+                <?php foreach ($_SESSION['f2f_contratantes_array'] AS $contra): ?>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="<?php echo __URL__ . '/fac2fast/f2f/changeCompany/' . $contra['id_contratante']; ?>">
+                        <strong><?php echo $contra['contratante']; ?></strong>
+                        <span class="small float-right text-muted"><?php echo $contra['cif']; ?></span>
+                        <div class="dropdown-message small">
+                            <?php echo $contra['nombre_contra']; ?>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
         <?php } ?>
     </li>
     <li class="nav-item dropdown">
@@ -80,8 +85,24 @@
             </div>
         </form>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
-            <i class="fa fa-fw fa-sign-out"></i>Salir</a>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle mr-lg-2" id="alertsDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-fw fa-user-circle"></i><?php echo $_SESSION['username']; ?>
+            <span class="d-lg-none"><?php echo $_SESSION['username']; ?>
+                <span class="badge badge-pill badge-warning">6 New</span>
+            </span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown">
+            <a class="dropdown-item" href="#">
+                Editar mis datos
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">
+                Cambiar mi contrase&ntilde;a
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">
+                <i class="fa fa-fw fa-sign-out"></i>Salir</a>
+        </div>
     </li>
 </ul>
