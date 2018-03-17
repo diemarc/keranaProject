@@ -1,4 +1,4 @@
-<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+<ul class="navbar-nav navbar-sidenav" style="background-color: #495057" id="exampleAccordion">
     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
         <a class="nav-link" href="<?php echo __URL__.'/fac2fast/f2f/index';?>">
             <i class="fa fa-fw fa-dashboard"></i>
