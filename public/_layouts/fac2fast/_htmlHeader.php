@@ -26,14 +26,14 @@
 
     <body class="fixed-nav" id="page-top">
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-            <a class="navbar-brand" href="<?php echo __URL__.'/fac2fast/f2f/index';?>">
+        <nav class="navbar navbar-expand-lg bg-dark fixed-top" id="mainNav">
+            <a class="navbar-brand text-info" href="<?php echo __URL__.'/fac2fast/f2f/index';?>">
                 <?php
                 if (isset($_SESSION['f2f_id_contratante'])) {
                     echo '<strong>' . $_SESSION['f2f_contratante'] . '</strong>';
                 }
                 ?>
-                <span class="text-info small"><span class="small"><strong>by f2F</strong></span></span>
+                <span class="text-muted small"><span class="small"><strong>by f2F</strong></span></span>
             </a>
 
             <button class="navbar-toggler navbar-toggler-right" 
