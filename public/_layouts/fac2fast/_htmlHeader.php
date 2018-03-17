@@ -26,7 +26,7 @@
 
     <body class="fixed-nav" id="page-top">
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="mainNav">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
             <a class="navbar-brand" href="<?php echo __URL__.'/fac2fast/f2f/index';?>">
                 <?php
                 if (isset($_SESSION['f2f_id_contratante'])) {
