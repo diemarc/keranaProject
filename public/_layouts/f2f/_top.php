@@ -61,7 +61,7 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-user-o"></i>
+                        <i class="fa fa-user-circle"></i>
                         <span class="hidden-xs"><?php echo $_SESSION['username']; ?></span>
                     </a>
                     <ul class="dropdown-menu">
