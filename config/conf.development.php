@@ -67,8 +67,8 @@ define('_MODEL_SUFIX_', 'Model');
  */
 
 define('_DEFAULT_MODULE_', 'welcome');
-define('_DEFAULT_CONTROLLER_', 'welcome');
-define('_DEFAULT_ACTION_', 'index');
+define('_DEFAULT_CONTROLLER_', 'login');
+define('_DEFAULT_ACTION_', 'introduceMySelf');
 
 
 //url position for each url-component
@@ -157,10 +157,15 @@ define('_ENABLE_PROFILER_', true);
  * 
  */
 
-$config->set('_dbhost_', 'localhost');
-$config->set('_dbname_', '');
-$config->set('_dbuser_', '');
-$config->set('_dbpass_', '');
+//$config->set('_dbhost_', 'localhost');
+//$config->set('_dbname_', 'factufacil');
+//$config->set('_dbuser_', 'factu_oper');
+//$config->set('_dbpass_', 'EDjXKe5YjV40');
+//$config->set('_dbport_', '3306');
+$config->set('_dbhost_', '172.26.0.41');
+$config->set('_dbname_', 'factufacil');
+$config->set('_dbuser_', 'factu_oper');
+$config->set('_dbpass_', 'EDjXKe5YjV40');
 $config->set('_dbport_', '3306');
 
 

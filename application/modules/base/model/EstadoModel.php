@@ -34,11 +34,9 @@ defined('__APPFOLDER__') OR exit('Direct access to this file is forbidden, siya'
 class EstadoModel extends tables\EstadoTable {
 
     
-    
      public function __construct()
     {
         parent::__construct();
-        
         
     }
 
@@ -49,7 +47,6 @@ class EstadoModel extends tables\EstadoTable {
      */
     public function savePost(){
         $this->set_estado();
-
         return parent::saveEstado();
     }
     
