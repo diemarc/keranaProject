@@ -94,7 +94,7 @@
         </div>
     </nav>
 </header>
-<div class="modal modal-info fade" id="modal-info">
+<div class="modal modal-warning fade" id="modal-info">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
