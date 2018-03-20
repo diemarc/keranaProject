@@ -202,11 +202,12 @@ abstract class Ada
      * -------------------------------------------------------------------------
      * @param array $conditions 
      */
-    public function _setConditions($conditions)
+    public function _setConditions($conditions,$operator = '=')
     {
         if (is_array($conditions)):
             foreach ($conditions AS $field => $search) :
-                $this->_query .= ' AND ' . $field . ' = :' . $field . '';
+                $operator_to_use = ($operator == '=')? ' = :'.$field : ' LIKE CONCAT(:'.$field.',"%")';
+                $this->_query .= ' AND ' . $field . $operator_to_use;
                 $this->_binds[':' . $field] = $search;
             endforeach;
         endif;
