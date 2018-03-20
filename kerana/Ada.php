@@ -303,6 +303,34 @@ abstract class Ada
         $this->_setConditions($conditions);
         return $this->getQuery($mode);
     }
+    /**
+     * -------------------------------------------------------------------------
+     * Find a rows from a $_query, or from  base table likes querys
+     * -------------------------------------------------------------------------
+     * @param string $fields , fields to select, default: *
+     * @param string $conditions , where conditions 
+     * @param string $mode , 
+     * @return rs
+     */
+    public function findLike($fields = '*', $conditions = false, $mode = 'one')
+    {
+
+        $this->_fields = $fields;
+
+        // if not _query is not setted, then use the base table
+        if (!isset($this->_query) AND empty($this->_query)) {
+            $this->_query = 'SELECT ' . $this->_fields
+                    . ' FROM ' . $this->table_name
+                    . ' WHERE ' . $this->table_id . ' IS NOT NULL ';
+        } else {
+            $this->_query = ' SELECT A.* FROM (' . $this->_query . ') A '
+                    . ' WHERE 1=1 ';
+        }
+        //  parse each conditions
+        $this->_setConditions($conditions,'like');
+        return $this->getQuery($mode);
+    }
+    
 
     /**
      * -------------------------------------------------------------------------
