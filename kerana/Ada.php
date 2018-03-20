@@ -262,6 +262,10 @@ abstract class Ada
                 case 'one':
                     $result = $rs->fetch(\PDO::FETCH_OBJ);
                     return $result;
+                    
+                case 'json':
+                    $result = $rs->fetchAll();
+                    return json_encode($result);
 
                 case 'onecheck':
                     $result = $rs->fetch(\PDO::FETCH_OBJ);
@@ -328,7 +332,7 @@ abstract class Ada
         }
         //  parse each conditions
         $this->_setConditions($conditions,'like');
-        return $this->getQuery($mode);
+        return $this->getQuery('json');
     }
     
 
